@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Materials & Assignments – EduPlatform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="../../css/add-material.css"/>
+</head>
+<body>
+
+  <div class="page-wrapper">
+
+    <!-- HEADER -->
+    <div class="page-header">
+      <h1>Add Materials & Assignments</h1>
+      <p>Upload course materials and create assignments</p>
+    </div>
+
+    <!-- LESSON MATERIALS CARD -->
+    <div class="section-card">
+      <div class="card-header">
+        <div class="card-icon pink">
+          <i class="fa-regular fa-file-lines"></i>
+        </div>
+        <h2>Lesson Materials</h2>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Lesson Title <span>*</span></label>
+        <input type="text" class="form-input" id="lesson-title" placeholder="e.g., Introduction to React Hooks"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-input" id="lesson-desc" placeholder="Describe what students will learn in this lesson..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Upload Material (PDF, Video, or Document)</label>
+        <div class="upload-area" id="upload-area">
+          <input type="file" id="file-input" accept=".pdf,.mp4,.doc,.docx,.ppt,.pptx" style="display:none"/>
+          <div class="upload-icon">
+            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+          </div>
+          <div class="upload-text">Click to upload or drag and drop</div>
+          <div class="upload-hint">PDF, Video, or Document (Max 100MB)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ASSIGNMENT CARD -->
+    <div class="section-card">
+      <div class="card-header">
+        <div class="card-icon teal">
+          <i class="fa-solid fa-code"></i>
+        </div>
+        <h2>Assignment</h2>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Assignment Title</label>
+        <input type="text" class="form-input" id="assignment-title" placeholder="e.g., Build a Todo App with React"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-input" id="assignment-desc" placeholder="Describe the assignment requirements..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Due Date</label>
+        <input type="date" class="form-input" id="due-date"/>
+      </div>
+
+      <div class="form-group">
+        <div class="tasks-header">
+          <span class="tasks-label">Coding Tasks</span>
+          <button class="btn-add-task" id="add-task-btn">
+            <i class="fa-solid fa-plus"></i> Add Task
+          </button>
+        </div>
+        <div class="task-list" id="task-list">
+          <div class="task-item">
+            <input type="text" class="form-input" placeholder="Task 1: e.g., Implement useState for task management"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="btn-row">
+      <button class="btn-publish" id="publish-btn">
+        <i class="fa-regular fa-floppy-disk"></i>
+        Publish Materials
+      </button>
+      <button class="btn-cancel" onclick="history.back()">Cancel</button>
+    </div>
+
+  </div>
+
+  <!-- HELP -->
+  <button class="help-btn">?</button>
+
+  <script src="../../js/add-material.js">
+  </script>
+
+</body>
+</html>
