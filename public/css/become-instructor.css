@@ -435,9 +435,10 @@ select.form-input {
 }
 /* ── FORCE CATEGORY SELECTED STATE ── */
 .categories-grid .cat-btn.selected,
-.cat-btn.selected {
-  background: rgba(255, 64, 160, 0.15) !important;
-  border: 1px solid var(--pink) !important;
+
+button.cat-btn.selected {
+  background-color: rgba(255, 64, 160, 0.15) !important;
+  border-color: var(--pink) !important;
   color: var(--pink) !important;
   font-weight: 600 !important;
 }

@@ -64,6 +64,7 @@ function showError(fieldId, errorId) {
 
 function hideError(errorId) {
   const error = document.getElementById(errorId);
+
   if (error) error.classList.remove('show');
 }
 
@@ -212,5 +213,20 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", () => {
       btn.classList.toggle("selected");
     });
+  });
+});
+document.querySelectorAll('.cat-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    if (this.classList.contains('selected')) {
+      this.classList.remove('selected');
+      this.style.removeProperty('background');
+      this.style.removeProperty('border-color');
+      this.style.removeProperty('color');
+    } else {
+      this.classList.add('selected');
+      this.style.background = 'rgba(255, 64, 160, 0.15)';  /* --pink with opacity */
+      this.style.borderColor = '#FF40A0';                   /* --pink */
+      this.style.color = '#FF40A0';                         /* --pink */
+    }
   });
 });
