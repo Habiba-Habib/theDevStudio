@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── Upload Zone Logic ──
+ 
   setupUploadZone('cvZone', 'cvInput', 'cvContent', 'cvPreview', 'cvFileName', 'cvRemove', 10);
   setupUploadZone('certZone', 'certInput', 'certContent', 'certPreview', 'certFileName', 'certRemove', 10);
 
@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     zone.addEventListener('click', (e) => {
       if (e.target.closest('.remove-file')) return;
+      if (e.target === input) return;
       input.click();
     });
 
@@ -61,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ── Inline Error Helpers ──
+ 
   function showError(zone, message) {
     clearError(zone);
     
@@ -80,10 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (next && next.classList.contains('inline-error')) next.remove();
   }
 
-  // ── Button Actions ──
-  document.getElementById('btnBack').addEventListener('click', () => {
-    window.history.back();
-  });
 
   document.getElementById('btnContinue').addEventListener('click', () => {
     const cvInput   = document.getElementById('cvInput');
@@ -109,8 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!valid) return;
 
-    // Navigate to step 3 — replace with your actual route:
-    // window.location.href = '/become-instructor/review';
+    window.location.href = '../pages/instructor/become-instructor3.html';
   });
 
 });

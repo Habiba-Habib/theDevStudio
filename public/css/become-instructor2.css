@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap');
 
 :root {
   --pink:       #FF40A0;
   --pink-light: #FFB7E6;
+  --pink-mid:   #ff85cc;
   --teal:       #60A3A6;
   --bg:         #0A0E27;
   --surface:    #1A203A;
@@ -10,7 +10,12 @@
   --text-white: #FFFFFC;
   --text-muted: #BDC2C9;
   --text-body:  #C8D0E7;
-  --font:       'Sora', sans-serif;
+  --font:       'Inter', sans-serif;
+
+  --pink-glow-sm:  0 4px 18px rgba(255, 64, 160, 0.45);
+  --pink-glow-md:  0 4px 24px rgba(255, 64, 160, 0.35);
+  --pink-glow-lg:  0 8px 32px rgba(255, 64, 160, 0.55);
+  --pink-gradient: linear-gradient(90deg, var(--pink) 0%, var(--pink-mid) 50%, var(--pink-light) 100%);
 }
 
 *, *::before, *::after {
@@ -23,19 +28,19 @@ body {
   font-family: var(--font);
   background-color: var(--bg);
   background-image:
-    radial-gradient(ellipse 70% 40% at 15% 0%, rgba(255, 64, 160, 0.13) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 35% at 85% 10%, rgba(255, 110, 180, 0.09) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 40% at 15% 0%,  rgba(255, 64, 160, 0.13) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 35% at 85% 10%, rgba(255, 64, 160, 0.09) 0%, transparent 55%),
     radial-gradient(ellipse 40% 30% at 50% 100%, rgba(255, 64, 160, 0.07) 0%, transparent 60%);
   color: var(--text-body);
   min-height: 100vh;
   padding: 48px 40px 80px;
 }
 
-/* ── Hero ── */
 .main-content {
   max-width: 1100px;
   margin: 0 auto;
 }
+
 
 .hero-section {
   text-align: center;
@@ -43,24 +48,24 @@ body {
 }
 
 .hero-icon {
-  width: 76px;
-  height: 76px;
-  background: linear-gradient(135deg, rgba(255,64,160,0.25), rgba(255,110,180,0.12));
-  border: 1px solid rgba(255, 64, 160, 0.3);
+  width: 80px;
+  height: 80px;
+  background: var(--surface);
+  border: 1.5px solid rgba(255, 64, 160, 0.2);
   border-radius: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 24px;
-  font-size: 30px;
+  font-size: 32px;
   color: var(--pink);
-  box-shadow: 0 0 40px rgba(255, 64, 160, 0.25), inset 0 1px 0 rgba(255,255,255,0.08);
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.4);
 }
 
 .hero-title {
   font-size: 2.2rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #fff 30%, var(--pink-light) 100%);
+  background: linear-gradient(135deg, var(--text-white) 30%, var(--pink-light) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -75,12 +80,10 @@ body {
   line-height: 1.6;
 }
 
-/* ── Stepper ── */
 .stepper {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0;
   margin-bottom: 36px;
 }
 
@@ -105,18 +108,12 @@ body {
   transition: all 0.3s ease;
 }
 
-.step.completed .step-circle {
-  background: var(--pink);
-  border-color: var(--pink);
-  color: #fff;
-  box-shadow: 0 0 20px rgba(255, 64, 160, 0.35);
-}
-
+.step.completed .step-circle,
 .step.active .step-circle {
-  background: var(--pink);
-  border-color: var(--pink);
-  color: #fff;
-  box-shadow: 0 0 20px rgba(255, 64, 160, 0.35);
+  background: var(--pink-gradient);
+  border-color: transparent;
+  color: var(--text-white);
+  box-shadow: var(--pink-glow-sm);
 }
 
 .step-label {
@@ -140,10 +137,10 @@ body {
 }
 
 .step-line.active {
-  background: linear-gradient(90deg, var(--pink), var(--pink-light), rgba(255, 64, 160, 0.2));
+  background: linear-gradient(90deg, var(--pink), var(--pink-light), transparent);
 }
 
-/* ── Card ── */
+
 .card {
   background: linear-gradient(160deg, rgba(30, 36, 70, 0.95) 0%, rgba(20, 26, 55, 0.95) 100%);
   border: 1px solid rgba(255, 64, 160, 0.15);
@@ -152,10 +149,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 36px;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.04) inset, 0 20px 60px rgba(0,0,0,0.3);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04) inset, 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-/* ── Form Group ── */
+
 .form-group {
   display: flex;
   flex-direction: column;
@@ -182,11 +179,11 @@ body {
   margin-top: -4px;
 }
 
-/* ── Upload Zone ── */
+
 .upload-zone {
   position: relative;
   background: rgba(10, 14, 39, 0.5);
-  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border: 2px dashed var(--border);
   border-radius: 16px;
   padding: 44px 32px;
   text-align: center;
@@ -198,7 +195,7 @@ body {
 .upload-zone:hover,
 .upload-zone.dragover {
   border-color: var(--pink);
-  background: linear-gradient(135deg, rgba(255, 64, 160, 0.07), rgba(255, 110, 180, 0.04));
+  background: linear-gradient(135deg, rgba(255, 64, 160, 0.07), rgba(255, 64, 160, 0.03));
   box-shadow: 0 0 30px rgba(255, 64, 160, 0.1) inset;
 }
 
@@ -206,14 +203,14 @@ body {
   position: absolute;
   inset: 0;
   opacity: 0;
-  cursor: pointer;
   width: 100%;
   height: 100%;
+  pointer-events: none;
 }
 
 .upload-icon {
   font-size: 1.8rem;
-  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  background: var(--pink-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -233,12 +230,12 @@ body {
   color: var(--text-muted);
 }
 
-/* ── Upload Preview ── */
+
 .upload-preview {
   display: flex;
   align-items: center;
-  gap: 12px;
   justify-content: center;
+  gap: 12px;
   padding: 4px 0;
 }
 
@@ -249,8 +246,8 @@ body {
 
 .file-name {
   font-size: 0.88rem;
-  color: var(--text-white);
   font-weight: 500;
+  color: var(--text-white);
   max-width: 300px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -269,16 +266,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
   position: relative;
   z-index: 2;
+  transition: background 0.2s;
 }
 
 .remove-file:hover {
   background: rgba(255, 64, 160, 0.25);
 }
 
-/* ── Link Fields ── */
+
 .link-fields {
   display: flex;
   flex-direction: column;
@@ -329,7 +326,7 @@ body {
   box-shadow: 0 0 0 3px rgba(255, 64, 160, 0.1);
 }
 
-/* ── Actions ── */
+
 .actions {
   display: flex;
   gap: 16px;
@@ -351,23 +348,22 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  text-decoration: none;
   transition: border-color 0.2s, background 0.2s;
 }
 
 .btn-back:hover {
-  border-color: rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.04);
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .btn-continue {
   flex: 1;
   padding: 15px 24px;
-  background: linear-gradient(135deg, var(--pink) 0%, #ff6eb4 50%, var(--pink-light) 100%);
-  background-size: 200% 200%;
-  animation: gradientShift 3s ease infinite;
+  background: var(--pink-gradient);
   border: none;
-  border-radius: 10px;
-  color: #fff;
+  border-radius: 12px;
+  color: var(--text-white);
   font-family: var(--font);
   font-size: 0.92rem;
   font-weight: 600;
@@ -377,30 +373,24 @@ body {
   justify-content: center;
   gap: 8px;
   transition: transform 0.15s, box-shadow 0.2s;
-  box-shadow: 0 4px 24px rgba(255, 64, 160, 0.4), 0 0 0 1px rgba(255,255,255,0.1) inset;
-}
-
-@keyframes gradientShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  box-shadow: var(--pink-glow-md);
 }
 
 .btn-continue:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(255, 64, 160, 0.55), 0 0 0 1px rgba(255,255,255,0.15) inset;
+  box-shadow: var(--pink-glow-lg), 0 0 0 1px rgba(255, 255, 255, 0.15) inset;
 }
 
 .btn-continue:active {
   transform: translateY(0);
 }
 
-/* ── Utility ── */
+
 .hidden {
   display: none !important;
 }
 
-/* ── Inline Errors ── */
+
 .inline-error {
   display: flex;
   align-items: center;
@@ -416,8 +406,6 @@ body {
   font-size: 0.78rem;
   flex-shrink: 0;
 }
-
-
 
 @keyframes errorFadeIn {
   from { opacity: 0; transform: translateY(-4px); }
