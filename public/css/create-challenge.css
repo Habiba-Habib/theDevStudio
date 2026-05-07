@@ -10,15 +10,7 @@
     --text-muted: #BDC2C9;
     --font:       'Inter', sans-serif;
 }
-:root {
-  --yellow:     #F0FE72;
-  --bg:         #0A0E27;
-  --surface:    #1A203A;
-  --border:     rgba(255, 255, 255, 0.08);
-  --text-white: #FFFFFC;
-  --text-muted: #BDC2C9;
-  --font:       'Inter', sans-serif;
-}
+
 body {
     background-color: var(--bg);
     font-family: var(--font);
@@ -272,3 +264,204 @@ p {
     background: var(--surface2);
     color: var(--text-white);
 }
+.preview-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    position: sticky;
+    top: 20px;
+}
+ 
+.preview-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+}
+ 
+.preview-icon {
+    color: var(--yellow);
+    font-size: 15px;
+}
+ 
+.preview-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-white);
+}
+ 
+.preview-body {
+    padding: 20px 18px;
+    min-height: 200px;
+}
+ 
+
+.preview-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 160px;
+    color: #3A4260;
+}
+ 
+.preview-empty-icon {
+    font-size: 32px;
+}
+ 
+.preview-empty p {
+    font-size: 13px;
+    color: #4A5170;
+}
+ 
+
+.preview-content {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+ 
+.preview-challenge-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-white);
+    line-height: 1.4;
+}
+ 
+.preview-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+ 
+.preview-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+}
+ 
+.badge-easy   { background: rgba(96,163,166,0.15); color: var(--teal); border: 1px solid rgba(96,163,166,0.3); }
+.badge-medium { background: rgba(240,254,114,0.12); color: var(--yellow); border: 1px solid rgba(240,254,114,0.25); }
+.badge-hard   { background: rgba(255,64,160,0.12); color: var(--pink); border: 1px solid rgba(255,64,160,0.25); }
+.badge-category { background: rgba(255,255,255,0.06); color: var(--text-muted); border: 1px solid var(--border); }
+ 
+.preview-description {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+ 
+.preview-code-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.preview-code-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--teal);
+    font-weight: 600;
+}
+.preview-code-block .tests{color:var(--yellow)}
+.preview-code-block .starter{color:var(--teal)}
+
+.preview-code-header i {
+    font-size: 11px;
+}
+
+.preview-code-content {
+    padding: 10px 14px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #a8d8f0;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    margin: 0;
+}
+.preview-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+ 
+.form-input.error,
+.form-select.error,
+.form-textarea.error {
+    border-color: var(--pink);
+}
+ 
+.error-msg {
+    font-size: 12px;
+    color: var(--pink);
+    margin-top: 2px;
+}
+
+.toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--surface);
+    border: 1px solid rgba(96,163,166,0.4);
+    border-radius: 10px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-white);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.35s ease;
+    z-index: 999;
+}
+ 
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+ 
+.toast i {
+    color: var(--teal);
+    font-size: 16px;
+}
+
+@media (max-width: 900px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+    .preview-card {
+        position: static;
+    }
+    .navbar {
+        padding: 0 20px;
+    }
+}
+ 
+@media (max-width: 600px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    .form-actions {
+        flex-direction: column;
+    }
+    .ai-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+}
+ 
