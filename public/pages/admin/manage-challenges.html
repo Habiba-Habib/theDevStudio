@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Challenges</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/public/css/navbar-css.css">
+    <link rel="stylesheet" href="../../css/manage-challenges.css">
+</head>
+<body>
+
+    <div class="page-wrapper">
+
+        <div class="page-header">
+            <div class="header-left">
+                <h1 class="page-title">Manage Challenges</h1>
+                <p class="page-subtitle">Create and manage coding challenges</p>
+            </div>
+            <button class="btn-create" onclick="window.location.href='/public/pages/admin/create-challenge.html'">
+                <i class="fa-solid fa-plus"></i>
+                Create Challenge
+            </button>
+        </div>
+
+        <div class="controls">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search challenges..." />
+            </div>
+
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">All</button>
+                <button class="filter-tab" data-filter="easy">Easy</button>
+                <button class="filter-tab" data-filter="medium">Medium</button>
+                <button class="filter-tab" data-filter="hard">Hard</button>
+            </div>
+        </div>
+
+        <p class="results-count" id="resultsCount">Showing 6 challenges</p>
+
+        <div class="table-wrapper">
+            <table class="challenges-table">
+                <thead>
+                    <tr>
+                        <th>Challenge</th>
+                        <th>Category</th>
+                        <th>Difficulty</th>
+                        <th>Points</th>
+                        <th>Submissions</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-icon">
+                <i class="fa-solid fa-trash"></i>
+            </div>
+            <h3 class="modal-title">Delete Challenge</h3>
+            <p class="modal-desc">Are you sure you want to delete this challenge? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button class="modal-cancel" id="modalCancel">Cancel</button>
+                <button class="modal-confirm" id="modalConfirm">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/manage-challenges.js"></script>
+    <script src="/public/js/main-navbar.js"></script>
+</body>
+</html>

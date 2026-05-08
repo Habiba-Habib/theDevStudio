@@ -1,5 +1,6 @@
 const challengeData = [
   {
+    id: 1,
     title: "Two Sum Problem",
     desc:  "Given an array of integers, return indices of two numbers that add up to a target.",
     difficulty: "easy",
@@ -7,6 +8,7 @@ const challengeData = [
     points: 50
   },
   {
+     id: 2,
     title: "Build a REST API",
     desc:  "Create a RESTful API with CRUD operations using Node.js and Express.",
     difficulty: "medium",
@@ -14,6 +16,7 @@ const challengeData = [
     points: 150
   },
   {
+     id: 3,
     title: "Implement Binary Search Tree",
     desc:  "Implement a binary search tree with insert, delete, and search operations.",
     difficulty: "hard",
@@ -21,6 +24,7 @@ const challengeData = [
     points: 300
   },
   {
+    id: 4,
     title: "CSS Grid Layout",
     desc:  "Create a responsive dashboard layout using CSS Grid.",
     difficulty: "easy",
@@ -28,6 +32,7 @@ const challengeData = [
     points: 75
   },
   {
+   id: 5,
     title: "React Component Lifecycle",
     desc:  "Build a React component demonstrating all lifecycle methods and hooks.",
     difficulty: "medium",
@@ -35,6 +40,7 @@ const challengeData = [
     points: 125
   },
   {
+    id: 6,
     title: "Dynamic Programming: Knapsack",
     desc:  "Solve the 0/1 knapsack problem using dynamic programming.",
     difficulty: "hard",
