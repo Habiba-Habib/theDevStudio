@@ -402,6 +402,17 @@ body {
     opacity: 0.9;
 }
 
+.restore-btn:hover {
+    background: rgba(96, 163, 166, 0.12);
+    color: var(--teal);
+    border-color: rgba(96, 163, 166, 0.25);
+}
+
+.deleted-at {
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
 @media (max-width: 768px) {
     .page-header {
         flex-direction: column;
