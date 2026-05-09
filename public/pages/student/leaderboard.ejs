@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="/css/leaderboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/navbar-css.css">
+    </head>
+    <body>
+
+<div class="leaderboard-page">
+
+    <div class="ranking-badge">
+        <i class="fa-solid fa-trophy"></i>
+            Global Rankings
+    </div>
+
+    <h1 class="leaderboard-title">Leaderboard</h1>
+    <p class="leaderboard-subtitle">
+        Compete with learners worldwide and climb to the top
+    </p>
+
+
+    <div class="top-players">
+
+    <div class="player-card second">
+        <img src="/images/avatars/<%= topPlayers[1].avatar %>" class="player-avatar">
+        <div class="rank" style="color:#6ee7ff;">2</div>
+        <h3><%= topPlayers[1].name %></h3>
+        <p class="points"><%= topPlayers[1].points %> pts</p>
+    </div>
+
+    <div class="player-card first">
+        <img src="/images/avatars/<%= topPlayers[0].avatar %>" class="player-avatar">
+        <div class="rank" style="color:#ff4da6;">1</div>
+        <h3><%= topPlayers[0].name %></h3>
+        <p class="points"><%= topPlayers[0].points %> pts</p>
+    </div>
+
+    <div class="player-card third">
+        <img src="/images/avatars/<%= topPlayers[2].avatar %>" class="player-avatar">
+        <div class="rank" style="color:#effb6d;">3</div>
+        <h3><%= topPlayers[2].name %></h3>
+        <p class="points"><%= topPlayers[2].points %> pts</p>
+    </div>
+
+</div>
+
+
+    <div class="podium-row">
+        <div class="podium second"><i class="fa-solid fa-trophy"></i></i></div>
+        <div class="podium first"><i class="fa-solid fa-trophy"></i></div>
+        <div class="podium third"><i class="fa-solid fa-trophy"></i></div>
+    </div>
+
+</div>
+<div class="full-rankings">
+
+  <h2 class="section-title">Full Rankings</h2>
+
+  <div class="ranking-list">
+
+  <% players.forEach((player, index) => { %>
+    <div class="rank-row <%= player._id.equals(currentUser._id) ? 'highlight' : '' %>">
+
+      <div class="rank-number <%= index < 3 ? 'top' : '' %>"><%= index + 1 %></div>
+
+      <img src="/images/avatars/<%= player.avatar %>" class="rank-avatar">
+
+      <div class="rank-info">
+        <div class="rank-name">
+          <%= player.name %>
+          <% if (player._id.equals(currentUser._id)) { %>
+            <span class="you-tag">You</span>
+          <% } %>
+        </div>
+        <div class="rank-stats">
+          🏆 <%= player.points %> points &nbsp;&nbsp; 🎖 <%= player.badges %> badges
+        </div>
+      </div>
+
+      <% if (index === 0) { %><div class="medal pink">🏅</div><% } %>
+      <% if (index === 1) { %><div class="medal blue">🏅</div><% } %>
+      <% if (index === 2) { %><div class="medal yellow">🏅</div><% } %>
+
+    </div>
+  <% }) %>
+
+</div>
+
+</div>
+<script src="/js/main-navbar.js"></script>
+</body>
+</html>

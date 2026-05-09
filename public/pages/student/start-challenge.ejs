@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduPlatform – Two Sum Problem</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/challenge.css">
+  <link rel="stylesheet" href="/css/navbar-css.css">
+</head>
+<body>
+
+  <!-- ─── BREADCRUMB ─────────────────────────────────────────── -->
+  <div class="breadcrumb">
+    <a href="/challenges">Challenges</a>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current"><%= challenge.title %></span>
+  </div>
+
+  <!-- ─── MAIN GRID ──────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- LEFT COLUMN -->
+    <div class="left-col">
+
+      <!-- Problem Header -->
+      <div class="card problem-header">
+        <div class="problem-meta">
+          <span class="badge-<%= challenge.difficulty.toLowerCase() %>"><%= challenge.difficulty %></span>
+          <span class="points">
+          <span class="points-icon">⚡</span>
+            <%= challenge.points %> points
+          </span>
+        </div>
+        <h1 class="problem-title"><%= challenge.title %></h1>
+        <p class="problem-summary"><%= challenge.summary %></p>
+      </div>
+
+      <!-- Description -->
+      <div class="card">
+        <h2 class="section-title">Description</h2>
+        <div class="description-text">
+          <%- challenge.description %>
+        </div>
+      </div>
+
+      <!-- Examples -->
+      <div class="card">
+        <h2 class="section-title">Examples</h2>
+
+        <% challenge.examples.forEach((ex, i) => { %>
+  <div class="example-block">
+    <div class="example-label">Example <%= i + 1 %></div>
+    <div class="example-line">
+      <span class="kw">Input: </span>
+      <span class="val"><%= ex.input %></span>
+    </div>
+    <div class="example-line">
+      <span class="kw">Output: </span>
+      <span class="out"><%= ex.output %></span>
+    </div>
+    <% if (ex.explanation) { %>
+      <div class="example-line" style="margin-top:6px; color: var(--text-muted); font-family: var(--font); font-size:13px;">
+        <%= ex.explanation %>
+      </div>
+    <% } %>
+  </div>
+<% }) %>
+      </div>
+
+      <!-- Constraints -->
+      <div class="card">
+        <h2 class="section-title">Constraints</h2>
+        <div class="constraints-list">
+        <% challenge.constraints.forEach(constraint => { %>
+        <div class="constraint-item">
+          <div class="constraint-bullet"></div>
+            <%- constraint %>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-col">
+
+      <!-- Code Editor -->
+      <div class="card editor-card">
+        <div class="editor-header">
+          <span class="editor-title">Code Editor</span>
+          <select class="lang-select" id="langSelect" onchange="changeLang()">
+            <option value="js">JavaScript</option>
+            <option value="py">Python</option>
+            <option value="java">Java</option>
+          </select>
+        </div>
+
+        <div class="editor-body">
+          <div class="line-numbers" id="lineNums"></div>
+          <textarea
+            class="editor-textarea"
+            id="codeEditor"
+            spellcheck="false"
+            autocorrect="off"
+            autocapitalize="off"
+          >function twoSum(nums, target) {
+  // Your code here
+
+}</textarea>
+        </div>
+
+        <div class="editor-footer">
+          <button class="btn-run" onclick="runCode()">
+            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 2l11 6-11 6z"/>
+            </svg>
+            Run Code
+          </button>
+          <button class="btn-submit" onclick="submitSolution('<%= challenge._id %>')">
+            Submit Solution</button>
+        </div>
+      </div>
+
+      <!-- Output Console -->
+      <div class="card console-card">
+        <div class="console-header">
+          <h2 class="section-title" style="margin-bottom:0;">Output Console</h2>
+          <div class="console-dots">
+            <div class="dot dot-red"></div>
+            <div class="dot dot-amber"></div>
+            <div class="dot dot-green"></div>
+          </div>
+        </div>
+        <div class="console-body">
+          <span class="console-placeholder" id="consolePlaceholder">
+            Run your code to see output here...
+          </span>
+          <div class="console-output" id="consoleOutput"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+  <script src="/js/main-navbar.js"></script>
+</body>
+</html>

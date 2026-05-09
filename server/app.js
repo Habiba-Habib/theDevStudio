@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const connectDB = require("./config/db");
+const challengeRoutes = require('./routes/challenges');
+app.use('/challenges', challengeRoutes);
 
 const app = express();
 
@@ -33,3 +35,4 @@ app.get("/", (req, res) => {
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });
+
