@@ -6,9 +6,10 @@
   <title>EduPlatform | Coding Challenges</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-  <link rel="stylesheet" href="../../../public/css/challengespage.css">
-  <link rel="stylesheet" href="/public/css/navbar-css.css">
-    <script src="../../../public/js/challengescode.js" defer></script>
+  <link rel="stylesheet" href="/css/challengespage.css">
+  <link rel="stylesheet" href="/css/navbar-css.css">
+  <script src="/js/challenges-data.js"></script>
+    <script src="/js/challengescode.js" defer></script>
 </head>
 <body>
 
@@ -26,19 +27,19 @@
 
     <!-- STATS -->
     <div class="stats-container">
-      <div class="stat-card">
+            <div class="stat-card">
         <i class="fa-solid fa-code icon-pink"></i>
-        <h3>6</h3>
+        <h3><%= stats.totalChallenges %></h3>
         <p>Total Challenges</p>
       </div>
       <div class="stat-card">
         <i class="fa-solid fa-bolt icon-yellow"></i>
-        <h3>1050</h3>
+        <h3><%= stats.totalPoints %></h3>
         <p>Total Points Available</p>
       </div>
       <div class="stat-card">
         <i class="fa-solid fa-trophy icon-teal"></i>
-        <h3>10K+</h3>
+        <h3><%= stats.totalUsers %>+</h3>
         <p>Active Competitors</p>
       </div>
     </div>
@@ -67,14 +68,34 @@
     </div>
 
     <!-- RESULTS COUNT -->
-    <p id="results-count">Showing 6 challenges</p>
+    <p id="results-count">Showing <%= challenges.length %> challenges</p>
 
-    <!-- GRID -->
-    <div id="challenges-grid" class="challenges-grid"></div>
+<div id="challenges-grid" class="challenges-grid">
+  <% challenges.forEach(challenge => { %>
+    <div class="challenge-card"
+         data-difficulty="<%= challenge.difficulty.toLowerCase() %>"
+         data-category="<%= challenge.category.toLowerCase() %>">
+
+      <div class="card-header">
+        <span class="badge-<%= challenge.difficulty.toLowerCase() %>"><%= challenge.difficulty %></span>
+        <span class="card-points">⚡ <%= challenge.points %> pts</span>
+      </div>
+
+      <h3 class="card-title"><%= challenge.title %></h3>
+      <p class="card-summary"><%= challenge.summary %></p>
+
+      <div class="card-footer">
+        <span class="card-category"><%= challenge.category %></span>
+        <a href="/challenges/<%= challenge._id %>" class="btn-solve">Solve</a>
+      </div>
+
+    </div>
+  <% }) %>
+</div>
 
   </section>
 
-  <script src="challengescode.js"></script>
-  <script src="/public/js/main-navbar.js"></script>
+  <script src="js/challengescode.js"></script>
+  <script src="/js/main-navbar.js"></script>
 </body>
 </html>
