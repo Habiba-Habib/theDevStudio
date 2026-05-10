@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Instructor Dashboard</title>
+  <title><%= instructor.name %>'s Dashboard</title>
   <link rel="stylesheet" href="../../../public/css/dashboards.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="/public/css/navbar-css.css">
@@ -17,10 +17,10 @@
     <!-- Welcome Section -->
     <section class="id-welcome-section">
       <div>
-        <h1 class="welcome-title">Welcome, Dr. Sarah Miller! </h1>
-        <p class="welcome-subtitle">Here's how your courses are performing</p>
+        <h1 class="welcome-title">Welcome, <%= instructor.name %>!</h1>
+        <p class="welcome-subtitle"><%= instructor.welcomeMessage %></p>
       </div>
-      <a href="create-step1.html" class="id-btn-create">
+      <a href="/create-course" class="id-btn-create">
         <i class="fa-solid fa-plus"></i> Create New Course
       </a>
     </section>
@@ -32,8 +32,8 @@
         <div class="stat-icon stat-icon--pink">
           <i class="fa-solid fa-users"></i>
         </div>
-        <div class="id-stat-change">↗ +12.5%</div>
-        <div class="stat-value">1,245</div>
+        <div class="id-stat-change">↗ <%= stats.studentsChange %></div>
+        <div class="stat-value"><%= stats.totalStudents.toLocaleString() %></div>
         <div class="stat-label">Total Students</div>
       </div>
 
@@ -41,8 +41,8 @@
         <div class="stat-icon stat-icon--green">
           <i class="fa-solid fa-book-open"></i>
         </div>
-        <div class="id-stat-change">↗ +2 this month</div>
-        <div class="stat-value">6</div>
+        <div class="id-stat-change">↗ <%= stats.coursesChange %></div>
+        <div class="stat-value"><%= stats.totalCourses %></div>
         <div class="stat-label">Courses Created</div>
       </div>
 
@@ -50,8 +50,8 @@
         <div class="stat-icon stat-icon--teal">
           <i class="fa-solid fa-dollar-sign"></i>
         </div>
-        <div class="id-stat-change">↗ +18.2%</div>
-        <div class="stat-value">$45,890</div>
+        <div class="id-stat-change">↗ <%= stats.revenueChange %></div>
+        <div class="stat-value">$<%= stats.totalRevenue.toLocaleString() %></div>
         <div class="stat-label">Total Revenue</div>
       </div>
 
@@ -59,8 +59,8 @@
         <div class="stat-icon stat-icon--purple">
           <i class="fa-solid fa-arrow-trend-up"></i>
         </div>
-        <div class="id-stat-change">↗ +0.2</div>
-        <div class="stat-value">4.8</div>
+        <div class="id-stat-change">↗ <%= stats.ratingChange %></div>
+        <div class="stat-value"><%= stats.avgRating %></div>
         <div class="stat-label">Avg. Rating</div>
       </div>
 
@@ -92,46 +92,20 @@
     <!-- Your Courses -->
     <section class="section-block">
       <h2 class="section-title" style="margin-bottom: 20px;">Your Courses</h2>
-
+      <% courses.forEach(function(course) { %>
       <div class="id-course-card">
-        <img src="../../../images/all-courses-1.jpg" alt="Web Development" class="course-thumb" />
+        <img src="<%= course.image %>" alt="<%= course.title %>" class="course-thumb" />
         <div class="id-course-info">
-          <h3 class="course-progress-title">Complete Web Development Bootcamp</h3>
+          <h3 class="course-progress-title"><%= course.title %></h3>
           <div class="id-course-meta">
-            <span><i class="fa-solid fa-users"></i> 12,453 students</span>
-            <span><i class="fa-solid fa-star"></i> 4.8</span>
-            <span>$49.99</span>
+            <span><i class="fa-solid fa-users"></i> <%= course.students.toLocaleString() %> students</span>
+            <span><i class="fa-solid fa-star"></i> <%= course.rating %></span>
+            <span>$<%= course.price %></span>
           </div>
         </div>
-        <a href="../public/course-description.html" class="id-btn-view">View Details</a>
+        <a href="/course-description" class="id-btn-view">View Details</a>
       </div>
-
-      <div class="id-course-card">
-        <img src="../../../images/all-courses-2.jpg" alt="React Development" class="course-thumb" />
-        <div class="id-course-info">
-          <h3 class="course-progress-title">Advanced React Development</h3>
-          <div class="id-course-meta">
-            <span><i class="fa-solid fa-users"></i> 8,932 students</span>
-            <span><i class="fa-solid fa-star"></i> 4.9</span>
-            <span>$69.99</span>
-          </div>
-        </div>
-        <a href="../public/course-description.html" class="id-btn-view">View Details</a>
-      </div>
-
-      <div class="id-course-card">
-        <img src="../../../images/all-courses-3.jpg" alt="Data Science" class="course-thumb" />
-        <div class="id-course-info">
-          <h3 class="course-progress-title">Python for Data Science</h3>
-          <div class="id-course-meta">
-            <span><i class="fa-solid fa-users"></i> 15,678 students</span>
-            <span><i class="fa-solid fa-star"></i> 4.7</span>
-            <span>$59.99</span>
-          </div>
-        </div>
-        <a href="../public/course-description.html" class="id-btn-view">View Details</a>
-      </div>
-
+      <% }); %>
     </section>
 
   </main>
