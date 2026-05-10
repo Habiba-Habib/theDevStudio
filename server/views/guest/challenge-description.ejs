@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= challenge.title %> | TheDevStudio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/challenge-description.css">
+    <link rel="stylesheet" href="/css/navbar-css.css">
+</head>
+
+<body>
+
+<%- include('../partials/navbar') %>
+
+<div class="container">
+    <div class="back-link">
+        <i class="fa-solid fa-arrow-left"></i>
+        <a href="javascript:history.back()">Back</a>
+    </div>
+
+    <div class="challenge-layout">
+
+        <div class="challenge-main">
+
+            <div class="challenge-card">
+                <div class="badge-row">
+                    <span class="badge badge-<%= challenge.difficulty.toLowerCase() %>">
+                        <%= challenge.difficulty %>
+                    </span>
+                    <span class="badge badge-category">
+                        <%= challenge.category %>
+                    </span>
+                    <span class="points-badge">
+                        <i class="fa-solid fa-bolt"></i>
+                        <%= challenge.points %> points
+                    </span>
+                </div>
+
+                <h2><%= challenge.title %></h2>
+                <p class="summary-text"><%= challenge.desc %></p>
+            </div>
+
+            <div class="challenge-card">
+                <h2>Problem Description</h2>
+                <p><%- challenge.description %></p>
+                <div>
+                    <% challenge.details.forEach(d => { %>
+                        <p><%= d %></p>
+                    <% }) %>
+                </div>
+            </div>
+
+            <div class="challenge-card">
+                <h2>Examples</h2>
+                <div>
+                    <% challenge.examples.forEach((ex, index) => { %>
+                    <div class="example-block">
+                        <p class="example-number">Example <%= index + 1 %></p>
+                        <p class="input-line">
+                            <span class="ex-label-input">Input:</span> <%= ex.input %>
+                        </p>
+                        <p class="output-line">
+                            <span class="ex-label-output">Output:</span> <%= ex.output %>
+                        </p>
+                        <% if (ex.explanation) { %>
+                        <p class="explanation-line">
+                            <span class="ex-label-explanation">Explanation:</span> <%= ex.explanation %>
+                        </p>
+                        <% } %>
+                    </div>
+                    <% }) %>
+                </div>
+            </div>
+
+            <div class="challenge-card">
+                <div class="solution-header">
+                    <h2>Your Solution</h2>
+                    <select id="lang-select">
+                        <option>JavaScript</option>
+                        <option>Python</option>
+                        <option>Java</option>
+                    </select>
+                </div>
+
+                <textarea id="code-editor" spellcheck="false"><%= challenge.defaultCode %></textarea>
+
+                <button class="start-btn" id="startBtn">Start Challenge</button>
+            </div>
+
+        </div>
+
+        <div class="challenge-sidebar">
+
+            <div class="challenge-card">
+                <h2>Challenge Info</h2>
+                <div class="info-list">
+
+                    <div class="info-item">
+                        <div class="info-icon pink">
+                            <i class="fa-solid fa-bolt"></i>
+                        </div>
+                        <div>
+                            <p class="info-value"><%= challenge.points %> Points</p>
+                            <p class="info-label">Reward</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon teal">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <div>
+                            <p class="info-value"><%= challenge.difficulty %></p>
+                            <p class="info-label">Difficulty</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon yellow">
+                            <i class="fa-regular fa-clock"></i>
+                        </div>
+                        <div>
+                            <p class="info-value"><%= challenge.timeLimit %></p>
+                            <p class="info-label">Time Limit</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="challenge-card">
+                <h2>Submission Stats</h2>
+                <div class="stats-list">
+
+                    <div class="stat-row">
+                        <span>Total Submissions</span>
+                        <span><%= challenge.stats.totalSubmissions.toLocaleString() %></span>
+                    </div>
+
+                    <div class="stat-row">
+                        <span>Accepted</span>
+                        <span class="stat-green">
+                            <%= challenge.stats.accepted.toLocaleString() %>
+                        </span>
+                    </div>
+
+                    <div class="stat-row">
+                        <span>Success Rate</span>
+                        <span class="stat-yellow">
+                            <%= challenge.stats.successRate %>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.getElementById('startBtn').addEventListener('click', () => {
+        window.location.href = '/student/start-challenge/<%= challenge._id %>';
+    });
+
+    document.getElementById('lang-select').addEventListener('change', (e) => {
+        console.log('Language changed to:', e.target.value);
+    });
+</script>
+
+</body>
+</html>
