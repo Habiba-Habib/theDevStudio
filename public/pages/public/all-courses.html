@@ -16,7 +16,7 @@
 
     <section class="hero-section">
       <h1 class="hero-title">Explore All Courses</h1>
-      <p class="hero-subtitle">Discover <span id="course-count">6</span> expert-led courses to advance your career</p>
+     <p class="hero-subtitle">Discover <span id="course-count"><%= courses.length %></span> expert-led courses to advance your career</p>
     </section>
 
     <section class="search-filter-section">
@@ -45,202 +45,43 @@
       </div>
     </section>
 
-    <p class="showing-count" id="showingCount">Showing 6 courses</p>
+    <p class="showing-count" id="showingCount">Showing <%= courses.length %> courses</p>
 
     <section class="course-grid">
 
-      <!-- Card 1 -->
-      <article class="course-card" data-category="Web Development" data-level="Beginner">
+      <!-- Card -->
+       <% courses.forEach(function(course) { %>
+      <article class="course-card" data-category="<%= course.category %>" data-level="<%= course.level %>">
         <div class="card-image-wrapper">
-          <img src="../../../images/all-courses-1.jpg" alt="Web Development" class="card-image" />
-          <span class="card-badge badge-beginner">Beginner</span>
+          <img src="<%= course.image %>" alt="<%= course.title %>" class="card-image" />
+          <span class="badge badge-<%= course.level.toLowerCase() %>"><%= course.level %></span>
         </div>
         <div class="card-body">
           <div class="card-meta">
-            <span class="card-category">Web Development</span>
+            <span class="card-category"><%= course.category %></span>
             <span class="card-dot">•</span>
-            <span class="card-hours">40 hours</span>
-          </div>
-          <h2 class="card-title">Complete Web Development Bootcamp</h2>
-          <p class="card-desc">Learn full-stack web development from zero to hero</p>
-          <p class="card-author">By Dr. Sarah Miller</p>
+           <span class="card-hours"><%= course.hours %> hours</span>
+             </div>
+          <h2 class="card-title"><%= course.title %></h2>
+          <p class="card-desc"><%= course.description %></p>
+          <p class="card-author">By <%= course.author %></p>
           <div class="card-stats">
             <span class="card-rating">
               <i class="fa-solid fa-star"></i>
-              4.8 <span class="rating-count">(12,453)</span>
+              <%= course.rating %> <span class="rating-count">(<%= course.students.toLocaleString() %>)</span>
             </span>
             <span class="card-students">
               <i class="fa-solid fa-users"></i>
-              12,453
+              <%= course.students.toLocaleString() %>
             </span>
           </div>
           <div class="card-footer">
-            <span class="card-price">$49.99</span>
-            <a href="course-description.html" class="btn-view-details">View Details</a>
+           <span class="card-price">$<%= course.price %></span>
+            <a href="/course-description" class="btn-view-details">View Details</a>
           </div>
         </div>
       </article>
-
-      <!-- Card 2 -->
-      <article class="course-card" data-category="Web Development" data-level="Advanced">
-        <div class="card-image-wrapper">
-          <img src="../../../images/all-courses-2.jpg" alt="React Development" class="card-image" />
-          <span class="badge badge-advanced">Advanced</span>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="card-category">Web Development</span>
-            <span class="card-dot">•</span>
-            <span class="card-hours">35 hours</span>
-          </div>
-          <h2 class="card-title">Advanced React Development</h2>
-          <p class="card-desc">Master advanced React concepts and patterns</p>
-          <p class="card-author">By Mike Chen</p>
-          <div class="card-stats">
-            <span class="card-rating">
-              <i class="fa-solid fa-star"></i>
-              4.9 <span class="rating-count">(8,932)</span>
-            </span>
-            <span class="card-students">
-              <i class="fa-solid fa-users"></i>
-              8,932
-            </span>
-          </div>
-          <div class="card-footer">
-            <span class="card-price">$69.99</span>
-            <a href="course-description.html" class="btn-view-details">View Details</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Card 3 -->
-      <article class="course-card" data-category="Data Science" data-level="Intermediate">
-        <div class="card-image-wrapper">
-          <img src="../../../images/all-courses-3.jpg" alt="Data Science" class="card-image" />
-          <span class="badge badge-intermediate">Intermediate</span>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="card-category card-category--teal">Data Science</span>
-            <span class="card-dot">•</span>
-            <span class="card-hours">45 hours</span>
-          </div>
-          <h2 class="card-title">Python for Data Science</h2>
-          <p class="card-desc">Master Python and data analysis</p>
-          <p class="card-author">By Dr. Emily Watson</p>
-          <div class="card-stats">
-            <span class="card-rating">
-              <i class="fa-solid fa-star"></i>
-              4.7 <span class="rating-count">(15,678)</span>
-            </span>
-            <span class="card-students">
-              <i class="fa-solid fa-users"></i>
-              15,678
-            </span>
-          </div>
-          <div class="card-footer">
-            <span class="card-price">$59.99</span>
-            <a href="course-description.html" class="btn-view-details">View Details</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Card 4 -->
-      <article class="course-card" data-category="Design" data-level="Beginner">
-        <div class="card-image-wrapper">
-          <img src="../../../images/all-courses-4.jpg" alt="UI/UX Design" class="card-image" />
-          <span class="badge badge-beginner">Beginner</span>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="card-category card-category--teal">Design</span>
-            <span class="card-dot">•</span>
-            <span class="card-hours">30 hours</span>
-          </div>
-          <h2 class="card-title">UI/UX Design Masterclass</h2>
-          <p class="card-desc">Create stunning user experiences</p>
-          <p class="card-author">By Lisa Park</p>
-          <div class="card-stats">
-            <span class="card-rating">
-              <i class="fa-solid fa-star"></i>
-              4.8 <span class="rating-count">(9,876)</span>
-            </span>
-            <span class="card-students">
-              <i class="fa-solid fa-users"></i>
-              9,876
-            </span>
-          </div>
-          <div class="card-footer">
-            <span class="card-price">$54.99</span>
-            <a href="course-description.html" class="btn-view-details">View Details</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Card 5 -->
-      <article class="course-card" data-category="Mobile Development" data-level="Intermediate">
-        <div class="card-image-wrapper">
-          <img src="../../../images/all-courses-5.jpg" alt="Mobile Development" class="card-image" />
-          <span class="badge badge-intermediate">Intermediate</span>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="card-category card-category--teal">Mobile Development</span>
-            <span class="card-dot">•</span>
-            <span class="card-hours">38 hours</span>
-          </div>
-          <h2 class="card-title">Mobile App Development with React Native</h2>
-          <p class="card-desc">Create mobile apps with React Native</p>
-          <p class="card-author">By David Kumar</p>
-          <div class="card-stats">
-            <span class="card-rating">
-              <i class="fa-solid fa-star"></i>
-              4.6 <span class="rating-count">(7,234)</span>
-            </span>
-            <span class="card-students">
-              <i class="fa-solid fa-users"></i>
-              7,234
-            </span>
-          </div>
-          <div class="card-footer">
-            <span class="card-price">$64.99</span>
-            <a href="course-description.html" class="btn-view-details">View Details</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Card 6 -->
-      <article class="course-card" data-category="Machine Learning" data-level="Advanced">
-        <div class="card-image-wrapper">
-          <img src="../../../images/all-courses-6.jpg" alt="Machine Learning" class="card-image" />
-          <span class="badge badge-advanced">Advanced</span>
-        </div>
-        <div class="card-body">
-          <div class="card-meta">
-            <span class="card-category card-category--teal">Machine Learning</span>
-            <span class="card-dot">•</span>
-            <span class="card-hours">50 hours</span>
-          </div>
-          <h2 class="card-title">Machine Learning Fundamentals</h2>
-          <p class="card-desc">Master ML and AI fundamentals</p>
-          <p class="card-author">By Dr. James Wilson</p>
-          <div class="card-stats">
-            <span class="card-rating">
-              <i class="fa-solid fa-star"></i>
-              4.9 <span class="rating-count">(11,245)</span>
-            </span>
-            <span class="card-students">
-              <i class="fa-solid fa-users"></i>
-              11,245
-            </span>
-          </div>
-          <div class="card-footer">
-            <span class="card-price">$79.99</span>
-            <a href="course-description.html" class="btn-view-details">View Details</a>
-          </div>
-        </div>
-      </article>
-
+        <% }); %>
     </section>
 
     <p class="no-results hidden" id="noResults">No courses found matching your criteria.</p>
