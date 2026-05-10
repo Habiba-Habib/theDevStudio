@@ -1,8 +1,5 @@
-function renderFooter() {
-  const footer = document.createElement('footer');
-  footer.className = 'footer';
 
-  footer.innerHTML = `
+<footer class="footer">
     <div class="footer-grid">
 
       <div class="footer-brand">
@@ -16,21 +13,21 @@ function renderFooter() {
       <div class="footer-col">
         <h4 class="footer-heading">Quick Links</h4>
         <ul class="footer-links">
-          <li><a href="/index.html">Home</a></li>
-          <li><a href="/public/pages/public/all-courses.html">All Courses</a></li>
-          <li><a href="/public/pages/public/coding-challenges.html">Challenges</a></li>
-          <li><a href="/public/pages/public/login.html">Login</a></li>
-          <li><a href="/public/pages/public/signup.html">Sign Up</a></li>
+          <li><a href="/">Home</a></li>
+          <li><a href="/all-courses">All Courses</a></li>
+          <li><a href="/coding-challenges">Challenges</a></li>
+          <li><a href="/login">Login</a></li>
+          <li><a href="/signup">Sign Up</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
         <h4 class="footer-heading">Categories</h4>
         <ul class="footer-links">
-          <li>Web Development</a></li>
-          <li>Data Science</a></li>
-          <li>Mobile Development</a></li>
-          <li>Machine Learning</a></li>
+          <li><a href="/courses?category=web-development">Web Development</a></li>
+          <li><a href="/courses?category=data-science">Data Science</a></li>
+          <li><a href="/courses?category=mobile-development">Mobile Development</a></li>
+          <li><a href="/courses?category=machine-learning">Machine Learning</a></li>
         </ul>
       </div>
 
@@ -50,11 +47,4 @@ function renderFooter() {
    
       <p>© 2026 TheDevStudio. All rights reserved.</p>
     </div>
-  `;
-
-  document.body.appendChild(footer);
-}
-
-renderFooter();
-
-
+    </footer>

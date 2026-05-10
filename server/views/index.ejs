@@ -4,21 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TheDevStudio</title>
- <link rel="stylesheet" href="/../public/css/home.css">
-<link rel="stylesheet" href="/public/css/navbar-css.css">
+ <link rel="stylesheet" href="/css/home.css">
+<link rel="stylesheet" href="/css/navbar-css.css">
  
-<link rel="stylesheet" href="/public/css/footer.css">
+<link rel="stylesheet" href="/css/footer.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">  
 
 </head>
 <body>
-    <header>
-    <!--NAVBAR PLACEHOLDER - BUILT BY (ZINA)-->
-    <div id="navbar"></div>
-    </header>   
+  <%- include('partials/navbar') %>
 
     <main>
-                  <!--Hero Section-->
+      <!--Hero Section-->
         <section class="hero"> 
             <div class="container">
 
@@ -34,7 +31,7 @@
 
             <div class="buttons">
                <button class="hero-buttn1">
-                <a href="/../../public/pages/public/all-courses.html">
+                <a href="/all-courses">
                   <span class="browse-text">Browse Courses
                    <i class="fa-solid fa-right-long"></i>                
                   </span>
@@ -42,7 +39,7 @@
                </button>
 
                <button class="hero-buttn2">
-                  <a href="/../../../public/pages/public/coding-challenges.html">
+                  <a href="/coding-challenges">
                     <span class="btn-icon">
                          <i class="fa-solid fa-code"></i>
                     </span>
@@ -82,7 +79,7 @@
 
         </section>
         
-           <!--FEATURED COURSES SECTION-->
+          
         <section class="featured-courses">
             <h1 class="section-title">Featured Courses</h1>
             <p class="courses-tagline">Start learning with our most popular courses</p>
@@ -90,7 +87,7 @@
             <div class="courses-grid">
               <article class="courses-card">
                  <div class="courses-image">
-                 <img src="/../images/all-courses-1.jpg" alt="courses">
+                 <img src="/images/all-courses-1.jpg" alt="courses">
                  <span class="badge">Beginner</span>
                  </div>
 
@@ -113,14 +110,14 @@
 
             <div class="card-footer">
                 <span class="price">$49.99</span>
-          <button class="btn-details"><a href="/../../../public/pages/public/course-description.html">View Details</a></button>
+          <button class="btn-details"><a href="/course-description/1">View Details</a></button>
             </div>
             </div>
             </article>
 
                <article class="courses-card">
                  <div class="courses-image">
-                 <img src="/../images/all-courses-2.jpg" alt="courses">
+                 <img src="/images/all-courses-2.jpg" alt="courses">
                  <span class="badge">Intermediate</span>
                  </div>
 
@@ -141,13 +138,13 @@
             </div>
             <div class="card-footer">
                 <span class="price">$69.99</span>
-          <button class="btn-details"><a href="/../../../public/pages/public/course-description.html">View Details</a></button>
+          <button class="btn-details"><a href="/course-description/2">View Details</a></button>
         </div>
         </div>
         </article>
      <article class="courses-card">
                  <div class="courses-image">
-                 <img src="/../images/all-courses-3.jpg" alt="courses">
+                 <img src="/images/all-courses-3.jpg" alt="courses">
                  <span class="badge">Advanced</span>
                  </div>
 
@@ -168,7 +165,7 @@
             </div>
             <div class="card-footer">
                 <span class="price">$69.99</span>
-          <button class="btn-details"> <a href="/../../../public/pages/public/course-description.html">View Details</a></button>
+          <button class="btn-details"> <a href="/course-description/3">View Details</a></button>
         </div> 
         </div>
       
@@ -176,17 +173,17 @@
             </div>
         </section>
        <div class="view-all-container">
-          <a href="/../../../public/pages/public/all-courses.html" class="view-all">View All Courses →</a>
+          <a href="/all-courses" class="view-all">View All Courses →</a>
         </div>
 
-                           <!--CHALLENGES SECTION-->
+          
 
         <section class="challenges">
          <div class="challenges-content">
             <span class="challenge"> 🏆 Challenge Yourself</span>
             <h1 style="color:white; font-family: 'Inter' , sans-serif;">Practice with Real Coding Challenges</h1>
             <p style="color: #99A1AF; font-family: 'Inter' , sans-serif;">Test your skills with hundreds of coding challenges. Earn points, climb the leaderboard, and prove your expertise.</p>
-            <button class="challenge-btn"><a href="/../../../public/pages/public/coding-challenges.html">Explore Challenges 
+            <button class="challenge-btn"><a href="/coding-challenges">Explore Challenges 
                 <span style="color:orange"><i class="fa-solid fa-bolt"></i></span>
             </a></button>
          </div>
@@ -285,7 +282,7 @@
   <div class="start-learning">
     <h1 >Ready to Start Learning?</h1>
     <p >Join thousands of students achieving their goals every day.</p>
-    <button class="learning-btn"><a href="/../../../public/pages/public/signup.html"> Get Started for Free 
+    <button class="learning-btn"><a href="/signup"> Get Started for Free 
       <span class="arrow-icon"> <i class="fa-solid fa-right-long"></i> </a> </button></span>
        
   </div>
@@ -296,6 +293,7 @@
 
 
     </main>
+    <%- include('partials/footer') %>
     
    <script src="/public/js/footer.js"></script>
   <script>
