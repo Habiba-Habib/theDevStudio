@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Dashboard</title>
+  <title><%= admin.name %>'s Dashboard</title>
   <link rel="stylesheet" href="../../../public/css/dashboards.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="/public/css/navbar-css.css">
@@ -16,8 +16,8 @@
 
     <!-- Header -->
     <section class="ad-header">
-      <h1 class="ad-title">Admin Dashboard</h1>
-      <p class="ad-subtitle">Platform overview and analytics</p>
+      <h1 class="ad-title">Welcome, <%= admin.name %>!<</h1>
+      <p class="ad-subtitle"><%= admin.subtitle %></p>
     </section>
 
     <!-- Stat Cards -->
@@ -28,9 +28,9 @@
           <div class="stat-icon stat-icon--pink">
             <i class="fa-solid fa-users"></i>
           </div>
-          <span class="ad-stat-change">↗ +8.2%</span>
+          <span class="ad-stat-change">↗ <%= stats.usersChange %></span>
         </div>
-        <div class="stat-value">52,345</div>
+        <div class="stat-value"><%= stats.totalUsers.toLocaleString() %></div>
         <div class="stat-label">Total Users</div>
       </div>
 
@@ -39,9 +39,9 @@
           <div class="stat-icon stat-icon--yellow">
             <i class="fa-solid fa-book-open"></i>
           </div>
-          <span class="ad-stat-change">↗ +3 this month</span>
+          <span class="ad-stat-change">↗ <%= stats.coursesChange %></span>
         </div>
-        <div class="stat-value">6</div>
+        <div class="stat-value"><%= stats.totalCourses %></div>
         <div class="stat-label">Total Courses</div>
       </div>
 
@@ -50,9 +50,9 @@
           <div class="stat-icon stat-icon--teal">
             <i class="fa-solid fa-dollar-sign"></i>
           </div>
-          <span class="ad-stat-change">↗ +22.5%</span>
+          <span class="ad-stat-change">↗ <%= stats.revenueChange %></span>
         </div>
-        <div class="stat-value">$285K</div>
+        <div class="stat-value">$<%= stats.totalRevenue %></div>
         <div class="stat-label">Total Revenue</div>
       </div>
 
@@ -61,9 +61,9 @@
           <div class="stat-icon stat-icon--purple">
             <i class="fa-solid fa-code"></i>
           </div>
-          <span class="ad-stat-change">↗ +2 this week</span>
+          <span class="ad-stat-change">↗ <%= stats.challengesChange %></span>
         </div>
-        <div class="stat-value">6</div>
+        <div class="stat-value"><%= stats.totalChallenges %></div>
         <div class="stat-label">Total Challenges</div>
       </div>
 
@@ -137,39 +137,15 @@
     <!-- Recent Activity -->
     <section class="ad-chart-card ad-activity-card">
       <h2 class="section-title">Recent Activity</h2>
-
+      <% recentActivity.forEach(function(activity) { %>
       <div class="ad-activity-item">
-        <img src="../../../images/avatars/avatar1g.png"  class="ad-avatar" alt="avatar" />
+        <img src="<%= activity.avatar %>"  class="ad-avatar" alt="avatar" />
         <div class="ad-activity-text">
-          <p><strong>Emma Smith</strong> completed <span class="ad-activity-highlight ad-highlight--teal">Web Development Bootcamp</span></p>
-          <span class="ad-activity-time">2 hours ago</span>
+          <p><strong><%= activity.userName %></strong>  <%= activity.action %> <span class="ad-activity-highlight ad-highlight--teal">Web Development Bootcamp</span></p>
+          <span class="ad-activity-highlight ad-highlight--<%= activity.highlightColor %>"><%= activity.highlight %></span>
         </div>
       </div>
-
-      <div class="ad-activity-item">
-        <img src="../../../images/avatars/avatar5g.png" class="ad-avatar" alt="avatar" />
-        <div class="ad-activity-text">
-          <p><strong>Emma Davis</strong> enrolled in <span class="ad-activity-highlight ad-highlight--teal">Python for Data Science</span></p>
-          <span class="ad-activity-time">5 hours ago</span>
-        </div>
-      </div>
-
-      <div class="ad-activity-item">
-        <img src="../../../images/avatars/avatar7b.png" class="ad-avatar" alt="avatar" />
-        <div class="ad-activity-text">
-          <p><strong>John Miller</strong> earned <span class="ad-activity-highlight ad-highlight--yellow">300 points from challenge</span></p>
-          <span class="ad-activity-time">1 day ago</span>
-        </div>
-      </div>
-
-      <div class="ad-activity-item">
-        <img src="../../../images/avatars/avatar3g.png" class="ad-avatar" alt="avatar" />
-        <div class="ad-activity-text">
-          <p><strong>Dr. Sarah Miller</strong> created <span class="ad-activity-highlight ad-highlight--teal">Advanced React Course</span></p>
-          <span class="ad-activity-time">2 days ago</span>
-        </div>
-      </div>
-
+      <% }); %>
     </section>
 
     <button class="fp-help-btn">?</button>
