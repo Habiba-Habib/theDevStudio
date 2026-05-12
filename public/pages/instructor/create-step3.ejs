@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create New Course – Pricing</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/create-step3-css.css">
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+  <h1 class="course-title">Create New Course</h1>
+  <p class="course-description">Share your knowledge with students worldwide</p>
+
+  <!-- STEPPER -->
+  <div class="stepper">
+    <div class="step active"><div class="step-circle">1</div></div>
+    <div class="step-line done"></div>
+    <div class="step active"><div class="step-circle">2</div></div>
+    <div class="step-line done"></div>
+    <div class="step active"><div class="step-circle">3</div></div>
+  </div>
+
+  <!-- FORM (IMPORTANT) -->
+  <form action="/courses/publish" method="POST">
+
+    <div class="learn-box">
+
+      <div class="learn-grid">
+
+        <div class="form-group">
+          <label>Course Price ($) *</label>
+          <input type="number" class="form-input" name="price" id="price-input" placeholder="49.99" required>
+        </div>
+
+        <div class="form-group">
+          <label>Course Duration *</label>
+          <input type="text" class="form-input" name="duration" placeholder="e.g., 40 hours" required>
+        </div>
+
+      </div>
+
+      <!-- PREVIEW -->
+      <div class="preview-card">
+        <h3>Course Preview</h3>
+
+        <div class="preview-row">
+          <span>Title:</span>
+          <span><%= courseTitle || "Not set" %></span>
+        </div>
+
+        <div class="preview-row">
+          <span>Category:</span>
+          <span><%= category || "Not set" %></span>
+        </div>
+
+        <div class="preview-row">
+          <span>Level:</span>
+          <span><%= level || "Not set" %></span>
+        </div>
+
+        <div class="preview-row">
+          <span>Price:</span>
+          <span id="preview-price">$0</span>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="btn-row">
+      <a href="/courses/create/step2" class="btn-back">Back</a>
+      <button type="submit" class="btn-publish">Publish Course</button>
+    </div>
+
+  </form>
+
+</div>
+
+<script src="/js/create-step3-js.js"></script>
+
+</body>
+</html>

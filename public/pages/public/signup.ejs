@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Account – EduPlatform</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/signup.css"/>
+  <link rel="stylesheet" href="/css/navbar-css.css">
+</head>
+
+<body>
+
+<div class="signup-layout">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="left-content">
+      <h1>
+        Join<br>
+        <span class="gradient">EduPlatform Today</span>
+      </h1>
+      <p>Start your journey to becoming a skilled professional.</p>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="form-card">
+
+      <h2>Create Account</h2>
+      <p class="subtitle">Sign up to start your learning journey</p>
+
+      <!-- ROLE -->
+      <div class="role-label">I want to join as</div>
+      <div class="role-buttons">
+        <button class="btn-role active" type="button">Student</button>
+        <button class="btn-role" type="button">Instructor</button>
+      </div>
+
+      <!-- NAME -->
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" class="form-input" id="name" placeholder="John Doe">
+      </div>
+
+      <!-- EMAIL -->
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" class="form-input" id="email" placeholder="you@example.com">
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-input" id="password" placeholder="Create password">
+      </div>
+
+      <!-- TERMS -->
+      <div class="terms-row">
+        <input type="checkbox" id="terms">
+        <label for="terms">
+          I agree to the Terms of Service
+        </label>
+      </div>
+
+      <!-- BUTTON -->
+      <button class="btn-create" id="btn-create">Create Account</button>
+
+      <!-- LOGIN -->
+      <div class="signin-row">
+        Already have an account?
+        <a href="/login">Sign In</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- JS -->
+<script src="/js/signup.js"></script>
+<script src="/js/main-navbar.js"></script>
+
+</body>
+</html>

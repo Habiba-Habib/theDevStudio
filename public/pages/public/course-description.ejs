@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title><%= course.title %> – Course Description</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/course-description-css.css">
+  <link rel="stylesheet" href="/css/navbar-css.css">
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+  <!-- LEFT -->
+  <div class="left-col">
+
+    <!-- BADGES -->
+    <div class="badges">
+      <span class="badge badge-frosted-blue"><%= course.category %></span>
+      <span class="badge badge-Dragonfruit"><%= course.level %></span>
+    </div>
+
+    <!-- TITLE -->
+    <h1 class="course-title"><%= course.title %></h1>
+
+    <p class="course-description">
+      <%= course.shortDescription %>
+    </p>
+
+    <!-- META -->
+    <div class="meta-row">
+      <span class="rating">
+        <i class="fa-solid fa-star" style="color: rgb(255, 212, 59);"></i>
+        <%= course.rating || 4.8 %>
+        <span class="rating-count">(<%= course.students?.length || 0 %> students)</span>
+      </span>
+
+      <span class="meta-item">
+        <i class="fa-regular fa-clock"></i> <%= course.duration || "40 hours" %>
+      </span>
+
+      <span class="meta-item">
+        <i class="fa-solid fa-people-group"></i>
+        <%= course.students?.length || 0 %> enrolled
+      </span>
+    </div>
+
+    <!-- INSTRUCTOR -->
+    <div class="Instructor">
+      <div class="avatar">
+        <img src="<%= course.instructor?.avatar || '/images/default-avatar.png' %>" alt="Instructor">
+      </div>
+      <div>
+        <div class="title">Instructor</div>
+        <div class="Instrutor-Name">
+          <%= course.instructor?.name || "Unknown Instructor" %>
+        </div>
+      </div>
+    </div>
+
+    <hr class="horizontal-strip">
+
+    <!-- IMAGE -->
+    <img class="preview-image" src="<%= course.thumbnail %>" alt="Course Preview">
+
+    <!-- WHAT YOU'LL LEARN -->
+    <div class="learn-box">
+      <h3 class="learn-title">What you'll learn</h3>
+
+      <div class="learn-grid">
+        <% course.learningOutcomes.forEach(outcome => { %>
+          <div class="learn-item">
+            <span class="check">✔</span>
+            <%= outcome %>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+
+    <!-- CURRICULUM -->
+    <h3 class="learn-title">Course Curriculum</h3>
+
+    <% course.sections.forEach(section => { %>
+      <div class="learn-box">
+
+        <div class="learn-box-line1">
+          <span class="course-c-title"><%= section.title %></span>
+          <span class="lessons"><%= section.lessons.length %> lessons</span>
+        </div>
+
+        <div class="learn-list">
+          <% section.lessons.forEach(lesson => { %>
+            <div class="learn-lesson">
+              <div class="play-button">▷</div>
+              <%= lesson %>
+            </div>
+          <% }) %>
+        </div>
+
+      </div>
+    <% }) %>
+
+    <!-- REVIEWS (static for now) -->
+    <h3 class="learn-title">Student Reviews</h3>
+
+    <div class="learn-box">
+      <div class="learn-box-line1">
+
+        <div class="Instructor">
+          <div class="avatar">
+            <img src="/images/default-avatar.png">
+          </div>
+          <div>
+            <div class="Instructor-Name">John Doe</div>
+            <div class="title">2026-02-15</div>
+          </div>
+        </div>
+
+        <div>
+          <i class="fa-solid fa-star" style="color: rgb(255, 212, 59);"></i> 5
+        </div>
+
+      </div>
+
+      <p class="course-description">
+        Amazing course! Very detailed and easy to follow.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="pricing-card">
+
+      <div class="pricing-top">
+        <div class="price">$<%= course.price %></div>
+        <div class="price-note">One-time payment • Full lifetime access</div>
+
+        <a href="/courses/<%= course._id %>/payment" class="btn-enroll">
+          Enroll
+        </a>
+      </div>
+
+      <hr class="pricing-divider">
+
+      <div class="pricing-features">
+
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-regular fa-clock"></i></div>
+          <div>
+            <div class="feature-title"><%= course.duration || "40 hours" %></div>
+            <div class="feature-sub">Total duration</div>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-signal"></i></div>
+          <div>
+            <div class="feature-title"><%= course.level %></div>
+            <div class="feature-sub">Skill level</div>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fa-solid fa-book-open"></i></div>
+          <div>
+            <div class="feature-title"><%= course.sections.length %> Sections</div>
+            <div class="feature-sub">Course modules</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // simple redirect (NO .html anymore)
+  document.getElementById('enrollBtn')?.addEventListener('click', () => {
+    window.location.href = "/courses/<%= course._id %>/payment";
+  });
+</script>
+
+<script src="/js/main-navbar.js"></script>
+
+</body>
+</html>

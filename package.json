@@ -1,0 +1,25 @@
+{
+  "name": "thedevstudio",
+  "version": "1.0.0",
+  "description": "Our Web development project for university, a coding platform where you can solve challenges as well as learn and take courses",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nadineashmawey/theDevStudio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nadineashmawey/theDevStudio/issues"
+  },
+  "homepage": "https://github.com/nadineashmawey/theDevStudio#readme",
+  "dependencies": {
+    "ejs": "^5.0.2",
+    "express": "^5.2.1"
+  }
+}
