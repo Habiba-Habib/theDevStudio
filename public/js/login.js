@@ -1,67 +1,40 @@
-const roleButtons = document.querySelectorAll(".role-btn");
 const togglePassword = document.getElementById("togglePassword");
 const passwordInput = document.getElementById("password");
 const signinForm = document.getElementById("signinForm");
 const formMessage = document.getElementById("form-message");
 
-let selectedRole = "Student";
+if (togglePassword && passwordInput) {
+  togglePassword.addEventListener("click", () => {
+    const isHidden = passwordInput.type === "password";
 
-roleButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    roleButtons.forEach((btn) => btn.classList.remove("active"));
-    button.classList.add("active");
-    selectedRole = button.dataset.role;
+    passwordInput.type = isHidden ? "text" : "password";
+
+    togglePassword.innerHTML = isHidden
+      ? '<i class="fa-regular fa-eye-slash"></i>'
+      : '<i class="fa-regular fa-eye"></i>';
   });
-});
+}
 
-togglePassword.addEventListener("click", () => {
-  const hidden = passwordInput.type === "password";
-  passwordInput.type = hidden ? "text" : "password";
-  togglePassword.textContent = hidden ? "🙈" : "👁";
-});
+if (signinForm) {
+  signinForm.addEventListener("submit", (e) => {
+    e.preventDefault();
 
+    const email = document.getElementById("email").value.trim();
+    const password = passwordInput.value.trim();
 
+    formMessage.textContent = "";
 
-signinForm.addEventListener("submit", (e) => {
-  e.preventDefault();
+    if (!email || !password) {
+      formMessage.textContent = "Please fill in all fields.";
+      formMessage.style.color = "red";
+      return;
+    }
 
-  const email = document.getElementById("email").value.trim();
-  const password = passwordInput.value.trim();
+    formMessage.textContent = "Signing in...";
+    formMessage.style.color = "#60A3A6";
 
-  // reset message
-  formMessage.textContent = "";
-
-  if (!email || !password) {
-    formMessage.textContent = "Please fill in all fields.";
-    formMessage.style.color = "red";
-    return;
-  }
-
-  formMessage.textContent = "Signing in...";
-  formMessage.style.color = "#60A3A6"; 
-
-  // redirect after short delay
-  setTimeout(() => {
-    redirectUser();
-  }, 50);
-});
-
-
-function redirectUser() {
-    const role = selectedRole.toLowerCase();
-
-  localStorage.setItem("role", role);
-  if (selectedRole === "student") {
-    window.location.href = "/../../../public/pages/student/dashboard.html";
-  } 
-  else if (selectedRole === "instructor") {
-    window.location.href = "/../../../public/pages/instructor/dashboard.html";
-  } 
-  else if (selectedRole === "admin") {
-    window.location.href = "/../../../public/pages/admin/dashboard.html";
-  } 
-  else {
-    formMessage.textContent = "Please select a role.";
-    formMessage.style.color = "red";
-  }
+    setTimeout(() => {
+      window.location.href = "../student/dashboard.html";
+    }, 300);
+  });
 }

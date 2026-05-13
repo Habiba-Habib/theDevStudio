@@ -3,107 +3,194 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Submission Passed</title>
-   <link rel="stylesheet" href="../../css/student.css" />
- <link rel="stylesheet" href="../../css/navbar.css" />
+
+  <link rel="stylesheet" href="/css/student.css" />
+  <link rel="stylesheet" href="/css/navbar.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
+
 <body>
   <div class="page">
     <div class="container">
+
       <div class="breadcrumb">
         <span>Challenges</span>
         <span class="sep">&gt;</span>
-        <span>Two Sum Problem</span>
+
+        <span>
+          <%= challenge && challenge.title ? challenge.title : "Two Sum Problem" %>
+        </span>
+
         <span class="sep">&gt;</span>
         <span class="active">Submission</span>
       </div>
+
       <section class="hero-card">
         <div class="hero-left">
           <div class="hero-icon">✓</div>
+
           <div>
             <h1>All Tests Passed!</h1>
-            <p>5 out of 5 test cases passed</p>
+            <p>
+              <%= submission && submission.passedTests ? submission.passedTests : 5 %>
+              out of
+              <%= submission && submission.totalTests ? submission.totalTests : 5 %>
+              test cases passed
+            </p>
           </div>
         </div>
+
         <div class="hero-right">
-          <!-- Trophy icon visible, yellow, Font Awesome outline style -->
-          <div class="trophy"><i class="fa-regular fa-trophy"></i></div>
-          <div class="points-value">50</div>
+          <div class="trophy">
+            <i class="fa-regular fa-trophy"></i>
+          </div>
+
+          <div class="points-value">
+            <%= challenge && challenge.points ? challenge.points : 50 %>
+          </div>
+
           <div class="points-label">Points Earned</div>
         </div>
       </section>
+
       <div class="main-grid">
+
         <div class="left-column">
+
           <section class="panel">
             <h2>Submission Status</h2>
+
             <div class="status-grid">
               <div class="status-box">
                 <span class="status-label">Language</span>
-                <span class="status-value">JavaScript</span>
+                <span class="status-value">
+                  <%= submission && submission.language ? submission.language : "JavaScript" %>
+                </span>
               </div>
+
               <div class="status-box">
                 <span class="status-label">Status</span>
-                <span class="status-value accepted">Accepted</span>
+                <span class="status-value accepted">
+                  <%= submission && submission.status ? submission.status : "Accepted" %>
+                </span>
               </div>
             </div>
+
             <div class="progress-area">
               <div class="progress-top">
                 <span>Test Cases Passed</span>
-                <span>5/5</span>
+                <span>
+                  <%= submission && submission.passedTests ? submission.passedTests : 5 %>/<%= submission && submission.totalTests ? submission.totalTests : 5 %>
+                </span>
               </div>
+
               <div class="progress-bar">
-                <div class="progress-fill"></div>
+                <div 
+                  class="progress-fill"
+                  style="width: <%= submission && submission.totalTests ? (submission.passedTests / submission.totalTests) * 100 : 100 %>%;"
+                ></div>
               </div>
             </div>
           </section>
+
           <section class="panel">
             <h2>Test Cases</h2>
-            <div class="test-list" id="testList"></div>
+
+            <div class="test-list" id="testList">
+              <% if (typeof testCases !== "undefined" && testCases && testCases.length > 0) { %>
+                <% testCases.forEach(function(testCase, index) { %>
+                  <div class="test-item">
+                    <div>
+                      <strong>Test Case <%= index + 1 %></strong>
+
+                      <% if (testCase.input) { %>
+                        <p>Input: <%= testCase.input %></p>
+                      <% } %>
+
+                      <% if (testCase.expectedOutput) { %>
+                        <p>Expected: <%= testCase.expectedOutput %></p>
+                      <% } %>
+
+                      <% if (testCase.actualOutput) { %>
+                        <p>Output: <%= testCase.actualOutput %></p>
+                      <% } %>
+                    </div>
+
+                    <span class="status-value accepted">
+                      <%= testCase.status || "Passed" %>
+                    </span>
+                  </div>
+                <% }); %>
+              <% } %>
+            </div>
+
             <div class="bottom-actions">
-              <button class="btn btn-outline">Retry Challenge</button>
-              <button class="btn btn-pink">Next Challenge</button>
+              <a 
+                href="/student/challenges/<%= challenge && challenge._id ? challenge._id : "" %>" 
+                class="btn btn-outline"
+              >
+                Retry Challenge
+              </a>
+
+              <a href="/student/challenges" class="btn btn-pink">
+                Next Challenge
+              </a>
             </div>
           </section>
+
         </div>
+
         <aside class="right-column">
           <section class="panel side-panel">
             <h3>Challenge Info</h3>
+
             <div class="info-list">
 
-              <!-- 50 Points / Max Reward — pink lightning bolt -->
               <div class="info-item">
                 <div class="info-icon pink">
                   <i class="fa-solid fa-bolt"></i>
                 </div>
+
                 <div>
-                  <div class="info-main">50 Points</div>
+                  <div class="info-main">
+                    <%= challenge && challenge.points ? challenge.points : 50 %> Points
+                  </div>
                   <div class="info-sub">Max Reward</div>
                 </div>
               </div>
 
-              <!-- Easy / Difficulty — teal "E" letter -->
               <div class="info-item">
-                <div class="info-icon teal">E</div>
+                <div class="info-icon teal">
+                  <%= challenge && challenge.difficulty ? challenge.difficulty.charAt(0).toUpperCase() : "E" %>
+                </div>
+
                 <div>
-                  <div class="info-main">Easy</div>
+                  <div class="info-main">
+                    <%= challenge && challenge.difficulty ? challenge.difficulty : "Easy" %>
+                  </div>
                   <div class="info-sub">Difficulty</div>
                 </div>
               </div>
 
-              <!-- 50 Points / Earned — teal trophy icon -->
               <div class="info-item">
                 <div class="info-icon muted">
                   <i class="fa-regular fa-trophy"></i>
                 </div>
+
                 <div>
-                  <div class="info-main">50 Points</div>
+                  <div class="info-main">
+                    <%= challenge && challenge.points ? challenge.points : 50 %> Points
+                  </div>
                   <div class="info-sub">Earned</div>
                 </div>
               </div>
 
             </div>
+
             <div class="divider"></div>
+
             <div class="achievement-box">
               <div class="achievement-title">
                 <span class="achievement-check">
@@ -111,29 +198,44 @@
                 </span>
                 Achievement Unlocked!
               </div>
+
               <p>You've successfully completed this challenge. Keep up the great work!</p>
             </div>
+
             <div class="divider"></div>
+
             <div class="performance">
               <h4>Performance</h4>
+
               <div class="performance-row">
                 <span>Accuracy</span>
-                <span>100%</span>
+                <span>
+                  <%= submission && submission.accuracy ? submission.accuracy : "100%" %>
+                </span>
               </div>
+
               <div class="performance-row">
                 <span>Avg. Execution Time</span>
-                <span class="highlight">11ms</span>
+                <span class="highlight">
+                  <%= submission && submission.executionTime ? submission.executionTime : "11ms" %>
+                </span>
               </div>
+
               <div class="performance-row">
                 <span>Memory Usage</span>
-                <span class="muted-blue">42.3 MB</span>
+                <span class="muted-blue">
+                  <%= submission && submission.memoryUsage ? submission.memoryUsage : "42.3 MB" %>
+                </span>
               </div>
             </div>
+
           </section>
         </aside>
+
       </div>
     </div>
   </div>
-  <script src="../../js/student.js"></script>
+
+  <script src="/js/student.js"></script>
 </body>
 </html>
