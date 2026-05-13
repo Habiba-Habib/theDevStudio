@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>EduPlatform | Payment Successful</title>
+
+  <link rel="stylesheet" href="/css/student.css" />
+  <link rel="stylesheet" href="/css/navbar-css.css">
+</head>
+
+<body>
+
+  <main class="page">
+    <section class="payment-layout">
+
+      <section class="payment-card" style="max-width: 650px; margin: 0 auto; text-align: center;">
+
+        <div class="payment-header" style="justify-content: center;">
+          <div class="payment-icon">✓</div>
+          <div>
+            <h2>Payment Successful</h2>
+            <p>Your enrollment has been completed successfully.</p>
+          </div>
+        </div>
+
+        <p class="description">
+          You now have lifetime access to this course. You can start learning immediately from your dashboard.
+        </p>
+
+        <% if (typeof course !== "undefined" && course) { %>
+          <div class="summary-box">
+            <div class="summary-row">
+              <span>Course</span>
+              <span><%= course.title || "Course" %></span>
+            </div>
+
+            <div class="summary-row">
+              <span>Instructor</span>
+              <span><%= course.instructorName || course.author || "Instructor" %></span>
+            </div>
+
+            <div class="summary-row total">
+              <span>Amount Paid</span>
+              <span>
+                $<%= course.price ? Number(course.price).toFixed(2) : "0.00" %>
+              </span>
+            </div>
+          </div>
+        <% } else { %>
+          <div class="summary-box">
+            <div class="summary-row total">
+              <span>Status</span>
+              <span>Enrollment Confirmed</span>
+            </div>
+          </div>
+        <% } %>
+
+        <a 
+          href="<%= typeof course !== 'undefined' && course && course._id ? '/student/course/' + course._id : '/student/my-courses' %>" 
+          class="confirm-btn" 
+          style="display: inline-block; text-decoration: none; margin-top: 20px;"
+        >
+          Go to Course
+        </a>
+
+        <br />
+
+        <a href="/student/my-courses" class="back-link">
+          ← Back to my courses
+        </a>
+
+      </section>
+
+    </section>
+  </main>
+
+  <script src="/js/student.js"></script>
+  <script src="/js/main-navbar.js"></script>
+</body>
+</html>
