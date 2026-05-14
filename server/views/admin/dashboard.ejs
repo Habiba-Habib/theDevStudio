@@ -16,7 +16,7 @@
 
     <!-- Header -->
     <section class="ad-header">
-      <h1 class="ad-title">Welcome, <%= admin.name %>!<</h1>
+      <h1 class="ad-title">Welcome, <%= admin.name %>!</h1>
       <p class="ad-subtitle"><%= admin.subtitle %></p>
     </section>
 
@@ -117,18 +117,18 @@
             <i class="fa-solid fa-users ad-action-icon ad-icon--pink"></i>
             <span>Manage Users</span>
           </a>
-          <a href="#" class="ad-action-btn">
-            <i class="fa-solid fa-book-open ad-action-icon ad-icon--yellow"></i>
-            <span>Manage Courses</span>
-          </a>
-          <a href="#" class="ad-action-btn">
-            <i class="fa-solid fa-code ad-action-icon ad-icon--teal"></i>
-            <span>Manage Challenges</span>
-          </a>
-          <a href="#" class="ad-action-btn">
-            <i class="fa-solid fa-arrow-trend-up ad-action-icon ad-icon--pink-light"></i>
-            <span>View Analytics</span>
-          </a>
+          <a href="/admin/users" class="ad-action-btn">
+          <i class="fa-solid fa-users ad-action-icon ad-icon--pink"></i>
+          <span>Manage Users</span>
+        </a>
+        <a href="#" class="ad-action-btn">
+          <i class="fa-solid fa-book-open ad-action-icon ad-icon--yellow"></i>
+          <span>Manage Courses</span>
+        </a>
+        <a href="/admin/manage-challenges" class="ad-action-btn">
+          <i class="fa-solid fa-code ad-action-icon ad-icon--teal"></i>
+          <span>Manage Challenges</span>
+        </a>
         </div>
       </div>
 
