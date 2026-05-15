@@ -11,6 +11,7 @@ connectDB();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 app.use(session({                   
   secret: 'yourSecretKey',
   resave: false,
@@ -27,6 +28,28 @@ app.get("/", (req, res) => {
   res.render("home");
 });
 
+/* =========================
+   ✅ ADDED ONLY BELOW
+   ========================= */
+
+// auth routes (LOGIN + SIGNUP)
+const authRoutes = require("./routes/authRoutes");
+app.use("/auth", authRoutes);
+
+// optional: session debug (you can remove later)
+app.get("/me", (req, res) => {
+  res.json(req.session.user || null);
+});
+
+// protect middleware (optional but useful)
+function requireLogin(req, res, next) {
+  if (!req.session.user) {
+    return res.status(401).json({ message: "Not logged in" });
+  }
+  next();
+}
+
+// example protected route wrapper (NOT changing your existing routes)
 app.use('/challenges', challengeRoutes);
 
 app.listen(3000, () => {
