@@ -4,6 +4,7 @@ const path = require("path");
 const session = require('express-session'); // add this
 const connectDB = require("./config/db");
 const challengeRoutes = require('./routes/challenges');
+const studentRoutes = require("./routes/studentRoutes");
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
+app.use("/student", studentRoutes);
 
 
 app.set("view engine", "ejs");

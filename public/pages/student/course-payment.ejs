@@ -76,7 +76,8 @@
           </div>
         </div>
 
-        <form action="/student/course-payment/<%= course._id %>" method="POST">
+       <form action="/student/payment/<%= course._id %>" method="POST">
+        <input type="hidden" name="paymentMethod" value="card">
 
           <div class="field-group">
             <label for="cardName">Cardholder Name</label>
