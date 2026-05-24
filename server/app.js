@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: "devstudiosecret",
   resave: false,
   saveUninitialized: false
 }));
@@ -41,7 +41,7 @@ app.get("/me", (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).render("public/error-404");
+  res.status(404).render("error-404");
 });
 
 app.listen(3000, () => {
