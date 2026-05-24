@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>My Courses</title>
+
+  <link rel="stylesheet" href="/css/my-courses.css" />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+</head>
+
+<body>
+  <main class="page">
+
+    <section class="header">
+      <h1>My Courses</h1>
+      <p>Track your learning progress</p>
+    </section>
+
+    <section class="stats">
+      <button class="stat-card" type="button" onclick="window.location.href='/student/my-courses'">
+        <div class="stat-icon pink-icon">
+          <i class="fa-solid fa-book-open"></i>
+        </div>
+
+        <div>
+          <h3>
+            <%= typeof totalCourses !== "undefined" ? totalCourses : 4 %>
+          </h3>
+          <p>Total Courses</p>
+        </div>
+      </button>
+
+      <button class="stat-card" type="button" onclick="window.location.href='/student/my-courses'">
+        <div class="stat-icon yellow-icon">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+        </div>
+
+        <div>
+          <h3>
+            <%= typeof inProgressCourses !== "undefined" ? inProgressCourses : 3 %>
+          </h3>
+          <p>In Progress</p>
+        </div>
+      </button>
+
+      <button class="stat-card" type="button" onclick="window.location.href='/student/my-courses'">
+        <div class="stat-icon teal-icon">
+          <i class="fa-solid fa-award"></i>
+        </div>
+
+        <div>
+          <h3>
+            <%= typeof completedCourses !== "undefined" ? completedCourses : 1 %>
+          </h3>
+          <p>Completed</p>
+        </div>
+      </button>
+
+      <button class="stat-card" type="button" onclick="window.location.href='/student/leaderboard'">
+        <div class="stat-icon purple-icon">
+          <i class="fa-solid fa-bullseye"></i>
+        </div>
+
+        <div>
+          <h3>
+            <%= typeof avgProgress !== "undefined" ? avgProgress : "74%" %>
+          </h3>
+          <p>Avg Progress</p>
+        </div>
+      </button>
+    </section>
+
+    <section class="tabs">
+      <button class="tab active" type="button" data-filter="ongoing">
+        Ongoing (<%= typeof inProgressCourses !== "undefined" ? inProgressCourses : 3 %>)
+      </button>
+
+      <button class="tab" type="button" data-filter="completed">
+        Completed (<%= typeof completedCourses !== "undefined" ? completedCourses : 1 %>)
+      </button>
+    </section>
+
+    <section class="courses" id="coursesContainer">
+      <% if (typeof courses !== "undefined" && courses && courses.length > 0) { %>
+        <% courses.forEach(function(course) { %>
+
+          <article class="course-card" data-status="<%= course.status || 'ongoing' %>">
+            <div 
+              class="course-image"
+              <% if (course.image) { %>
+                style="background-image: url('<%= course.image %>');"
+              <% } %>
+            ></div>
+
+            <div class="course-content">
+              <div class="course-top">
+                <span class="course-status <%= course.status || 'ongoing' %>">
+                  <%= course.status === "completed" ? "Completed" : "Ongoing" %>
+                </span>
+
+                <span class="course-progress-text">
+                  <%= course.progress !== undefined ? course.progress : 0 %>%
+                </span>
+              </div>
+
+              <h3><%= course.title || "Course Title" %></h3>
+
+              <p class="course-instructor">
+                By <%= course.instructorName || course.author || "Instructor" %>
+              </p>
+
+              <p class="course-description">
+                <%= course.description || "Continue learning and improving your skills." %>
+              </p>
+
+              <div class="progress-bar">
+                <div 
+                  class="progress-fill"
+                  style="width: <%= course.progress !== undefined ? course.progress : 0 %>%;"
+                ></div>
+              </div>
+
+              <div class="course-footer">
+                <span>
+                  <i class="fa-regular fa-clock"></i>
+                  <%= course.duration || "12 hours" %>
+                </span>
+
+                <a 
+                  href="/student/course/<%= course._id || course.id || '' %>" 
+                  class="continue-btn"
+                >
+                  <%= course.status === "completed" ? "Review Course" : "Continue" %>
+                </a>
+              </div>
+            </div>
+          </article>
+
+        <% }); %>
+      <% } %>
+    </section>
+
+  </main>
+
+  <script src="/js/my-courses.js"></script>
+</body>
+</html>

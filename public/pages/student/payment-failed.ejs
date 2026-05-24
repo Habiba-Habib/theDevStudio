@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>EduPlatform | Payment Failed</title>
+
+  <link rel="stylesheet" href="/css/student.css" />
+  <link rel="stylesheet" href="/css/navbar-css.css">
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="brand">
+      <div class="brand-icon">🎓</div>
+      <span>EduPlatform</span>
+    </div>
+
+    <nav class="nav-links">
+      <a href="/student/my-courses">Courses</a>
+      <a href="/student/challenges">Challenges</a>
+      <a href="/student/dashboard">Dashboard</a>
+    </nav>
+
+    <div class="nav-user">
+      <div class="user-pill">
+        <div class="user-avatar">
+          <%= user && user.avatar ? user.avatar : "👩🏻" %>
+        </div>
+        <span>
+          <%= user && user.name ? user.name : "Student" %>
+        </span>
+      </div>
+
+      <button class="logout-btn" type="button" aria-label="Logout">↪</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="payment-layout">
+
+      <section class="payment-card" style="max-width: 600px; margin: 0 auto; text-align: center;">
+        <div class="payment-header" style="justify-content: center;">
+          <div class="payment-icon">✖</div>
+          <div>
+            <h2>Payment Failed</h2>
+            <p>Your payment could not be completed.</p>
+          </div>
+        </div>
+
+        <p class="description">
+          <% if (typeof message !== "undefined" && message) { %>
+            <%= message %>
+          <% } else { %>
+            Something went wrong while processing your payment. Please check your payment details and try again.
+          <% } %>
+        </p>
+
+        <% if (typeof course !== "undefined" && course) { %>
+          <div class="summary-box">
+            <div class="summary-row">
+              <span>Course</span>
+              <span><%= course.title || "Course" %></span>
+            </div>
+
+            <div class="summary-row total">
+              <span>Amount</span>
+              <span>
+                $<%= course.price ? Number(course.price).toFixed(2) : "0.00" %>
+              </span>
+            </div>
+          </div>
+
+          <a 
+            href="/student/course-payment/<%= course._id %>" 
+            class="confirm-btn" 
+            style="display: inline-block; text-decoration: none; margin-top: 20px;"
+          >
+            Try Again
+          </a>
+        <% } else { %>
+          <a 
+            href="/student/my-courses" 
+            class="confirm-btn" 
+            style="display: inline-block; text-decoration: none; margin-top: 20px;"
+          >
+            Back to Courses
+          </a>
+        <% } %>
+
+        <br />
+
+        <a href="/student/my-courses" class="back-link">
+          ← Back to courses
+        </a>
+      </section>
+
+    </section>
+  </main>
+
+  <script src="/js/student.js"></script>
+  <script src="/js/main-navbar.js"></script>
+</body>
+</html>
