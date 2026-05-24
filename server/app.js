@@ -34,3 +34,6 @@ app.use('/challenges', challengeRoutes);
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });
+
+const instructorRoutes = require('./routes/instructor');
+app.use('/instructor', instructorRoutes);
