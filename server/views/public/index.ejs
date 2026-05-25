@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TheDevStudio</title>
  <link rel="stylesheet" href="/css/home.css">
-<link rel="stylesheet" href="/css/navbar-css.css">
  
 <link rel="stylesheet" href="/css/footer.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">  
 
 </head>
 <body>
-  <%- include('partials/navbar') %>
+<%- include('../partials/navbar') %>
 
     <main>
       <!--Hero Section-->
@@ -31,7 +30,7 @@
 
             <div class="buttons">
                <button class="hero-buttn1">
-                <a href="/all-courses">
+                <a href="courses/all-courses">
                   <span class="browse-text">Browse Courses
                    <i class="fa-solid fa-right-long"></i>                
                   </span>
@@ -39,7 +38,8 @@
                </button>
 
                <button class="hero-buttn2">
-                  <a href="/challenges">
+
+                  <a href="challenges/coding-challenges">
                     <span class="btn-icon">
                          <i class="fa-solid fa-code"></i>
                     </span>
@@ -110,7 +110,7 @@
 
             <div class="card-footer">
                 <span class="price">$49.99</span>
-          <button class="btn-details"><a href="/course-description/1">View Details</a></button>
+          <button class="btn-details"><a href="courses/course-description">View Details</a></button>
             </div>
             </div>
             </article>
@@ -138,7 +138,7 @@
             </div>
             <div class="card-footer">
                 <span class="price">$69.99</span>
-          <button class="btn-details"><a href="/course-description/2">View Details</a></button>
+          <button class="btn-details"><a href="courses/course-description">View Details</a></button>
         </div>
         </div>
         </article>
@@ -165,7 +165,7 @@
             </div>
             <div class="card-footer">
                 <span class="price">$69.99</span>
-          <button class="btn-details"> <a href="/course-description/3">View Details</a></button>
+          <button class="btn-details"> <a href="courses/course-description">View Details</a></button>
         </div> 
         </div>
       
@@ -173,7 +173,7 @@
             </div>
         </section>
        <div class="view-all-container">
-          <a href="/all-courses" class="view-all">View All Courses →</a>
+          <a href="courses/all-courses" class="view-all">View All Courses →</a>
         </div>
 
           
@@ -183,7 +183,7 @@
             <span class="challenge"> 🏆 Challenge Yourself</span>
             <h1 style="color:white; font-family: 'Inter' , sans-serif;">Practice with Real Coding Challenges</h1>
             <p style="color: #99A1AF; font-family: 'Inter' , sans-serif;">Test your skills with hundreds of coding challenges. Earn points, climb the leaderboard, and prove your expertise.</p>
-            <button class="challenge-btn"><a href="/coding-challenges">Explore Challenges 
+            <button class="challenge-btn"><a href="challenges/coding-challenges">Explore Challenges 
                 <span style="color:orange"><i class="fa-solid fa-bolt"></i></span>
             </a></button>
          </div>
@@ -283,7 +283,7 @@
     <h1 >Ready to Start Learning?</h1>
     <p >Join thousands of students achieving their goals every day.</p>
     <button class="learning-btn">
-      <a href="/signup"> Get Started for Free 
+      <a href="/auth/signup"> Get Started for Free 
       <span class="arrow-icon">
          <i class="fa-solid fa-right-long"></i> 
       </span>
@@ -296,7 +296,7 @@
 
 
     </main>
-    <%- include('partials/footer') %>
+<%- include('../partials/footer') %>
     
 
   <script>
@@ -327,7 +327,7 @@
         }
     });
 </script>
-<script src="/public/js/main-navbar.js"></script>
+
 </body>
 </html>
  

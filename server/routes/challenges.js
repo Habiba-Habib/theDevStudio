@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Challenge = require('../models/Challenges');
+const Challenge = require('../models/challenges');
 
 const User = require('../models/User');
 
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
   const totalPoints = challenges.reduce((sum, c) => sum + c.points, 0);
   const totalUsers = await User.countDocuments({ role: 'student' });
 
-  res.render('student/coding-challenges', {
+  res.render('guest/coding-challenges', {
     challenges,
     stats: {
       totalChallenges: challenges.length,
@@ -44,7 +44,7 @@ router.get('/:id', async (req, res) => {
     return res.status(404).render('public/page-404', {message:'Challenge not found'});
   }
 
-  res.render('student/coding-challenges', { challenge });
+  res.render('guest/challenge-description', { challenge });
 }catch(err){
   console.error(err);
   res.status(500).render('public/page-404',{message:'Server error'})

@@ -29,26 +29,49 @@ const adminRoutes      = require("./routes/admin");
 const challengeRoutes  = require("./routes/challenges");
 const publicRoutes     = require("./routes/public");           //moved
 
+const coursesRoutes     = require("./routes/coursesRoutes");
+
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "..", "public")));
+app.use(session({
+  secret: process.env.SESSION_SECRET || "devstudiosecret",
+  resave: false,
+  saveUninitialized: false,
+}));
 
 app.use("/auth",       authRoutes);
-app.use("/",           publicRoutes);
 app.use("/student",    studentRoutes);
 app.use("/instructor", instructorRoutes);
 app.use("/admin",      adminRoutes);
 app.use("/challenges", challengeRoutes);
+app.use("/courses", coursesRoutes);
+app.use("/",           publicRoutes);
 
-app.get("/me", (req, res) => {
-  res.json(req.session.user || null);
+app.get("/me", (req, res) => res.json(req.session.user || null));
+app.get("/dashboard", (req, res) => {
+  const role = req.session.role;
+  const dashboards = {
+    student:    "/student/dashboard",
+    instructor: "/instructor/dashboard",
+    admin:      "/admin/dashboard"
+  };
+  res.redirect(dashboards[role] || "/login");
 });
 
 app.use((req, res) => {
   res.status(404).render("public/page-404");
 });
 
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({ message: err.message || "Internal server error" });
 });
 
 app.use((req, res) => {
   res.status(404).render("public/page-404");
+});
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server running on port ${process.env.PORT || 3000}`);
 });

@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link rel="stylesheet" href="<%= basePath || '../../' %>css/create-step1-css.css">
-  <link rel="stylesheet" href="/public/css/navbar-css.css">
+  <link rel="stylesheet" href="/css/navbar-css.css">
 </head>
 <body>
 
@@ -85,7 +85,7 @@
             <div class="upload-text">Click to upload or drag and drop</div>
             <div class="upload-hint">PNG, JPG up to 5MB</div>
           </div>
-          <% if (thumbnailError) { %>
+          <% if (locals.thumbnailError) { %>
             <div class="error-message"><%= thumbnailError %></div>
           <% } %>
         </div>
@@ -98,6 +98,6 @@
 
   </div>
   <script src="<%= basePath || '../../' %>js/create-step1-js.js" defer></script>
-  <script src="/public/js/main-navbar.js"></script>
+  <script src="/js/main-navbar.js"></script>
 </body>
 </html>
