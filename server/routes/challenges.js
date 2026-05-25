@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Challenge = require('../models/Challenges');
+const Challenge = require('../models/challenges');
 
 const User = require('../models/User');
 

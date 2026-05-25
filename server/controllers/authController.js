@@ -60,11 +60,16 @@ exports.login = (req, res) => {
   }
 
   // session
+  
+  req.session.userId = user.id;
+  req.session.role = user.role;
+  
   req.session.user = {
     id: user.id,
     name: user.name,
     email: user.email,
     role: user.role
+    
   };
 
   return res.status(200).json({
