@@ -8,7 +8,7 @@ const authRoutes       = require("./routes/authRoutes");
 const publicRoutes     = require("./routes/public");
 const studentRoutes    = require("./routes/studentRoutes");
 const instructorRoutes = require("./routes/instructor");
-const adminRoutes      = require("./routes/admin");
+const adminRoutes      = require("./routes/adminRoutes");
 const challengeRoutes  = require("./routes/challenges");
 const coursesRoutes     = require("./routes/coursesRoutes");
 
@@ -59,3 +59,5 @@ app.use((err, req, res, next) => {
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Server running on port ${process.env.PORT || 3000}`);
 });
+
+
