@@ -6,19 +6,17 @@ const users = []; // temporary memory DB (later MongoDB)
 exports.signup = (req, res) => {
   const { name, email, password, role } = req.body;
 
-  // only allow student or instructor signup
   if (!name || !email || !password || !role) {
-    return res.status(400).json({ message: "Missing fields" });
+    return res.render('auth/signup', { error: 'Missing fields' });
   }
 
   if (!["student", "instructor"].includes(role)) {
-    return res.status(400).json({ message: "Invalid signup role" });
+    return res.render('auth/signup', { error: 'Invalid role' });
   }
 
   const exists = users.find(u => u.email === email);
-
   if (exists) {
-    return res.status(409).json({ message: "User already exists" });
+    return res.render('auth/signup', { error: 'User already exists' });
   }
 
   const newUser = {
@@ -30,13 +28,8 @@ exports.signup = (req, res) => {
   };
 
   users.push(newUser);
-
-  return res.status(201).json({
-    message: "Signup successful",
-    user: { id: newUser.id, name, email, role }
-  });
+  return res.redirect('/auth/login');
 };
-
 
 /* =========================
    LOGIN
@@ -45,45 +38,40 @@ exports.login = (req, res) => {
   const { email, password, role } = req.body;
 
   if (!email || !password || !role) {
-    return res.status(400).json({ message: "Missing fields" });
+    return res.render('auth/login', { error: 'Missing fields', email });
   }
 
   const user = users.find(
-    u =>
-      u.email === email &&
-      u.password === password &&
-      u.role === role
+    u => u.email === email && u.password === password && u.role === role
   );
 
   if (!user) {
-    return res.status(401).json({ message: "Invalid credentials" });
+    return res.render('auth/login', { error: 'Invalid credentials', email });
   }
 
-  // session
-  
   req.session.userId = user.id;
   req.session.role = user.role;
-  
   req.session.user = {
     id: user.id,
     name: user.name,
     email: user.email,
     role: user.role
-    
   };
 
-  return res.status(200).json({
-    message: "Login successful",
-    user: req.session.user
-  });
-};
+  const dashboards = {
+    student:    "/student/dashboard",
+    instructor: "/instructor/dashboard",
+    admin:      "/admin/dashboard"
+  };
 
+  return res.redirect(dashboards[user.role] || "/");
+};
 
 /* =========================
    LOGOUT
    ========================= */
 exports.logout = (req, res) => {
   req.session.destroy(() => {
-    res.json({ message: "Logged out" });
+    res.redirect('/');
   });
 };

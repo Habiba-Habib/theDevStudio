@@ -40,7 +40,7 @@ exports.getChallengeById = async (req, res) => {
 
     const visibleTestCases = challenge.testCases.filter((tc) => !tc.isHidden);
 
-    res.render("guest/challenge-description", {
+    res.render("challenges/challenge-description", {
       challenge,
       visibleTestCases,
     });
