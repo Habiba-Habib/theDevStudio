@@ -17,17 +17,18 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "../public")));   //added
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 const authRoutes       = require("./routes/authRoutes");
-const publicRoutes     = require("./routes/public");
 const studentRoutes    = require("./routes/studentRoutes");
 const instructorRoutes = require("./routes/instructor");
 const adminRoutes      = require("./routes/admin");
 const challengeRoutes  = require("./routes/challenges");
+const publicRoutes     = require("./routes/public");           //moved
+
 
 app.use("/auth",       authRoutes);
 app.use("/",           publicRoutes);
@@ -41,7 +42,7 @@ app.get("/me", (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).render("error-404");
+  res.status(404).render("public/page-404");
 });
 
 app.listen(3000, () => {
@@ -49,5 +50,5 @@ app.listen(3000, () => {
 });
 
 app.use((req, res) => {
-  res.status(404).render("error404");
+  res.status(404).render("public/page-404");
 });

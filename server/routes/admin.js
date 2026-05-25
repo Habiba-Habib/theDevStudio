@@ -3,7 +3,7 @@ const router     = express.Router();
 const isAdmin    = require("../middleware/isAdmin");
 const controller = require("../controllers/admin-controller");
 
-router.use(isAdmin);
+// router.use(isAdmin);
 
 // Dashboard
 router.get("/dashboard", controller.getDashboard);

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduPlatform | Coding Challenges</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/challengespage.css">
+  <link rel="stylesheet" href="/css/navbar-css.css">
+  <script src="/js/challenges-data.js"></script>
+    <script src="/js/challengescode.js" defer></script>
+</head>
+<body>
+
+  <!-- HERO -->
+  <header class="hero">
+    <button class="btn-test-skills">
+      <i class="fa-solid fa-trophy"></i> Test Your Skills
+    </button>
+    <h1>Coding Challenges</h1>
+    <p>Sharpen your coding skills with real-world challenges. Earn points, climb the leaderboard, and become a top coder.</p>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <section class="challenges-section">
+
+    <!-- STATS -->
+    <div class="stats-container">
+            <div class="stat-card">
+        <i class="fa-solid fa-code icon-pink"></i>
+        <h3><%= stats.totalChallenges %></h3>
+        <p>Total Challenges</p>
+      </div>
+      <div class="stat-card">
+        <i class="fa-solid fa-bolt icon-yellow"></i>
+        <h3><%= stats.totalPoints %></h3>
+        <p>Total Points Available</p>
+      </div>
+      <div class="stat-card">
+        <i class="fa-solid fa-trophy icon-teal"></i>
+        <h3><%= stats.totalUsers %>+</h3>
+        <p>Active Competitors</p>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters">
+      <div class="filter-row">
+        <span>Difficulty</span>
+        <div class="filter-btns" data-type="difficulty">
+          <button class="active" data-value="all">All</button>
+          <button data-value="easy">Easy</button>
+          <button data-value="medium">Medium</button>
+          <button data-value="hard">Hard</button>
+        </div>
+      </div>
+      <div class="filter-row">
+        <span>Category</span>
+        <div class="filter-btns" data-type="category">
+          <button class="active" data-value="all">All</button>
+          <button data-value="algorithms">Algorithms</button>
+          <button data-value="backend">Backend</button>
+          <button data-value="data structures">Data Structures</button>
+          <button data-value="frontend">Frontend</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS COUNT -->
+    <p id="results-count">Showing <%= challenges.length %> challenges</p>
+
+<div id="challenges-grid" class="challenges-grid">
+  <% challenges.forEach(challenge => { %>
+    <div class="challenge-card"
+         data-difficulty="<%= challenge.difficulty.toLowerCase() %>"
+         data-category="<%= challenge.category.toLowerCase() %>">
+
+      <div class="card-header">
+        <span class="badge-<%= challenge.difficulty.toLowerCase() %>"><%= challenge.difficulty %></span>
+        <span class="card-points">⚡ <%= challenge.points %> pts</span>
+      </div>
+
+      <h3 class="card-title"><%= challenge.title %></h3>
+      <p class="card-summary"><%= challenge.summary %></p>
+
+      <div class="card-footer">
+        <span class="card-category"><%= challenge.category %></span>
+        <a href="/challenges/<%= challenge._id %>" class="btn-solve">Solve</a>
+      </div>
+
+    </div>
+  <% }) %>
+</div>
+
+  </section>
+
+  <script src="js/challengescode.js"></script>
+  <script src="/js/main-navbar.js"></script>
+</body>
+</html>

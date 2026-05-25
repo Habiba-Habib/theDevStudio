@@ -4,13 +4,13 @@ const Challenge = require('../models/Challenges');
 
 const User = require('../models/User');
 
-const isLoggedIn =(req,res,next)=>{
-  if(!req.session.userId)return res.redirect('/login');
-  next();
+// const isLoggedIn =(req,res,next)=>{
+//   if(!req.session.userId)return res.redirect('/login');
+//   next();
   
-};
+// };
 
-router.use(isLoggedIn);
+// router.use(isLoggedIn);
 
 router.get('/', async (req, res) => {
 
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
   const totalPoints = challenges.reduce((sum, c) => sum + c.points, 0);
   const totalUsers = await User.countDocuments({ role: 'student' });
 
-  res.render('student/challenges', {
+  res.render('student/coding-challenges', {
     challenges,
     stats: {
       totalChallenges: challenges.length,
@@ -30,24 +30,24 @@ router.get('/', async (req, res) => {
 }
 catch(err){
   console.error(err);
-  res.status(500).render('public/error404',{message:'Server error'});
+  res.status(500).render('public/page-404',{message:'Server error'});
 }
 });
 
 router.get('/:id', async (req, res) => {
   try{
 
-  if (!req.session.userId) return res.redirect('/login');
+  // if (!req.session.userId) return res.redirect('/login');
 
   const challenge = await Challenge.findById(req.params.id);
   if(!challenge){
-    return res.status(404).render('public/error404', {message:'Challenge not found'});
+    return res.status(404).render('public/page-404', {message:'Challenge not found'});
   }
 
-  res.render('student/challenge', { challenge });
+  res.render('student/coding-challenges', { challenge });
 }catch(err){
   console.error(err);
-  res.status(500).render('public/error404',{message:'Server error'})
+  res.status(500).render('public/page-404',{message:'Server error'})
 }
 });
 
