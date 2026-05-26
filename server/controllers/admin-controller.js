@@ -1,11 +1,8 @@
 const User      = require("../models/User");
 const Challenge = require("../models/challenges");
 
-// ─── Dashboard ───────────────────────────────────────────────
 exports.getDashboard = async (req, res) => {
   try {
-    const admin = await User.findById(req.session.user._id);
-
     const totalUsers      = await User.countDocuments();
     const totalChallenges = await Challenge.countDocuments({ deletedAt: null }).catch(() => 0);
 
@@ -21,7 +18,7 @@ exports.getDashboard = async (req, res) => {
 
     res.render("admin/dashboard", {
       admin: {
-        name:     admin.name,
+        name:     req.session.user.name,
         subtitle: "Here's what's happening on your platform today."
       },
       stats: {
@@ -42,10 +39,9 @@ exports.getDashboard = async (req, res) => {
   }
 };
 
-// ─── Profile ─────────────────────────────────────────────────
 exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.session.user._id);
+    const user = await User.findById(req.session.user._id) || req.session.user;
     res.render("admin/edit-profile", { user });
   } catch (err) {
     console.error(err);
@@ -76,7 +72,6 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
-// ─── User Management ─────────────────────────────────────────
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.find().sort({ createdAt: -1 });
@@ -135,7 +130,6 @@ exports.toggleSuspend = async (req, res) => {
   }
 };
 
-// ─── Challenges Oversight ─────────────────────────────────────
 exports.getChallenges = async (req, res) => {
   try {
     const challenges      = await Challenge.find({ deletedAt: null }).sort({ createdAt: -1 });

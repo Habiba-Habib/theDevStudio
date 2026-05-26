@@ -1,3 +1,8 @@
+// NOTE: isAdmin is bypassed by the fake session above.
+// Once auth is connected to MongoDB, remove the fake session
+// and uncomment router.use(isAdmin) in adminRoutes.js
+
+
 module.exports = function isAdmin(req, res, next) {
   if (!req.session.user) {
     return res.redirect("/login");
