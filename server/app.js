@@ -51,7 +51,7 @@ app.use("/",           publicRoutes);
 
 app.get("/me", (req, res) => res.json(req.session.user || null));
 app.get("/dashboard", (req, res) => {
-  const role = req.session.role;
+  const role = req.session.user?.role;
   const dashboards = {
     student:    "/student/dashboard",
     instructor: "/instructor/dashboard",
@@ -69,9 +69,6 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ message: err.message || "Internal server error" });
 });
 
-app.use((req, res) => {
-  res.status(404).render("public/page-404");
-});
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Server running on port ${process.env.PORT || 3000}`);
 });

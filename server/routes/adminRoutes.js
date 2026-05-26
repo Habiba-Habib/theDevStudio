@@ -19,5 +19,5 @@ router.get("/users",                         controller.getUsers);
 router.post("/users/change-role",            controller.changeRole);
 router.post("/users/toggle-suspend/:userId", controller.toggleSuspend);
 router.get("/manage-challenges",             controller.getChallenges);
-
+router.get("/create-challenge", controller.getCreateChallenge);
 module.exports = router;
