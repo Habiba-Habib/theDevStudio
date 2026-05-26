@@ -25,7 +25,7 @@ app.set("views", path.join(__dirname, "views"));
 const authRoutes       = require("./routes/authRoutes");
 const studentRoutes    = require("./routes/studentRoutes");
 const instructorRoutes = require("./routes/instructor");
-const adminRoutes      = require("./routes/admin");
+const adminRoutes      = require("./routes/adminRoutes");
 const challengeRoutes  = require("./routes/challenges");
 const publicRoutes     = require("./routes/public");           //moved
 
