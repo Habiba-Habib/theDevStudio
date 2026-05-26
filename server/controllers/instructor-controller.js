@@ -32,7 +32,7 @@ exports.getProfile = async (req, res) => {
     const instructor = await User.findById(req.session.userId)
       .populate('completedCourses');
 
-    res.render('instructor/profile', {
+    res.render('shared/profile', {
       user: instructor,
       completedCourses: instructor.completedCourses || [],
       certificates: instructor.certificates || []
@@ -46,7 +46,7 @@ exports.getProfile = async (req, res) => {
 exports.getEditProfile = async (req, res) => {
   try {
     const instructor = await User.findById(req.session.userId);
-    res.render('instructor/edit-profile', { user: instructor, errors: [] });
+    res.render('shared/edit-profile', { user: instructor, errors: [] });
   } catch (err) {
     console.error(err);
     res.status(500).render('error');

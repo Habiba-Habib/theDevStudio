@@ -8,8 +8,6 @@ router.get('/home', (req, res) => res.render('public/home'));
 router.get('/page-404', (req, res) => res.render('public/page-404'));
 
 
-// Challenges
-router.get('/challenges/:id', (req, res) => res.render('challenges/challenge-description'));
 
 
 // Instructor public pages

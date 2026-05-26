@@ -27,21 +27,12 @@ const studentRoutes    = require("./routes/studentRoutes");
 const instructorRoutes = require("./routes/instructor");
 const adminRoutes      = require("./routes/adminRoutes");
 const challengeRoutes  = require("./routes/challenges");
-const publicRoutes     = require("./routes/public");           //moved
-
+const studentsRoutes = require("./routes/student");
 const coursesRoutes     = require("./routes/coursesRoutes");
-
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "..", "public")));
-app.use(session({
-  secret: process.env.SESSION_SECRET || "devstudiosecret",
-  resave: false,
-  saveUninitialized: false,
-}));
+const publicRoutes     = require("./routes/public");  
 
 app.use("/auth",       authRoutes);
+app.use("/student", studentsRoutes);
 app.use("/student",    studentRoutes);
 app.use("/instructor", instructorRoutes);
 app.use("/admin",      adminRoutes);
