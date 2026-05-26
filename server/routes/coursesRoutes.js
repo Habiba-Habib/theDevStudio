@@ -11,7 +11,7 @@ router.get('/all-courses', async (req, res, next) => {
   }
 });
 
-router.get('/course/:id', async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const course = await Course.findById(req.params.id);
     res.render('guest/course-description', { course });
