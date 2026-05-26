@@ -31,10 +31,6 @@ const publicRoutes     = require("./routes/public");           //moved
 
 const coursesRoutes     = require("./routes/coursesRoutes");
 
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(session({
   secret: process.env.SESSION_SECRET || "devstudiosecret",
   resave: false,
