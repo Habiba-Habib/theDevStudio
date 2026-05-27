@@ -11,8 +11,8 @@ exports.getDashboard = async (req, res) => {
 
     // Stats for dashboard
     const totalCourses = courses.length;
-    const totalStudents = courses.reduce((sum, c) => sum + c.enrolledCount, 0);
-    const totalRevenue = courses.reduce((sum, c) => sum + (c.price * c.enrolledCount), 0);
+    const totalStudents = courses.reduce((sum, c) => sum + c.students.length, 0);
+    const totalRevenue = courses.reduce((sum, c) => sum + (c.price * c.students.length), 0);
 
     res.render('instructor/dashboard', {
       instructor,
@@ -81,7 +81,7 @@ exports.getCreateStep1 = async (req, res) => {
     // Check if there's an in-progress course to resume
     const draft = await Course.findOne({
       instructor: req.session.userId,
-      status: 'draft'
+      isPublished: false
     });
 
     res.render('instructor/create-step1', { draft, errors: [] });
@@ -98,7 +98,7 @@ exports.postCreateStep1 = async (req, res) => {
     // Check if a draft already exists — update it, don't create a new one
     let course = await Course.findOne({
       instructor: req.session.userId,
-      status: 'draft'
+      isPublished: false
     });
 
     const thumbnailUrl = req.file ? req.file.path : (course ? course.thumbnail : '');
@@ -107,8 +107,8 @@ exports.postCreateStep1 = async (req, res) => {
       // Update existing draft
       await Course.findByIdAndUpdate(course._id, {
         title,
-        summary: shortDescription,
-        description: fullDescription,
+        shortDescription,
+        fullDescription,
         category,
         level,
         thumbnail: thumbnailUrl
@@ -117,13 +117,13 @@ exports.postCreateStep1 = async (req, res) => {
       // Create new draft
       course = await Course.create({
         title,
-        summary: shortDescription,
-        description: fullDescription,
+        shortDescription,
+        fullDescription,
         category,
         level,
         thumbnail: thumbnailUrl,
         instructor: req.session.userId,
-        status: 'draft'
+        isPublished: false
       });
     }
 
@@ -142,7 +142,7 @@ exports.getCreateStep2 = async (req, res) => {
   try {
     const draft = await Course.findOne({
       instructor: req.session.userId,
-      status: 'draft'
+      isPublished: false
     });
 
     // If no draft exists, send back to step 1
@@ -170,7 +170,7 @@ exports.postCreateStep2 = async (req, res) => {
 
     const draft = await Course.findOne({
       instructor: req.session.userId,
-      status: 'draft'
+      isPublished : false
     });
 
     if (!draft) return res.redirect('/instructor/create/step1');
@@ -194,7 +194,7 @@ exports.getCreateStep3 = async (req, res) => {
   try {
     const draft = await Course.findOne({
       instructor: req.session.userId,
-      status: 'draft'
+      isPublished : false
     });
 
     if (!draft) return res.redirect('/instructor/create/step1');
@@ -212,7 +212,7 @@ exports.postCreateStep3 = async (req, res) => {
 
     const draft = await Course.findOne({
       instructor: req.session.userId,
-      status: 'draft'
+      isPublished : false
     });
 
     if (!draft) return res.redirect('/instructor/create/step1');
@@ -221,7 +221,7 @@ exports.postCreateStep3 = async (req, res) => {
     await Course.findByIdAndUpdate(draft._id, {
       price: Number(price),
       duration,
-      status: 'published'
+      isPublished : true
     });
 
     res.redirect('/instructor/dashboard');
@@ -251,9 +251,17 @@ exports.getEditCourse = async (req, res) => {
 
 exports.updateCourse = async (req, res) => {
   try {
-    const { title, summary, description, category, level, price, duration } = req.body;
+    const { title, shortDescription, fullDescription, category, level, price, duration } = req.body;
 
-    const updateData = { title, summary, description, category, level, price, duration };
+    const updateData = {
+      title,
+      shortDescription,
+      fullDescription,
+      category,
+      level,
+      price,
+      duration
+    };
 
     if (req.file) {
       updateData.thumbnail = req.file.path;

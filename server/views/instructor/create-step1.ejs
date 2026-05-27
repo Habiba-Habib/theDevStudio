@@ -38,10 +38,10 @@
     <!-- FORM CARD — reusing learn-box -->
     <div class="learn-box">
 
-      <form action="<%= formAction || '/create-course/step1' %>" method="<%= formMethod || 'POST' %>" enctype="multipart/form-data">
+      <form action="/instructor/create/step1" method="POST" enctype="multipart/form-data">
         <div class="form-group">
           <label class="lessons">Course Title <span>*</span></label>
-          <input type="text" class="form-input" name="courseTitle" placeholder="e.g., Complete Web Development Bootcamp" value="<%= courseTitle || '' %>" required />
+          <input type="text" class="form-input" name="title" placeholder="e.g., Complete Web Development Bootcamp" value="<%= courseTitle || '' %>" required />
         </div>
 
         <div class="form-group">
