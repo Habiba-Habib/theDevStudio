@@ -142,7 +142,7 @@
         <div class="price">$<%= course.price %></div>
         <div class="price-note">One-time payment • Full lifetime access</div>
 
-        <a href="/courses/<%= course._id %>/payment" class="btn-enroll">
+        <a href="/student/payment/<%= course._id %>" class="btn-enroll">
           Enroll
         </a>
       </div>
@@ -186,7 +186,7 @@
 <script>
   // simple redirect (NO .html anymore)
   document.getElementById('enrollBtn')?.addEventListener('click', () => {
-    window.location.href = "/courses/<%= course._id %>/payment";
+    window.location.href = "/student/payment/<%= course._id %>";
   });
 </script>
 

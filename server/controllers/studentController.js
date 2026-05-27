@@ -50,10 +50,14 @@ if (cleanCardNumber.length === 16) {
     });
 
     if (paymentStatus === "successful") {
-      return res.render("student/payment-success", {
-        course: course,
-        payment: payment,
-      });
+      await Course.findByIdAndUpdate(course._id, {
+    $addToSet: { students: req.session.userId }
+  });
+
+  return res.render("student/payment-success", {
+    course: course,
+    payment: payment,
+  });
     } else {
       return res.render("student/payment-failed", {
         course: course,
