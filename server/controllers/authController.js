@@ -49,10 +49,10 @@ exports.login = (req, res) => {
     return res.render('auth/login', { error: 'Invalid credentials', email });
   }
 
-  req.session.userId = user.id;
+  req.session.userId = user._id.toString();
   req.session.role = user.role;
   req.session.user = {
-    id: user.id,
+    _id: user.id.toString(),
     name: user.name,
     email: user.email,
     role: user.role

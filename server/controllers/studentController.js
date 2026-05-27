@@ -42,7 +42,7 @@ if (cleanCardNumber.length === 16) {
 }
 
     const payment = await Payment.create({
-      student: req.session.user._id,
+      student: req.session.userId,
       course: course._id,
       amount: course.price,
       paymentMethod: paymentMethod,
