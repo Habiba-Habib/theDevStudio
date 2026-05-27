@@ -15,7 +15,7 @@ const User = require('../models/User');
 router.get('/', async (req, res) => {
 
   try{
-  const challenges = await Challenge.find();
+  const challenges = await Challenge.find({isPublished: true});
   const totalPoints = challenges.reduce((sum, c) => sum + c.points, 0);
   const totalUsers = await User.countDocuments({ role: 'student' });
 
