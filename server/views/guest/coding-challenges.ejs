@@ -72,11 +72,11 @@
 <div id="challenges-grid" class="challenges-grid">
   <% challenges.forEach(challenge => { %>
     <div class="challenge-card"
-         data-difficulty="<%= challenge.difficulty.toLowerCase() %>"
-         data-category="<%= challenge.category.toLowerCase() %>">
+         data-difficulty="<%= (challenge.difficulty || '').toLowerCase() %>"
+         data-category="<%= (challenge.category || '').toLowerCase() %>">
 
       <div class="card-header">
-        <span class="badge-<%= challenge.difficulty.toLowerCase() %>"><%= challenge.difficulty %></span>
+        <span class="badge-<%= (challenge.difficulty || '').toLowerCase() %>"><%= challenge.difficulty %></span>
         <span class="card-points">⚡ <%= challenge.points %> pts</span>
       </div>
 
