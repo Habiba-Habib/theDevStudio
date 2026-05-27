@@ -3,7 +3,15 @@ const router = express.Router();
 const Course = require('../models/Course');
 
 // Public pages
-router.get('/', (req, res) => res.render('public/index'));
+router.get('/', async (req, res, next) => {
+  try {
+    const courses = await Course.find({ isPublished: true }).limit(3);
+
+    res.render('public/index', { courses });
+  } catch (err) {
+    next(err);
+  }
+});
 router.get('/home', (req, res) => res.render('public/home'));
 router.get('/page-404', (req, res) => res.render('public/page-404'));
 
