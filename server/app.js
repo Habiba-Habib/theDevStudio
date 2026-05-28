@@ -27,12 +27,10 @@ const studentRoutes    = require("./routes/studentRoutes");
 const instructorRoutes = require("./routes/instructor");
 const adminRoutes      = require("./routes/adminRoutes");
 const challengeRoutes  = require("./routes/challenges");
-const studentsRoutes = require("./routes/student");
 const coursesRoutes     = require("./routes/coursesRoutes");
 const publicRoutes     = require("./routes/public");  
 
 app.use("/auth",       authRoutes);
-app.use("/student", studentsRoutes);
 app.use("/student",    studentRoutes);
 app.use("/instructor", instructorRoutes);
 app.use("/admin",      adminRoutes);
@@ -48,7 +46,7 @@ app.get("/dashboard", (req, res) => {
     instructor: "/instructor/dashboard",
     admin:      "/admin/dashboard"
   };
-  res.redirect(dashboards[role] || "/login");
+  res.redirect(dashboards[role] || "/auth/login");
 });
 
 app.use((req, res) => {

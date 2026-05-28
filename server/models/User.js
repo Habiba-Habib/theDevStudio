@@ -37,7 +37,20 @@ const userSchema = new mongoose.Schema(
 
     courses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
 
-  
+      instructorVerification: {
+      cvUrl: String,
+      certificateUrl: String,
+      linkedinUrl: String,
+      portfolioUrl: String,
+      websiteUrl: String,
+      status: {
+        type: String,
+        enum: ["not_submitted", "pending", "approved", "rejected"],
+        default: "not_submitted"
+      },
+      submittedAt: Date
+    },
+    
     enrolledCourses: [
       {
         course: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },

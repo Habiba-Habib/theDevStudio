@@ -82,31 +82,33 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  document.getElementById('btnContinue').addEventListener('click', () => {
-    const cvInput   = document.getElementById('cvInput');
-    const certInput = document.getElementById('certInput');
-    const cvZone    = document.getElementById('cvZone');
-    const certZone  = document.getElementById('certZone');
+document.getElementById('btnContinue').addEventListener('click', (e) => {
+  e.preventDefault();
 
-    let valid = true;
+  const cvInput   = document.getElementById('cvInput');
+  const certInput = document.getElementById('certInput');
+  const cvZone    = document.getElementById('cvZone');
+  const certZone  = document.getElementById('certZone');
 
-    if (!cvInput.files.length) {
-      showError(cvZone, 'Please upload your CV / Resume.');
-      valid = false;
-    } else {
-      clearError(cvZone);
-    }
+  let valid = true;
 
-    if (!certInput.files.length) {
-      showError(certZone, 'Please upload your Professional Verification Document.');
-      valid = false;
-    } else {
-      clearError(certZone);
-    }
+  if (!cvInput.files.length) {
+    showError(cvZone, 'Please upload your CV / Resume.');
+    valid = false;
+  } else {
+    clearError(cvZone);
+  }
 
-    if (!valid) return;
+  if (!certInput.files.length) {
+    showError(certZone, 'Please upload your Professional Verification Document.');
+    valid = false;
+  } else {
+    clearError(certZone);
+  }
 
-    window.location.href = '../pages/instructor/become-instructor3.html';
-  });
+  if (!valid) return;
+
+  document.getElementById('pageDocuments').submit();
+});
 
 });

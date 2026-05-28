@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Course = require('../models/Course');
+const User = require('../models/User');
+const multer = require("multer");
+const upload = multer({ dest: "uploads/instructor-verification/" });
 
 // Public pages
 router.get('/', async (req, res, next) => {
@@ -23,4 +26,33 @@ router.get('/become-instructor', (req, res) => res.render('instructor/become-ins
 router.get('/become-instructor/step2', (req, res) => res.render('instructor/become-instructor2'));
 router.get('/become-instructor/step3', (req, res) => res.render('instructor/become-instructor3'));
 
+router.post('/become-instructor/step2', upload.fields([
+  { name: "cv", maxCount: 1 },
+  { name: "certificate", maxCount: 1 }
+]), async (req, res) => {
+  try {
+    if (!req.session.userId) {
+      return res.redirect('/auth/login');
+    }
+
+    const { linkedinUrl, portfolioUrl, websiteUrl } = req.body;
+
+    await User.findByIdAndUpdate(req.session.userId, {
+      instructorVerification: {
+        cvUrl: req.files?.cv?.[0]?.path || "",
+        certificateUrl: req.files?.certificate?.[0]?.path || "",
+        linkedinUrl,
+        portfolioUrl,
+        websiteUrl,
+        status: "pending",
+        submittedAt: new Date()
+      }
+    });
+
+    res.redirect('/become-instructor/step3');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
 module.exports = router;

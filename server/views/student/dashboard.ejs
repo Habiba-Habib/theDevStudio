@@ -6,8 +6,8 @@
   <title>Student Dashboard</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-   <link rel="stylesheet" href="../../../public/css/dashboards.css" />
-   <link rel="stylesheet" href="/public/css/navbar-css.css">
+   <link rel="stylesheet" href="/css/dashboards.css" />
+   <link rel="stylesheet" href="/css/navbar-css.css">
 </head>
 <body>
 
@@ -62,7 +62,7 @@
         <section class="section-block">
           <div class="section-header">
             <h2 class="section-title">My Current Courses</h2>
-            <a href="/my-courses"class="section-link">View All →</a>
+           <a href="/student/my-courses" class="section-link">View All</a>
           </div>
 
           <!-- Card  -->
@@ -73,8 +73,7 @@
               <div class="course-progress-top">
                 <div>
                   <h3 class="course-progress-title"><%= course.title %></h3>
-                  <p class="course-progress-author">By <%= course.instructor?.name || "Unknown Instructor" %></p>
-                </div>
+                  <p class="course-progress-author">By <%= course.instructor || "Unknown Instructor" %></p>
                 <span class="progress-badge"><%= course.progress %>% Complete</span>
               </div>
               <div class="progress-bar-wrapper">
@@ -87,7 +86,7 @@
         
           <!-- Action Buttons -->
           <div class="courses-actions">
-            <a href="/all-courses" class="btn-explore">
+            <a href="/courses/all-courses" class="btn-explore">
               <i class="fa-solid fa-book-open"></i>
               Explore More Courses
             </a>
@@ -159,7 +158,7 @@
     </div>
   </main>
 
-  <script src="../../../public/js/dashboards.js"></script>
-  <script src="/public/js/main-navbar.js"></script>
+  <script src="/js/dashboards.js"></script>
+  <script src="/js/main-navbar.js"></script>
 </body>
 </html>
