@@ -26,7 +26,7 @@
   </div>
 
   <!-- FORM (IMPORTANT) -->
-  <form action="/courses/publish" method="POST">
+<form action="/instructor/create/step3" method="POST">
 
     <div class="learn-box">
 
@@ -50,17 +50,17 @@
 
         <div class="preview-row">
           <span>Title:</span>
-          <span><%= courseTitle || "Not set" %></span>
+         <%= draft ? draft.title : "Not set" %>
         </div>
 
         <div class="preview-row">
           <span>Category:</span>
-          <span><%= category || "Not set" %></span>
+         <%= draft ? draft.category : "Not set" %>
         </div>
 
         <div class="preview-row">
           <span>Level:</span>
-          <span><%= level || "Not set" %></span>
+          <%= draft ? draft.level : "Not set" %>
         </div>
 
         <div class="preview-row">
@@ -74,7 +74,7 @@
 
     <!-- BUTTONS -->
     <div class="btn-row">
-      <a href="/courses/create/step2" class="btn-back">Back</a>
+     <%= draft ? draft.level : "Not set" %>
       <button type="submit" class="btn-publish">Publish Course</button>
     </div>
 

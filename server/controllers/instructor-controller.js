@@ -6,8 +6,8 @@ const User = require('../models/User');
 
 exports.getDashboard = async (req, res) => {
   try {
-    const instructor = await User.findById(req.session.userId);
-    const courses = await Course.find({ instructor: req.session.userId });
+    const instructor = await User.findById(req.session.user._id);
+    const courses = await Course.find({ instructor: req.session.user._id });
 
     // Stats for dashboard
     const totalCourses = courses.length;
@@ -29,7 +29,7 @@ exports.getDashboard = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
   try {
-    const instructor = await User.findById(req.session.userId)
+    const instructor = await User.findById(req.session.user._id)
       .populate('completedCourses');
 
     res.render('shared/profile', {
@@ -45,7 +45,7 @@ exports.getProfile = async (req, res) => {
 
 exports.getEditProfile = async (req, res) => {
   try {
-    const instructor = await User.findById(req.session.userId);
+    const instructor = await User.findById(req.session.user._id);
     res.render('shared/edit-profile', { user: instructor, errors: [] });
   } catch (err) {
     console.error(err);
@@ -64,7 +64,7 @@ exports.updateProfile = async (req, res) => {
       updateData.avatar = req.file.path;
     }
 
-    await User.findByIdAndUpdate(req.session.userId, updateData);
+    await User.findByIdAndUpdate(req.session.user._id, updateData);
     res.redirect('/instructor/profile');
   } catch (err) {
     console.error(err);
@@ -80,7 +80,7 @@ exports.getCreateStep1 = async (req, res) => {
   try {
     // Check if there's an in-progress course to resume
     const draft = await Course.findOne({
-      instructor: req.session.userId,
+      instructor: req.session.user._id,
       isPublished: false
     });
 
@@ -97,7 +97,7 @@ exports.postCreateStep1 = async (req, res) => {
 
     // Check if a draft already exists — update it, don't create a new one
     let course = await Course.findOne({
-      instructor: req.session.userId,
+      instructor: req.session.user._id,
       isPublished: false
     });
 
@@ -122,7 +122,7 @@ exports.postCreateStep1 = async (req, res) => {
         category,
         level,
         thumbnail: thumbnailUrl,
-        instructor: req.session.userId,
+        instructor: req.session.user._id,
         isPublished: false
       });
     }
@@ -141,7 +141,7 @@ exports.postCreateStep1 = async (req, res) => {
 exports.getCreateStep2 = async (req, res) => {
   try {
     const draft = await Course.findOne({
-      instructor: req.session.userId,
+      instructor: req.session.user._id,
       isPublished: false
     });
 
@@ -169,7 +169,7 @@ exports.postCreateStep2 = async (req, res) => {
     const sectionsArray = JSON.parse(sections);
 
     const draft = await Course.findOne({
-      instructor: req.session.userId,
+      instructor: req.session.user._id,
       isPublished : false
     });
 
@@ -193,7 +193,7 @@ exports.postCreateStep2 = async (req, res) => {
 exports.getCreateStep3 = async (req, res) => {
   try {
     const draft = await Course.findOne({
-      instructor: req.session.userId,
+      instructor: req.session.user._id,
       isPublished : false
     });
 
@@ -211,7 +211,7 @@ exports.postCreateStep3 = async (req, res) => {
     const { price, duration } = req.body;
 
     const draft = await Course.findOne({
-      instructor: req.session.userId,
+      instructor: req.session.user._id,
       isPublished : false
     });
 
@@ -237,7 +237,7 @@ exports.getEditCourse = async (req, res) => {
   try {
     const course = await Course.findOne({
       _id: req.params.id,
-      instructor: req.session.userId // security: only their own courses
+      instructor: req.session.user._id // security: only their own courses
     });
 
     if (!course) return res.status(404).render('public/error-404');
@@ -268,7 +268,7 @@ exports.updateCourse = async (req, res) => {
     }
 
     await Course.findOneAndUpdate(
-      { _id: req.params.id, instructor: req.session.userId },
+      { _id: req.params.id, instructor: req.session.user._id },
       updateData
     );
 
@@ -285,7 +285,7 @@ exports.deleteCourse = async (req, res) => {
   try {
     await Course.findOneAndDelete({
       _id: req.params.id,
-      instructor: req.session.userId // security: only their own courses
+      instructor: req.session.user._id // security: only their own courses
     });
 
     res.redirect('/instructor/dashboard');
@@ -301,7 +301,7 @@ exports.getEnrolledStudents = async (req, res) => {
   try {
     const course = await Course.findOne({
       _id: req.params.id,
-      instructor: req.session.userId
+      instructor: req.session.user._id
     });
 
     if (!course) return res.status(404).render('public/error-404');
