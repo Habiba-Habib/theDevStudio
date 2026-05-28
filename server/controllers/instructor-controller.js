@@ -29,17 +29,35 @@ exports.getDashboard = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
   try {
-    const instructor = await User.findById(req.session.user._id)
-      .populate('completedCourses');
+    if (!req.session.user || !req.session.user._id) {
+      return res.redirect("/auth/login");
+    }
 
-    res.render('shared/profile', {
+    const instructor = await User.findById(req.session.user._id);
+
+    if (!instructor) {
+      return res.status(404).render("public/page-404", {
+        message: "Instructor not found"
+      });
+    }
+
+    const instructorCourses = await Course.find({
+      instructor: req.session.user._id
+    });
+
+    res.render("shared/profile", {
       user: instructor,
-      completedCourses: instructor.completedCourses || [],
-      certificates: instructor.certificates || []
+      completedCourses: [],
+      certificates: [],
+      instructorCourses,
+      adminStats: null,
+      rank: null
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).render('error');
+    console.error("Instructor profile error:", err);
+    res.status(500).render("public/page-404", {
+      message: "Server error"
+    });
   }
 };
 
@@ -339,12 +357,3 @@ exports.getEnrolledStudents = async (req, res) => {
     res.status(500).render('error');
   }
 };
-//--------------------SHARED PROFILE-----------------------
-res.render("shared/profile", {
-  user: instructor,
-  completedCourses: [],
-  certificates: [],
-  instructorCourses,
-  adminStats: null,
-  rank: null
-});

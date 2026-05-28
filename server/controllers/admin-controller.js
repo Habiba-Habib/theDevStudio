@@ -42,7 +42,20 @@ exports.getDashboard = async (req, res) => {
 exports.getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.session.user._id) || req.session.user;
-    res.render("admin/edit-profile", { user });
+
+    const adminStats = {
+      totalUsers: await User.countDocuments(),
+      totalChallenges: await Challenge.countDocuments()
+    };
+
+    res.render("shared/profile", {
+      user,
+      completedCourses: [],
+      certificates: [],
+      instructorCourses: [],
+      adminStats,
+      rank: null
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");
@@ -228,12 +241,4 @@ exports.logout = (req, res) => {
   });
 };
 
-//------------------- SHARED PROFILE-----------
-res.render("shared/profile", {
-  user,
-  completedCourses: [],
-  certificates: [],
-  instructorCourses: [],
-  adminStats,
-  rank: null
-});
+
