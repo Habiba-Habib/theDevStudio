@@ -68,12 +68,12 @@
           <!-- Card  -->
            <% courses.forEach(function(course) { %>
           <div class="course-progress-card">
-            <img src="<%= course.image %>" alt="<%= course.title %>" class="course-thumb" />
+            <img src="<%= course.thumbnail %>" alt="<%= course.title %>" class="course-thumb" />
             <div class="course-progress-info">
               <div class="course-progress-top">
                 <div>
                   <h3 class="course-progress-title"><%= course.title %></h3>
-                  <p class="course-progress-author">By <%= course.author %></p>
+                  <p class="course-progress-author">By <%= course.instructor?.name || "Unknown Instructor" %></p>
                 </div>
                 <span class="progress-badge"><%= course.progress %>% Complete</span>
               </div>

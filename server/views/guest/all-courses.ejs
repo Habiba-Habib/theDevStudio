@@ -53,31 +53,31 @@
        <% courses.forEach(function(course) { %>
       <article class="course-card" data-category="<%= course.category %>" data-level="<%= course.level %>">
         <div class="card-image-wrapper">
-          <img src="<%= course.image %>" alt="<%= course.title %>" class="card-image" />
+          <img src="<%= course.thumbnail %>" alt="<%= course.title %>" class="card-image" />
           <span class="badge badge-<%= course.level.toLowerCase() %>"><%= course.level %></span>
         </div>
         <div class="card-body">
           <div class="card-meta">
             <span class="card-category"><%= course.category %></span>
             <span class="card-dot">•</span>
-           <span class="card-hours"><%= course.hours %> hours</span>
+           <span class="card-hours"><%= course.duration || "0 hours" %> hours</span>
              </div>
           <h2 class="card-title"><%= course.title %></h2>
-          <p class="card-desc"><%= course.description %></p>
-          <p class="card-author">By <%= course.author %></p>
+          <p class="card-desc"><%= course.shortDescription %></p>
+          <p class="card-author">By <%= course.instructor?.name || "Unknown Instructor" %></p>
           <div class="card-stats">
             <span class="card-rating">
               <i class="fa-solid fa-star"></i>
-              <%= course.rating %> <span class="rating-count">(<%= course.students.toLocaleString() %>)</span>
+              <%= course.rating %> <span class="rating-count">(<%= (course.students?.length || 0).toLocaleString() %>)</span>
             </span>
             <span class="card-students">
               <i class="fa-solid fa-users"></i>
-              <%= course.students.toLocaleString() %>
+              <%= (course.students?.length || 0).toLocaleString() %>
             </span>
           </div>
           <div class="card-footer">
            <span class="card-price">$<%= course.price %></span>
-            <a href="/courses/<%= course._id %>" class="btn-view-details">View Details</a>
+             <a href="/courses/<%= course._id %>" class="btn-view-details">View Details</a>
           </div>
         </div>
       </article>
