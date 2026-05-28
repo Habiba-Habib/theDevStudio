@@ -69,3 +69,11 @@ if (cleanCardNumber.length === 16) {
     res.status(500).send("Server error");
   }
 };
+res.render("shared/profile", {
+  user,
+  completedCourses: user.completedCourses || [],
+  certificates: user.certificates || [],
+  instructorCourses: [],
+  adminStats: null,
+  rank: null
+});

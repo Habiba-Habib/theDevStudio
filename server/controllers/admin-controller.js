@@ -227,3 +227,13 @@ exports.logout = (req, res) => {
     res.redirect('/');
   });
 };
+
+//------------------- SHARED PROFILE-----------
+res.render("shared/profile", {
+  user,
+  completedCourses: [],
+  certificates: [],
+  instructorCourses: [],
+  adminStats,
+  rank: null
+});

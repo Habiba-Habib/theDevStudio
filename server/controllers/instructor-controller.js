@@ -339,3 +339,12 @@ exports.getEnrolledStudents = async (req, res) => {
     res.status(500).render('error');
   }
 };
+//--------------------SHARED PROFILE-----------------------
+res.render("shared/profile", {
+  user: instructor,
+  completedCourses: [],
+  certificates: [],
+  instructorCourses,
+  adminStats: null,
+  rank: null
+});
