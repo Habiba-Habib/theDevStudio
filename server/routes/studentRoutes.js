@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const studentController = require("../controllers/studentController");
-
+const session = require('express-session');
 
 router.get("/dashboard", studentController.getDashboard);
 router.get("/leaderboard", studentController.getLeaderboard);
