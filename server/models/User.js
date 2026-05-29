@@ -43,6 +43,10 @@ const userSchema = new mongoose.Schema(
       linkedinUrl: String,
       portfolioUrl: String,
       websiteUrl: String,
+      jobTitle: String,
+      expertise: String,
+      experience: String,
+      categories: String,
       status: {
         type: String,
         enum: ["not_submitted", "pending", "approved", "rejected"],

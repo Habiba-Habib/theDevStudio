@@ -71,15 +71,44 @@ document.getElementById('btn-continue-1').addEventListener('click', () => {
     document.getElementById('categories-error').classList.remove('show');
   }
 
-  if (!valid) {
+  const email = document.getElementById('email');
+  const password = document.getElementById('password');
+  const confirmPassword = document.getElementById('confirm-password');
+
+  if (!email?.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+    showError('email', 'email-error');
+    valid = false;
+  } else {
+    hideError('email-error');
+  }
+
+  if (!password?.value || password.value.length < 6) {
+    showError('password', 'password-error');
+    valid = false;
+  } else {
+    hideError('password-error');
+  }
+
+  if (password?.value !== confirmPassword?.value) {
+    showError('confirm-password', 'confirm-password-error');
+    valid = false;
+  } else {
+    hideError('confirm-password-error');
+  }
+
+     if (!valid) {
     shakeBtn('btn-continue-1');
-    // Scroll to first error
     const firstError = document.querySelector('.error-msg.show');
     if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
 
-  // Populate hidden input and submit
+  const btn = document.getElementById('btn-continue-1');
+  btn.disabled = true;
+
   document.getElementById('categories-hidden').value = selectedCategories.join(',');
   document.getElementById('section-1').submit();
+
 });
+
+

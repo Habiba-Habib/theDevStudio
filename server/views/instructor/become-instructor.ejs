@@ -40,7 +40,9 @@
       <span class="step-label">Review &amp; Submit</span>
     </div>
   </div>
-
+    <% if (locals.formError) { %>
+    <p class="error-msg show" id="form-error"><%= formError %></p>
+  <% } %>
   <!-- STEP 1 FORM -->
   <form class="form-section" id="section-1" action="/become-instructor" method="POST">
 
@@ -102,6 +104,39 @@
         <textarea class="form-input bio-input no-icon" id="bio" name="bio" placeholder="Describe your professional background, teaching philosophy, and what students will learn from you…"></textarea>
         <span class="error-msg" id="bio-error">A short professional bio is required.</span>
       </div>
+          <div class="form-card">
+      <h2 class="card-title">Account Details</h2>
+      <p class="card-subtitle">Create your login - you can sign in while your application is reviewed</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address <span>*</span></label>
+          <div class="input-wrapper">
+            <i class="fa-regular fa-envelope input-icon"></i>
+            <input class="form-input" type="email" id="email" name="email" placeholder="you@example.com"/>
+          </div>
+          <span class="error-msg" id="email-error">A valid email is required.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password <span>*</span></label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input class="form-input" type="password" id="password" name="password" placeholder="At least 6 characters"/>
+          </div>
+          <span class="error-msg" id="password-error">Password must be at least 6 characters.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="confirm-password">Confirm Password <span>*</span></label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock input-icon"></i>
+          <input class="form-input" type="password" id="confirm-password" placeholder="Repeat password"/>
+        </div>
+        <span class="error-msg" id="confirm-password-error">Passwords do not match.</span>
+      </div>
+    </div>
     </div>
 
     <!-- TEACHING CATEGORIES -->

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= user.name %> - Become an Instructor</title>
+  <title><%= typeof user !== "undefined" && user ? user.name : "User" %> - Become an Instructor</title>
   <link rel="stylesheet" href="/css/become-instructor3.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
@@ -62,34 +62,42 @@
 
         <div class="summary-row">
           <span class="summary-label">Full Name</span>
-          <span class="summary-value" id="sumFullName">—</span>
+          <span class="summary-value" id="sumFullName"><%= application.fullName || user?.name || '—' %></span>
         </div>
         <div class="summary-row">
           <span class="summary-label">Professional Title</span>
-          <span class="summary-value" id="sumTitle">—</span>
+          <span class="summary-value" id="sumTitle"><%= application.jobTitle || '—' %></span>
         </div>
         <div class="summary-row">
           <span class="summary-label">Expertise</span>
-          <span class="summary-value" id="sumExpertise">—</span>
+          <span class="summary-value" id="sumExpertise"><%= application.experience || '—' %></span>
         </div>
         <div class="summary-row">
           <span class="summary-label">Experience</span>
-          <span class="summary-value" id="sumExperience">—</span>
+          <span class="summary-value" id="sumExperience"><%= application.experience || '—' %></span>
         </div>
         <div class="summary-row">
           <span class="summary-label">Categories</span>
-          <span class="summary-value" id="sumCategories">None selected</span>
+          <span class="summary-value" id="sumCategories"><%= application.categories || 'None selected' %></span>
         </div>
         <div class="summary-row">
           <span class="summary-label">CV Upload</span>
-          <span class="summary-value status-missing" id="sumCV">
-            <i class="fa-solid fa-circle-exclamation"></i> Not uploaded
+                    <span class="summary-value" id="sumCV">
+            <% if (verification.cvUrl) { %>
+              <i class="fa-solid fa-circle-check"></i> Uploaded
+            <% } else { %>
+              <i class="fa-solid fa-circle-exclamation"></i> Not uploaded
+            <% } %>
           </span>
         </div>
         <div class="summary-row no-border">
           <span class="summary-label">Certificate</span>
-          <span class="summary-value status-missing" id="sumCert">
-            <i class="fa-solid fa-circle-exclamation"></i> Not uploaded
+              <span class="summary-value" id="sumCert">
+            <% if (verification.certificateUrl) { %>
+              <i class="fa-solid fa-circle-check"></i> Uploaded
+            <% } else { %>
+              <i class="fa-solid fa-circle-exclamation"></i> Not uploaded
+            <% } %>
           </span>
         </div>
 
@@ -97,6 +105,8 @@
     </div>
 
     
+        <form id="verificationForm" action="/become-instructor/step3" method="POST">
+
     <div class="card" id="agreementCard">
       <h2 class="card-title">Agreement</h2>
 
@@ -119,11 +129,12 @@
       </label>
     </div>
 
-    
     <div class="actions">
-      <a href="/become-instructor2" class="btn-back">Back</a>
-      <button class="btn-submit" id="btnSubmit">Submit Verification</button>
+      <a href="/become-instructor/step2" class="btn-back">Back</a>
+      <button type="submit" class="btn-submit" id="btnSubmit">Submit Verification</button>
     </div>
+
+    </form>
 
   </main>
 
