@@ -6,30 +6,44 @@
       document.querySelectorAll('.btn-role').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       selectedRole = role;
+
+      const roleInput = document.getElementById('role');
+      if (roleInput) roleInput.value = role;
     }
 
     // password toggle
-    document.getElementById('toggle-pw').addEventListener('click', () => {
-      const pw = document.getElementById('password');
-      const icon = document.querySelector('#toggle-pw i');
-      if (pw.type === 'password') {
-        pw.type = 'text';
-        icon.className = 'fa-regular fa-eye-slash';
-      } else {
-        pw.type = 'password';
-        icon.className = 'fa-regular fa-eye';
-      }
-    });
+    const togglePw = document.getElementById('toggle-pw');
+
+    if (togglePw) {
+      togglePw.addEventListener('click', () => {
+        const pw = document.getElementById('password');
+        const icon = document.querySelector('#toggle-pw i');
+
+        if (pw.type === 'password') {
+          pw.type = 'text';
+          if (icon) icon.className = 'fa-regular fa-eye-slash';
+        } else {
+          pw.type = 'password';
+          if (icon) icon.className = 'fa-regular fa-eye';
+        }
+      });
+    }
 
     // validation helpers
     function showError(fieldId, errorId) {
-      document.getElementById(fieldId).classList.add('error');
-      document.getElementById(errorId).classList.add('show');
+      const field = document.getElementById(fieldId);
+      const error = document.getElementById(errorId);
+
+      if (field) field.classList.add('error');
+      if (error) error.classList.add('show');
     }
 
     function clearError(fieldId, errorId) {
-      document.getElementById(fieldId).classList.remove('error');
-      document.getElementById(errorId).classList.remove('show');
+      const field = document.getElementById(fieldId);
+      const error = document.getElementById(errorId);
+
+      if (field) field.classList.remove('error');
+      if (error) error.classList.remove('show');
     }
 
     // clear errors on typing
@@ -78,11 +92,13 @@
       }
 
       // terms check
+      const termsError = document.getElementById('terms-error');
+
       if (!terms.checked) {
-        document.getElementById('terms-error').classList.add('show');
+        if (termsError) termsError.classList.add('show');
         valid = false;
       } else {
-        document.getElementById('terms-error').classList.remove('show');
+        if (termsError) termsError.classList.remove('show');
       }
 
       if (!valid) {
@@ -93,14 +109,29 @@
         return;
       }
 
-      // after successful login or signup
-     localStorage.setItem("role", selectedRole);
-     
-      const routes = {
-        student:    "../../pages/student/dashboard.html",
-        instructor: "../../pages/instructor/dashboard.html",
-       
-      };
-      window.location.href = routes[selectedRole];
+            fetch("/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: name.value.trim(),
+          email: email.value.trim(),
+          password: password.value,
+          role: selectedRole
+        })
+      })
+        .then(async (res) => {
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.message || "Signup failed");
+          }
+
+          window.location.href = "/auth/login";
+        })
+        .catch((err) => {
+          alert(err.message);
+        });
     });
  

@@ -9,11 +9,11 @@ function goHome() {
 }
 
 function goLogin() {
-  window.location.href = "/public/pages/public/login.html";
+  window.location.href = "/auth/login";
 }
 
 function goSignup() {
-  window.location.href = "/public/pages/public/signup.html";
+  window.location.href = "/auth/signup";
 }
 
 function goCourses() {
@@ -40,7 +40,7 @@ function goProfile() {
     student:    "/public/pages/student/profile.html",
     admin:      "/public/pages/admin/profile.html"
   };
-
+  
   window.location.href = routes[getRole()] || "/public/pages/public/login.html";
 }
 
