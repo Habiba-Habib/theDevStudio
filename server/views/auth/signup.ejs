@@ -39,7 +39,7 @@
         <button class="btn-role active" type="button" onclick="setRole(this, 'student')">Student</button>
         <button class="btn-role" type="button" onclick="setRole(this, 'instructor')">Instructor</button>
       </div>
-
+      <input type="hidden" id="role" name="role" value="student">
       <!-- NAME -->
       <div class="form-group">
         <label>Full Name</label>
@@ -67,12 +67,12 @@
       </div>
 
       <!-- BUTTON -->
-      <button class="btn-create" id="btn-create">Create Account</button>
+      <button type="button" class="btn-create" id="btn-create">Create Account</button>
       </form>
       <!-- LOGIN -->
       <div class="signin-row">
         Already have an account?
-        <a href="/login">Sign In</a>
+        <a href="/auth/login">Sign In</a>
       </div>
 
     </div>
