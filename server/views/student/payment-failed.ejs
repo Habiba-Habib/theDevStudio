@@ -4,9 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>EduPlatform | Payment Failed</title>
+  <title>TheDevStudio | Payment Failed</title>
 
-  <link rel="stylesheet" href="/css/student.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/payment-result.css"/>
   <link rel="stylesheet" href="/css/navbar-css.css">
 </head>
 
@@ -41,8 +43,10 @@
     <section class="payment-layout">
 
       <section class="payment-card" style="max-width: 600px; margin: 0 auto; text-align: center;">
-        <div class="payment-header" style="justify-content: center;">
-          <div class="payment-icon">✖</div>
+        <div class="payment-header">
+          <div class="payment-icon payment-icon--failed">
+            <i class="fa-solid fa-circle-xmark"></i>
+          </div>
           <div>
             <h2>Payment Failed</h2>
             <p>Your payment could not be completed.</p>
@@ -72,28 +76,20 @@
             </div>
           </div>
 
-          <a 
-            href="/student/payment/<%= course._id %>"
-            class="confirm-btn" 
-            style="display: inline-block; text-decoration: none; margin-top: 20px;"
-          >
-            Try Again
+                  <div class="result-actions">
+          <% if (typeof course !== "undefined" && course) { %>
+            <a href="/student/payment/<%= course._id %>" class="confirm-btn">
+              Try Again
+            </a>
+          <% } else { %>
+            <a href="/student/my-courses" class="confirm-btn">
+              Back to Courses
+            </a>
+          <% } %>
+          <a href="/student/my-courses" class="back-link">
+            ← Back to my courses
           </a>
-        <% } else { %>
-          <a 
-            href="/student/my-courses" 
-            class="confirm-btn" 
-            style="display: inline-block; text-decoration: none; margin-top: 20px;"
-          >
-            Back to Courses
-          </a>
-        <% } %>
-
-        <br />
-
-        <a href="/student/my-courses" class="back-link">
-          ← Back to courses
-        </a>
+        </div>
       </section>
 
     </section>

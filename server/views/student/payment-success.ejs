@@ -4,9 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>EduPlatform | Payment Successful</title>
+  <title>TheDevStudio | Payment Successful</title>
 
-  <link rel="stylesheet" href="/css/student.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/payment-result.css"/>
   <link rel="stylesheet" href="/css/navbar-css.css">
 </head>
 
@@ -17,8 +19,10 @@
 
       <section class="payment-card" style="max-width: 650px; margin: 0 auto; text-align: center;">
 
-        <div class="payment-header" style="justify-content: center;">
-          <div class="payment-icon">✓</div>
+        <div class="payment-header">
+          <div class="payment-icon payment-icon--success">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
           <div>
             <h2>Payment Successful</h2>
             <p>Your enrollment has been completed successfully.</p>
@@ -57,19 +61,14 @@
           </div>
         <% } %>
 
-        <a 
-          href="/courses/all-courses" 
-          class="confirm-btn" 
-          style="display: inline-block; text-decoration: none; margin-top: 20px;"
-        >
-          Browse more courses
-        </a>
-
-        <br />
-
-        <a href="/student/my-courses" class="back-link">
-         Go to my courses
-        </a>
+        <div class="result-actions">
+          <a href="/courses/all-courses" class="confirm-btn">
+            Browse more courses
+          </a>
+          <a href="/student/my-courses" class="back-link">
+            Go to my courses →
+          </a>
+        </div>
 
       </section>
 
