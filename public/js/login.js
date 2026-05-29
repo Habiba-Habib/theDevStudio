@@ -32,7 +32,7 @@ if (signinForm) {
     }
 
     try {
-      formMessage.textContent = "Signing in...";
+      formMessage.textContent = "Logging in...";
       formMessage.style.color = "#60A3A6";
 
       const res = await fetch("/auth/login", {
