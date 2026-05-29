@@ -554,15 +554,6 @@ body {
 }
 .btn-explore:hover { border-color: var(--teal); color: var(--teal); }
 
-.btn-payment {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--pink);
-  text-decoration: none;
-  transition: opacity 0.2s;
-}
-.btn-payment:hover { opacity: 0.75; }
-
 /* ========================================
    Quick Actions — Admin
    ======================================== */
