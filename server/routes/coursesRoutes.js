@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 
 router.get('/all-courses', async (req, res, next) => {
   try {
-    const courses = await Course.find({ isPublished: true });
+    const courses = await Course.find({ isPublished: true })
+      .populate("instructor", "name");
     res.render('guest/all-courses', { courses });
   } catch (err) {
     next(err);

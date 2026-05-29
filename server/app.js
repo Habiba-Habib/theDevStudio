@@ -1,5 +1,4 @@
 require("dotenv").config();
-const User = require("./models/User");
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
@@ -17,15 +16,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
-app.use(async (req, res, next) => {
-  if (req.session.userId) {
-    await User.findByIdAndUpdate(req.session.userId, {
-      lastActive: new Date()
-    });
-  }
 
-  next();
-});
 app.use(express.static(path.join(__dirname, "../public")));   //added
 
 app.set("view engine", "ejs");
@@ -55,7 +46,7 @@ app.get("/dashboard", (req, res) => {
     instructor: "/instructor/dashboard",
     admin:      "/admin/dashboard"
   };
-  res.redirect(dashboards[role] || "/auth/login");
+  res.redirect(dashboards[role] || "/login");
 });
 
 app.use((req, res) => {

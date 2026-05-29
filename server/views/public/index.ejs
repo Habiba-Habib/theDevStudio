@@ -85,91 +85,37 @@
             <p class="courses-tagline">Start learning with our most popular courses</p>
 
             <div class="courses-grid">
+              <% courses.forEach(course => { %>
               <article class="courses-card">
                  <div class="courses-image">
-                 <img src="/images/all-courses-1.jpg" alt="courses">
-                 <span class="badge">Beginner</span>
+                 <img src="<%= course.thumbnail %>" alt="courses">
+                 <span class="badge"><%= course.level %></span>
                  </div>
 
            
                  <div class="content">
-                <p class="category">Web Development • 40 hours</p>
-            <h3 class="card-title">Complete Web Development Bootcamp</h3>
-            <p class="description">Learn full-stack web development from zero to hero</p>
-            <p class="instructor">By Dr.Sarah Miller</p>
+                <p class="category"><%= course.category %> • <%= course.duration %></p>
+            <h3 class="card-title"><%= course.title %></h3>
+            <p class="description"><%= course.shortDescription %></p>
+            <p class="instructor">By <%= course.instructor?.name || "Instructor" %></p>
             <div class="rating">
                <span class="card-rating">
               <i class="fa-solid fa-star"></i>
-              4.8 <span class="rating-count">(12,453)</span>
+              <%= course.rating || 0 %>
                </span>
                <span class="card-students">
               <i class="fa-solid fa-users"></i>
-               12,453
+               <%= course.students ? course.students.length : 0 %>
               </span>
             </div>
 
             <div class="card-footer">
-                <span class="price">$49.99</span>
-          <button class="btn-details"><a href="/courses/all-courses">View Details</a></button>
+                <span class="price">$<%= course.price %></span>
+          <button class="btn-details"><a href="/courses/<%= course._id %>">View Details</a></button>
             </div>
             </div>
             </article>
-
-               <article class="courses-card">
-                 <div class="courses-image">
-                 <img src="/images/all-courses-2.jpg" alt="courses">
-                 <span class="badge">Intermediate</span>
-                 </div>
-
-            <div class="content">
-                <p class="category">Data Science • 45 hours</p>
-            <h3 class="card-title">Python for Data Science</h3>
-            <p class="description">Master python and data analysis</p>
-            <p class="instructor">By Dr.Emily Watson</p>
-            <div class="rating">
-                <span class="card-rating">
-        <i class="fa-solid fa-star"></i>
-        4.9 <span class="rating-count">(8,932)</span>
-    </span>
-    <span class="card-students">
-        <i class="fa-solid fa-users"></i>
-        8,932
-    </span>
-            </div>
-            <div class="card-footer">
-                <span class="price">$69.99</span>
-          <button class="btn-details"><a href="/courses">View Details</a></button>
-        </div>
-        </div>
-        </article>
-     <article class="courses-card">
-                 <div class="courses-image">
-                 <img src="/images/all-courses-3.jpg" alt="courses">
-                 <span class="badge">Advanced</span>
-                 </div>
-
-            <div class="content">
-                <p class="category">Web Development • 35 hours</p>
-            <h3 class="card-title">Advanced React Development</h3>
-            <p class="description">Master advanced Reach Concepts and patterns</p>
-            <p class="instructor">By Mike Chen</p>
-            <div class="rating">
-                <span class="card-rating">
-        <i class="fa-solid fa-star"></i>
-        4.9 <span class="rating-count">(8,932)</span>
-    </span>
-    <span class="card-students">
-        <i class="fa-solid fa-users"></i>
-        8,932
-    </span>
-            </div>
-            <div class="card-footer">
-                <span class="price">$69.99</span>
-          <button class="btn-details"> <a href="/courses">View Details</a></button>
-        </div> 
-        </div>
-      
-      </article>
+            <% }) %>
             </div>
         </section>
        <div class="view-all-container">

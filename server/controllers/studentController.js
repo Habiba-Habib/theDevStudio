@@ -247,3 +247,35 @@ exports.getLeaderboard = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
+exports.getStartChallenge = async (req, res) => {
+  try {
+    const challenge = await Challenge.findById(req.params.id);
+
+    if (!challenge) {
+      return res.status(404).render("public/page-404", {
+        message: "Challenge not found",
+      });
+    }
+
+    res.render("student/start-challenge", {
+      challenge: {
+        ...challenge.toObject(),
+        summary: challenge.description,
+        examples: challenge.testCases
+          .filter(testCase => !testCase.isHidden)
+          .map(testCase => ({
+            input: testCase.input,
+            output: testCase.expectedOutput,
+            explanation: "",
+          })),
+        constraints: [],
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).render("public/page-404", {
+      message: "Server error",
+    });
+  }
+};

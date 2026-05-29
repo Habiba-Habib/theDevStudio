@@ -48,7 +48,25 @@ router.get('/:id', async (req, res) => {
     return res.status(404).render('public/page-404', {message:'Challenge not found'});
   }
 
-  res.render('guest/challenge-description', { challenge });
+ res.render('guest/challenge-description', {
+  challenge: {
+    ...challenge.toObject(),
+    desc: challenge.description,
+    details: [],
+    examples: challenge.testCases.map(testCase => ({
+      input: testCase.input,
+      output: testCase.expectedOutput,
+      explanation: ""
+    })),
+    defaultCode: challenge.starterCode,
+    timeLimit: "No limit",
+    stats: {
+      totalSubmissions: 0,
+      accepted: challenge.solvedCount || 0,
+      successRate: "0%"
+    }
+  }
+});
 }catch(err){
   console.error(err);
   res.status(500).render('public/page-404',{message:'Server error'})
