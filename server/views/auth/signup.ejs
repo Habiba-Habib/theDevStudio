@@ -33,28 +33,29 @@
       <p class="subtitle">Sign up to start your learning journey</p>
 
       <!-- ROLE -->
+       <form action="/auth/signup" method="POST">
       <div class="role-label">I want to join as</div>
       <div class="role-buttons">
-        <button class="btn-role active" type="button">Student</button>
-        <button class="btn-role" type="button">Instructor</button>
+        <button class="btn-role active" type="button" onclick="setRole(this, 'student')">Student</button>
+        <button class="btn-role" type="button" onclick="setRole(this, 'instructor')">Instructor</button>
       </div>
 
       <!-- NAME -->
       <div class="form-group">
         <label>Full Name</label>
-        <input type="text" class="form-input" id="name" placeholder="John Doe">
+        <input type="text" class="form-input" id="name" name ="name" placeholder="John Doe">
       </div>
 
       <!-- EMAIL -->
       <div class="form-group">
         <label>Email</label>
-        <input type="email" class="form-input" id="email" placeholder="you@example.com">
+        <input type="email" class="form-input" id="email" name="email" placeholder="you@example.com">
       </div>
 
       <!-- PASSWORD -->
       <div class="form-group">
         <label>Password</label>
-        <input type="password" class="form-input" id="password" placeholder="Create password">
+        <input type="password" class="form-input" id="password" name = "password" placeholder="Create password">
       </div>
 
       <!-- TERMS -->
@@ -67,7 +68,7 @@
 
       <!-- BUTTON -->
       <button class="btn-create" id="btn-create">Create Account</button>
-
+      </form>
       <!-- LOGIN -->
       <div class="signin-row">
         Already have an account?
