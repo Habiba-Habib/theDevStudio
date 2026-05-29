@@ -202,7 +202,7 @@ body {
 .challenge-card.medium::before { background: var(--yellow); }
 .challenge-card.hard::before   { background: var(--pink); }
 
-.card-top {
+.card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -243,7 +243,7 @@ body {
   flex: 1;
 }
 
-.card-bottom {
+.card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -260,11 +260,12 @@ body {
 .btn-view {
   background: transparent;
   border: 1.5px solid var(--pink);
+  text-decoration: none;
   color: var(--pink);
   font-family: var(--font);
   font-size: 13px;
   font-weight: 600;
-  padding: 7px 18px;
+  padding: 7px 12px;
   border-radius: 20px;
   cursor: pointer;
   transition: background 0.18s, color 0.18s;
