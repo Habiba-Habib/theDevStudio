@@ -50,14 +50,13 @@ exports.signup = async (req, res) => {
    ========================= */
 exports.login = async (req, res) => {
   try {
-    const { email, password, role } = req.body;
+    const { email, password } = req.body;
 
-    if (!email || !password || !role) {
+    if (!email || !password) {
       return res.status(400).json({ message: "Missing fields" });
     }
 
-    // 1. Find the user in your real MongoDB database
-    const user = await User.findOne({ email, role });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
