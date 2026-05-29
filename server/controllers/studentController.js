@@ -220,3 +220,30 @@ exports.getMyCourses = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+//leaderboard page
+exports.getLeaderboard = async (req, res) => {
+  try {
+    if (!req.session.userId) {
+      return res.redirect("/auth/login");
+    }
+
+    const players = await User.find({ role: "student" })
+      .sort({ points: -1 })
+      .limit(10);
+
+    const currentUser = await User.findById(req.session.userId);
+
+    if (!currentUser) {
+      return res.redirect("/auth/login");
+    }
+
+    res.render("student/leaderboard", {
+      players,
+      topPlayers: players.slice(0, 3),
+      currentUser
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server error");
+  }
+};

@@ -5,6 +5,7 @@ const studentController = require("../controllers/studentController");
 
 
 router.get("/dashboard", studentController.getDashboard);
+router.get("/leaderboard", studentController.getLeaderboard);
 router.get("/payment/:courseId", studentController.getPaymentPage);
 router.get("/my-courses", studentController.getMyCourses);
 router.post("/payment/:courseId", studentController.processPayment);
