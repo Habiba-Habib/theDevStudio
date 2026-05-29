@@ -65,24 +65,34 @@
            <a href="/student/my-courses" class="section-link">View All</a>
           </div>
 
-          <!-- Card  -->
-           <% courses.forEach(function(course) { %>
+                    <div class="courses-list">
+          <% if (courses.length === 0) { %>
+            <p class="empty-courses">You haven't enrolled in any courses yet.</p>
+          <% } %>
+
+          <% courses.forEach(function(course) { %>
           <div class="course-progress-card">
-            <img src="<%= course.thumbnail %>" alt="<%= course.title %>" class="course-thumb" />
+            <img
+              src="<%= course.thumbnail || '/images/course1.jpg' %>"
+              alt="<%= course.title %>"
+              class="course-thumb"
+            />
             <div class="course-progress-info">
               <div class="course-progress-top">
                 <div>
                   <h3 class="course-progress-title"><%= course.title %></h3>
-                  <p class="course-progress-author">By <%= course.instructor || "Unknown Instructor" %></p>
+                  <p class="course-progress-author">By <%= course.instructor %></p>
+                </div>
                 <span class="progress-badge"><%= course.progress %>% Complete</span>
               </div>
               <div class="progress-bar-wrapper">
                 <div class="progress-bar" data-width="<%= course.progress %>"></div>
               </div>
-              <a href="/course-description" class="btn-continue">Continue Learning</a>
+              <a href="/courses/<%= course._id %>" class="btn-continue">Continue Learning</a>
             </div>
           </div>
-              <% }); %>
+          <% }); %>
+          </div>
         
           <!-- Action Buttons -->
           <div class="courses-actions">

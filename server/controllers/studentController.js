@@ -109,7 +109,7 @@ exports.getDashboard = async (req, res) => {
       return res.redirect("/auth/login");
     }
 
-    const courses = user.enrolledCourses
+        const allCourses = user.enrolledCourses
       .filter(enrollment => enrollment.course)
       .map(enrollment => ({
         _id: enrollment.course._id,
@@ -118,6 +118,8 @@ exports.getDashboard = async (req, res) => {
         instructor: enrollment.course.instructor?.name || "Unknown Instructor",
         progress: enrollment.progress || 0
       }));
+
+    const courses = allCourses.slice(0, 3);
 
     const averageProgress = courses.length
       ? Math.round(
@@ -164,7 +166,7 @@ exports.getDashboard = async (req, res) => {
   };
 });
     const stats = {
-      enrolledCourses: courses.length,
+      enrolledCourses: allCourses.length,
       enrolledChange: "",
       progress: averageProgress,
       progressChange: "",
