@@ -5,6 +5,10 @@ const Challenge = require("../models/challenges");
 
 exports.getPaymentPage = async (req, res) => {
   try {
+    if (!req.session.userId) {
+      return res.redirect("/auth/login");
+    }
+
     const courseId = req.params.courseId;
 
     const course = await Course.findById(courseId);
@@ -24,6 +28,10 @@ exports.getPaymentPage = async (req, res) => {
 
 exports.processPayment = async (req, res) => {
   try {
+    if (!req.session.userId) {
+      return res.redirect("/auth/login");
+    }
+
     const courseId = req.params.courseId;
 
     const course = await Course.findById(courseId);

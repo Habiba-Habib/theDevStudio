@@ -58,17 +58,17 @@
         <% } %>
 
         <a 
-          href="<%= typeof course !== 'undefined' && course && course._id ? '/student/course/' + course._id : '/student/my-courses' %>" 
+          href="/courses/all-courses" 
           class="confirm-btn" 
           style="display: inline-block; text-decoration: none; margin-top: 20px;"
         >
-          Go to Course
+          Browse more courses
         </a>
 
         <br />
 
         <a href="/student/my-courses" class="back-link">
-          ← Back to my courses
+         Go to my courses
         </a>
 
       </section>

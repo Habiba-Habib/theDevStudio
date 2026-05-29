@@ -34,15 +34,16 @@ router.get("/edit-profile", async (req, res) => {
 router.post("/edit-profile", async (req, res) => {
   if (!req.session.userId) return res.redirect("/auth/login");
 
-  const { name, fullname, username, email, bio, location } = req.body;
+  const { name, fullname, username, email, bio, location, avatar } = req.body;
 
   await User.findByIdAndUpdate(req.session.userId, {
-    name,
+    name: name || fullname,
     fullname,
     username,
     email,
     bio,
     location,
+    avatar,
     lastActive: new Date(),
   });
 

@@ -17,7 +17,7 @@
 
         <h1 class="edit-title">Edit Profile</h1>
 
-       
+        <form action="/<%= user.role %>/edit-profile" method="POST">
         <div class="avatar-card">
             <h2 style="margin-bottom: 16px;">Choose Your Avatar</h2>
             <div class="grid-avatars">
@@ -32,8 +32,9 @@
                 <img src="/images/avatars/avatar9b.png" alt="Avatar 9">
                 <img src="/images/avatars/avatar10b.png" alt="Avatar 10">
             </div>
+            <input type="hidden" id="avatar" name="avatar" value="<%= user.avatar || 'avatar1g.png' %>">
             <div class="selected-avatar">
-                <img id="selected-img" src="/images/avatars/avatar1g.png" alt="Selected Avatar">
+                <img id="selected-img" src="/images/avatars/<%= user.avatar || 'avatar1g.png' %>" alt="Selected Avatar">
                 <div class="selected-info">
                     <p class="selected-title">Selected Avatar</p>
                     <p class="selected-desc">This will be your new profile picture</p>
@@ -50,7 +51,7 @@
                     <label>Full Name</label>
                     <div class="input-wrapper">
                          <span class="input-icon"><i class="fa-regular fa-user "></i></span>
-                        <input type="text" id="fullname" placeholder="Jana mohamed" value="<%= user.fullname %>">
+                        <input type="text" id="fullname" name="name" placeholder="Jana mohamed" value="<%= user.name || user.fullname || '' %>">
                     </div>
                 </div>
 
@@ -58,7 +59,7 @@
                     <label>Username</label>
                     <div class="input-wrapper">
                        <span class="input-icon"><i class="fa-regular fa-user"></i></span>
-                        <input type="text" id="username" placeholder="jana" value="<%= user.username %>">
+                        <input type="text" id="username" name="username" placeholder="jana" value="<%= user.username || '' %>">
                     </div>
                 </div>
             </div>
@@ -67,7 +68,7 @@
                 <label>Email Address</label>
                 <div class="input-wrapper">
                  <span class="input-icon"><i class="fa-regular fa-envelope"></i></span>
-                    <input type="email" id="email" placeholder="jana@gmail.com" value="<%= user.email %>">
+                    <input type="email" id="email" name="email" placeholder="jana@gmail.com" value="<%= user.email || '' %>">
                 </div>
             </div>
 
@@ -75,13 +76,13 @@
                 <label>Location</label>
                 <div class="input-wrapper">
                    <span class="input-icon"><i class="fa-solid fa-location-dot"></i></span>
-                    <input type="text" id="location" placeholder="Egypt, Cai" value="<%= user.location || '' %>">
+                    <input type="text" id="location" name="location" placeholder="Egypt, Cai" value="<%= user.location || '' %>">
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Bio</label>
-                <textarea id="bio" placeholder="Passionate learner exploring web development and data science. Love solving coding challenges!"><%= user.bio || '' %></textarea>
+                <textarea id="bio" name="bio" placeholder="Passionate learner exploring web development and data science. Love solving coding challenges!"><%= user.bio || '' %></textarea>
             </div>
         </div>
 
@@ -122,9 +123,10 @@
 
        
      <div class="bttns">
-       <button class="save-bttn" id="save-bttn">Save Changes</button>
-       <button class="cancel-bttn" id="cancel-bttn">Cancel</button>
+       <button class="save-bttn" id="save-bttn" type="submit">Save Changes</button>
+       <button class="cancel-bttn" id="cancel-bttn" type="button">Cancel</button>
      </div>
+     </form>
 
     </div>
 

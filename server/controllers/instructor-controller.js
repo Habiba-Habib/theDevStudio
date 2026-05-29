@@ -73,9 +73,9 @@ exports.getEditProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    const { name, bio, location } = req.body;
+    const { name, username, email, bio, location, avatar } = req.body;
 
-    const updateData = { name, bio, location };
+    const updateData = { name, username, email, bio, location, avatar };
 
     // If a new avatar was uploaded, update it
     if (req.file) {
