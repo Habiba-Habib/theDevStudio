@@ -44,8 +44,13 @@ router.post('/become-instructor/step2', upload.fields([
     }
 
     const { linkedinUrl, portfolioUrl, websiteUrl } = req.body;
+    
+    const step1Data = req.session.instructorApplication || {};
 
     await User.findByIdAndUpdate(req.session.userId, {
+      name: step1Data.name || req.session.user?.name || "",
+      bio: step1Data.bio || "",
+      
       instructorVerification: {
         cvUrl: req.files?.cv?.[0]?.path || "",
         certificateUrl: req.files?.certificate?.[0]?.path || "",

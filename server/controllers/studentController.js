@@ -117,7 +117,7 @@ exports.getDashboard = async (req, res) => {
         )
       : 0;
 
-    const allUsersByPoints = await User.find()
+    const allUsersByPoints = await User.find({ role: "student" })
       .sort({ points: -1 })
       .select("_id");
 

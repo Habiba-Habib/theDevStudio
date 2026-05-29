@@ -34,6 +34,15 @@ exports.signup = async (req, res) => {
       role
     });
 
+    req.session.user = {
+      _id: newUser._id,
+      name: newUser.name,
+      email: newUser.email,
+      role: newUser.role
+    };
+    req.session.userId = newUser._id;
+    req.session.role = newUser.role;
+
     return res.status(201).json({
       message: "Signup successful",
       user: { id: newUser._id, name, email, role }
