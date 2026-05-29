@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema(
     ],
 
 
-    courses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
+    
 
       instructorVerification: {
       cvUrl: String,

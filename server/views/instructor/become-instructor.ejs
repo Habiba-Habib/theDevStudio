@@ -7,6 +7,7 @@
   <title>Become an Instructor – EduPlatform</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link rel="stylesheet" href="/css/become-instructor.css"/>
   <link rel="stylesheet" href="/css/navbar-css.css">
 </head>
@@ -26,14 +27,17 @@
   </div>
 
   <!-- STEP 1 -->
-  <div class="form-section" id="section-1">
+ <form class="form-section" id="section-1" action="/become-instructor" method="POST">
 
     <div class="form-card">
       <h2 class="card-title">Instructor Information</h2>
 
       <div class="form-row">
-        <input class="form-input" id="full-name" placeholder="Full Name"/>
-        <input class="form-input" id="job-title" placeholder="Job Title"/>
+        <input class="form-input" id="full-name" name="fullName" placeholder="Full Name"/>
+<input class="form-input" id="job-title" name="jobTitle" placeholder="Job Title"/>
+<input class="form-input" id="expertise" name="expertise" placeholder="Primary Expertise"/>
+<select class="form-input" id="experience" name="experience">
+<textarea class="form-input" id="bio" name="bio" placeholder="Professional Bio"></textarea>
       </div>
 
       <div class="form-row">
@@ -51,48 +55,11 @@
     </div>
 
     <div class="btn-row">
-      <button class="btn-continue" id="btn-continue-1">Continue</button>
+      <button class="btn-continue" id="btn-continue-1" type="submit">Continue</button>
     </div>
 
-  </div>
-
-  <!-- STEP 2 -->
-  <div class="form-section hidden" id="section-2">
-
-    <div class="form-card">
-      <h2 class="card-title">Upload Documents</h2>
-
-      <input type="file" id="file-id"/>
-      <input type="file" id="file-cert"/>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn-back" id="btn-back-2">Back</button>
-      <button class="btn-continue" id="btn-continue-2">Continue</button>
-    </div>
-
-  </div>
-
-  <!-- STEP 3 -->
-  <div class="form-section hidden" id="section-3">
-
-    <div class="form-card">
-      <h2 class="card-title">Review</h2>
-      <div id="review-grid"></div>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn-back" id="btn-back-3">Back</button>
-
-      <!-- IMPORTANT: backend route -->
-      <button class="btn-submit" id="btn-submit">
-        Submit Application
-      </button>
-    </div>
-
-  </div>
-
-</div>
+ </form>
+ 
 
 <!-- HELP -->
 <button class="help-btn">?</button>

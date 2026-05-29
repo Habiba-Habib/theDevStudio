@@ -23,6 +23,14 @@ router.get('/page-404', (req, res) => res.render('public/page-404'));
 
 // Instructor public pages
 router.get('/become-instructor', (req, res) => res.render('instructor/become-instructor'));
+router.post('/become-instructor', (req, res) => {
+  req.session.instructorApplication = {
+    ...req.session.instructorApplication,
+    ...req.body
+  };
+
+  res.redirect('/become-instructor/step2');
+});
 router.get('/become-instructor/step2', (req, res) => res.render('instructor/become-instructor2'));
 router.get('/become-instructor/step3', (req, res) => res.render('instructor/become-instructor3'));
 

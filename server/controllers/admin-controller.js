@@ -100,7 +100,7 @@ exports.getUsers = async (req, res) => {
         ? u.createdAt.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
         : "N/A",
       progress: u.progress || 0,
-      courses:  u.courses  || 0,
+      courses:  u.u.enrolledCourses?.length  || 0,
       students: u.students || 0
     }));
 

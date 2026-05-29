@@ -17,7 +17,11 @@ router.get('/', async (req, res) => {
   try{
   const challenges = await Challenge.find({isPublished: true});
   const totalPoints = challenges.reduce((sum, c) => sum + c.points, 0);
-  const totalUsers = await User.countDocuments({ role: 'student' });
+  const activeSince = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const totalUsers = await User.countDocuments({
+    role: 'student',
+    lastActive: { $gte: activeSince }
+  });
 
   res.render('guest/coding-challenges', {
     challenges,

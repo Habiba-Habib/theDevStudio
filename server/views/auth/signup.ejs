@@ -6,6 +6,7 @@
   <title>Create Account – EduPlatform</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link rel="stylesheet" href="/css/signup.css"/>
   <link rel="stylesheet" href="/css/navbar-css.css">
 </head>
@@ -37,7 +38,7 @@
       <div class="role-label">I want to join as</div>
       <div class="role-buttons">
         <button class="btn-role active" type="button" onclick="setRole(this, 'student')">Student</button>
-        <button class="btn-role" type="button" onclick="setRole(this, 'instructor')">Instructor</button>
+<button class="btn-role" type="button" onclick="window.location.href='/become-instructor'">Instructor</button>
       </div>
       <input type="hidden" id="role" name="role" value="student">
       <!-- NAME -->
@@ -53,10 +54,27 @@
       </div>
 
       <!-- PASSWORD -->
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" class="form-input" id="password" name = "password" placeholder="Create password">
-      </div>
+     <div class="form-group">
+  <label>Password</label>
+  <div class="input-wrapper">
+    <input type="password" class="form-input" id="password" name="password" placeholder="Create password">
+    <button type="button" class="btn-toggle-pw" data-target="password">
+      <i class="fa-regular fa-eye"></i>
+    </button>
+  </div>
+  <span class="error-msg" id="password-error">Password is too easy. Use at least 8 characters with letters and numbers.</span>
+</div>
+
+<div class="form-group">
+  <label>Confirm Password</label>
+  <div class="input-wrapper">
+  <input type="password" class="form-input" id="confirm-password" placeholder="Confirm password">
+  <button type="button" class="btn-toggle-pw" data-target="confirm-password">
+    <i class="fa-regular fa-eye"></i>
+  </button>
+</div>
+<span class="error-msg" id="confirm-password-error">Passwords do not match.</span>
+</div>
 
       <!-- TERMS -->
       <div class="terms-row">
@@ -65,7 +83,7 @@
           I agree to the Terms of Service
         </label>
       </div>
-
+     <span class="error-msg terms-error-msg" id="terms-error">Please confirm the Terms of Service.</span>
       <!-- BUTTON -->
       <button type="button" class="btn-create" id="btn-create">Create Account</button>
       </form>
@@ -77,7 +95,17 @@
 
     </div>
   </div>
+  
 
+</div>
+<div class="signup-popup hidden" id="signup-popup">
+  <div class="signup-popup-card">
+    <div class="signup-popup-icon" id="signup-popup-icon">
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
+    <h3 id="signup-popup-title">Account Created</h3>
+    <p id="signup-popup-message">Please log in to continue.</p>
+  </div>
 </div>
 
 <!-- JS -->
