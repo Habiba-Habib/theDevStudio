@@ -10,10 +10,16 @@ function initAvatarSelection() {
             avatar.classList.add('active');
             selectedImg.src = avatar.src;
             selectedImg.alt = avatar.alt;
+            const avatarInput = document.getElementById('avatar');
+            if (avatarInput) {
+                avatarInput.value = avatar.src.split('/').pop();
+            }
         });
     });
 
-    avatars[0].classList.add('active');
+    const currentAvatar = selectedImg.src.split('/').pop();
+    const activeAvatar = Array.from(avatars).find(avatar => avatar.src.split('/').pop() === currentAvatar);
+    (activeAvatar || avatars[0]).classList.add('active');
 }
 
 
@@ -75,9 +81,9 @@ function initSaveButton() {
     if (!saveBtn) return;
 
     saveBtn.removeAttribute('onclick');
-    saveBtn.addEventListener('click', () => {
-        if (validatePasswords()) {
-            window.location.href = '/public/pages/admin/profile.html';
+    saveBtn.addEventListener('click', (event) => {
+        if (!validatePasswords()) {
+            event.preventDefault();
         }
     });
 }

@@ -141,33 +141,43 @@ document.getElementById('cvv').addEventListener('input', function () {
 // ─────────────────────────────────────────────
 //  Promo code
 // ─────────────────────────────────────────────
-const PROMO_CODES = { 'SAVE10': 80.99, 'EDU20': 71.99 };
+const PROMO_CODES = { 'SAVE10': 0.10, 'EDU20': 0.20 };
+
+function updateOrderSummary(subtotal) {
+  const subEl   = document.getElementById('subtotal');
+  const taxEl   = document.getElementById('tax');
+  const totalEl = document.getElementById('total');
+  const taxRate = Number(taxEl?.dataset.taxRate || 0);
+  const tax     = subtotal * taxRate;
+  const total   = subtotal + tax;
+
+  if (subEl) subEl.textContent = '$' + subtotal.toFixed(2);
+  if (taxEl) taxEl.textContent = '$' + tax.toFixed(2);
+  if (totalEl) totalEl.textContent = '$' + total.toFixed(2);
+}
 
 document.getElementById('promo').addEventListener('blur', function () {
   const code    = this.value.trim().toUpperCase();
   const errEl   = document.getElementById('err-promo');
   const subEl   = document.getElementById('subtotal');
-  const totalEl = document.getElementById('total');
+  const originalSubtotal = Number(subEl?.dataset.subtotal || 0);
 
   if (!code) {
-    subEl.textContent   = '$89.99';
-    totalEl.textContent = '$89.99';
+    updateOrderSummary(originalSubtotal);
     if (errEl) { errEl.textContent = ''; errEl.classList.remove('visible'); }
     return;
   }
 
   if (PROMO_CODES[code]) {
-    const discounted = PROMO_CODES[code].toFixed(2);
-    subEl.textContent   = '$' + discounted;
-    totalEl.textContent = '$' + discounted;
+    const discounted = originalSubtotal * (1 - PROMO_CODES[code]);
+    updateOrderSummary(discounted);
     if (errEl) {
       errEl.style.color = 'var(--teal)';
       errEl.innerHTML   = '<i class="fa-solid fa-circle-check"></i> Promo code applied!';
       errEl.classList.add('visible');
     }
   } else {
-    subEl.textContent   = '$89.99';
-    totalEl.textContent = '$89.99';
+    updateOrderSummary(originalSubtotal);
     if (errEl) {
       errEl.style.color = 'var(--pink)';
       errEl.innerHTML   = '<i class="fa-solid fa-circle-exclamation"></i> Invalid promo code.';
