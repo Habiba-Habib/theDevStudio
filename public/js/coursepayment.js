@@ -189,7 +189,11 @@ document.getElementById('promo').addEventListener('blur', function () {
 // ─────────────────────────────────────────────
 //  Submit
 // ─────────────────────────────────────────────
-function handlePayment() {
+const paymentForm = document.getElementById('paymentForm');
+
+paymentForm.addEventListener('submit', function (event) {
+  event.preventDefault();
+
   const isValid = [
     validateName(),
     validateCardNumber(),
@@ -198,16 +202,13 @@ function handlePayment() {
     validateTerms()
   ].every(Boolean);
 
-  if (!isValid) return;
+  if (!isValid) {
+    return;
+  }
 
   const btn = document.getElementById('confirmBtn');
   btn.disabled = true;
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
 
-  setTimeout(() => {
-    btn.innerHTML        = '<i class="fa-solid fa-circle-check"></i> Payment Successful!';
-    btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
-    btn.style.boxShadow  = '0 6px 24px rgba(34,197,94,0.4)';
-    clearAll();
-  }, 2000);
-}
+  paymentForm.submit();
+});
