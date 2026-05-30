@@ -6,6 +6,10 @@ const connectDB = require("./config/db");
 
 const app = express();
 
+
+const passport = require("passport");
+const { configurePassport } = require("./config/passport");
+
 connectDB();
 
 app.use(express.urlencoded({ extended: true }));
@@ -16,6 +20,12 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
+
+configurePassport();
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use(express.static(path.join(__dirname, "../public")));   //added
 app.use("/images", express.static(path.join(__dirname, "../images")));
