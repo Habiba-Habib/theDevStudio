@@ -1,11 +1,8 @@
 const User      = require("../models/User");
 const Challenge = require("../models/challenges");
 
-// ─── Dashboard ───────────────────────────────────────────────
 exports.getDashboard = async (req, res) => {
   try {
-    const admin = await User.findById(req.session.user._id);
-
     const totalUsers      = await User.countDocuments();
     const totalChallenges = await Challenge.countDocuments({ deletedAt: null }).catch(() => 0);
 
@@ -21,7 +18,7 @@ exports.getDashboard = async (req, res) => {
 
     res.render("admin/dashboard", {
       admin: {
-        name:     admin.name,
+        name:     req.session.user.name,
         subtitle: "Here's what's happening on your platform today."
       },
       stats: {
@@ -42,11 +39,23 @@ exports.getDashboard = async (req, res) => {
   }
 };
 
-// ─── Profile ─────────────────────────────────────────────────
 exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.session.user._id);
-    res.render("admin/edit-profile", { user });
+    const user = await User.findById(req.session.user._id) || req.session.user;
+
+    const adminStats = {
+      totalUsers: await User.countDocuments(),
+      totalChallenges: await Challenge.countDocuments()
+    };
+
+    res.render("shared/profile", {
+      user,
+      completedCourses: [],
+      certificates: [],
+      instructorCourses: [],
+      adminStats,
+      rank: null
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");
@@ -76,7 +85,6 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
-// ─── User Management ─────────────────────────────────────────
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.find().sort({ createdAt: -1 });
@@ -92,7 +100,7 @@ exports.getUsers = async (req, res) => {
         ? u.createdAt.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
         : "N/A",
       progress: u.progress || 0,
-      courses:  u.courses  || 0,
+      courses:  u.u.enrolledCourses?.length  || 0,
       students: u.students || 0
     }));
 
@@ -135,7 +143,6 @@ exports.toggleSuspend = async (req, res) => {
   }
 };
 
-// ─── Challenges Oversight ─────────────────────────────────────
 exports.getChallenges = async (req, res) => {
   try {
     const challenges      = await Challenge.find({ deletedAt: null }).sort({ createdAt: -1 });
@@ -147,3 +154,141 @@ exports.getChallenges = async (req, res) => {
     res.render("admin/manage-challenges", { challenges: [], recentlyDeleted: [] });
   }
 };
+const users = []; // temporary memory DB (later MongoDB)
+
+/* =========================
+   SIGN UP
+   ========================= */
+exports.signup = (req, res) => {
+  const { name, email, password, role } = req.body;
+
+  if (!name || !email || !password || !role) {
+    return res.render('auth/signup', { error: 'Missing fields' });
+  }
+
+  if (!["student", "instructor"].includes(role)) {
+    return res.render('auth/signup', { error: 'Invalid role' });
+  }
+
+  const exists = users.find(u => u.email === email);
+  if (exists) {
+    return res.render('auth/signup', { error: 'User already exists' });
+  }
+
+  const newUser = {
+    id: users.length + 1,
+    name,
+    email,
+    password,
+    role
+  };
+
+  users.push(newUser);
+  return res.redirect('/auth/login');
+};
+
+/* =========================
+   LOGIN
+   ========================= */
+exports.login = (req, res) => {
+  const { email, password, role } = req.body;
+
+  if (!email || !password || !role) {
+    return res.render('auth/login', { error: 'Missing fields', email });
+  }
+
+  const user = users.find(
+    u => u.email === email && u.password === password && u.role === role
+  );
+
+  if (!user) {
+    return res.render('auth/login', { error: 'Invalid credentials', email });
+  }
+
+  req.session.userId = user.id;
+  req.session.role = user.role;
+  req.session.user = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role
+  };
+
+  const dashboards = {
+    student:    "/student/dashboard",
+    instructor: "/instructor/dashboard",
+    admin:      "/admin/dashboard"
+  };
+
+  return res.redirect(dashboards[user.role] || "/");
+};
+
+exports.getCreateChallenge = async (req, res) => {
+  try {
+    res.render("admin/create-challenge");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+};
+exports.postCreateChallenge = async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      difficulty,
+      category,
+      points,
+      starterCode,
+      testCases,
+      isPublished
+    } = req.body;
+
+    if (!title || !description || !difficulty || !category) {
+      return res.status(400).json({ message: "Missing required fields." });
+    }
+
+    if (!Array.isArray(testCases) || testCases.length === 0) {
+      return res.status(400).json({ message: "At least one test case is required." });
+    }
+
+    const allowedDifficulties = ["easy", "medium", "hard"];
+    const normalizedDifficulty = String(difficulty).toLowerCase();
+
+    if (!allowedDifficulties.includes(normalizedDifficulty)) {
+      return res.status(400).json({ message: "Invalid difficulty value." });
+    }
+
+    const challenge = await Challenge.create({
+      title: title.trim(),
+      description: description.trim(),
+      difficulty: normalizedDifficulty,
+      category: category.trim(),
+      points: Number(points) || 100,
+      starterCode: starterCode || "// Write your solution here\n",
+      testCases,
+      createdBy: req.session.user._id,
+      isPublished: Boolean(isPublished)
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Challenge saved successfully.",
+      challengeId: challenge._id
+    });
+  } catch (err) {
+    console.error("postCreateChallenge error:", err);
+    res.status(500).json({ message: "Failed to save challenge." });
+  }
+};
+
+/* =========================
+   LOGOUT
+   ========================= */
+exports.logout = (req, res) => {
+  req.session.destroy(() => {
+    res.redirect('/');
+  });
+};
+
+

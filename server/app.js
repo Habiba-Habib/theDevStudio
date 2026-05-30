@@ -1,6 +1,6 @@
-require("dotenv").config();
-const express = require("express");
 const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
+const express = require("express");
 const session = require("express-session");
 const connectDB = require("./config/db");
 
@@ -17,37 +17,48 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "../public")));   //added
+app.use("/images", express.static(path.join(__dirname, "../images")));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 const authRoutes       = require("./routes/authRoutes");
-const publicRoutes     = require("./routes/public");
 const studentRoutes    = require("./routes/studentRoutes");
 const instructorRoutes = require("./routes/instructor");
-const adminRoutes      = require("./routes/admin");
+const adminRoutes      = require("./routes/adminRoutes");
 const challengeRoutes  = require("./routes/challenges");
+const coursesRoutes     = require("./routes/coursesRoutes");
+const publicRoutes     = require("./routes/public");  
 
 app.use("/auth",       authRoutes);
-app.use("/",           publicRoutes);
 app.use("/student",    studentRoutes);
 app.use("/instructor", instructorRoutes);
 app.use("/admin",      adminRoutes);
 app.use("/challenges", challengeRoutes);
+app.use("/courses", coursesRoutes);
+app.use("/",           publicRoutes);
 
-app.get("/me", (req, res) => {
-  res.json(req.session.user || null);
+app.get("/me", (req, res) => res.json(req.session.user || null));
+app.get("/dashboard", (req, res) => {
+  const role = req.session.user?.role;
+  const dashboards = {
+    student:    "/student/dashboard",
+    instructor: "/instructor/dashboard",
+    admin:      "/admin/dashboard"
+  };
+  res.redirect(dashboards[role] || "/login");
 });
 
 app.use((req, res) => {
-  res.status(404).render("error-404");
+  res.status(404).render("public/page-404");
 });
 
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.status || 500).json({ message: err.message || "Internal server error" });
 });
 
-app.use((req, res) => {
-  res.status(404).render("error404");
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server running on port ${process.env.PORT || 3000}`);
 });

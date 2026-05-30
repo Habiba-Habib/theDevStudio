@@ -1,0 +1,196 @@
+/* Step 1 only — forms. Layout/stepper/navbar: become-instructor-wizard.css */
+
+.instructor-wizard .form-card {
+  background: var(--surface);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  padding: 28px 32px;
+  margin-bottom: 20px;
+}
+
+.instructor-wizard .card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 6px;
+}
+
+.instructor-wizard .card-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.instructor-wizard .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 4px;
+}
+
+.instructor-wizard .form-group {
+  margin-bottom: 20px;
+}
+
+.instructor-wizard .form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-body);
+  margin-bottom: 8px;
+}
+
+.instructor-wizard .form-label span {
+  color: var(--pink);
+}
+
+.instructor-wizard .input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.instructor-wizard .input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-muted);
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.instructor-wizard .form-input {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 16px 13px 40px;
+  font-size: 14px;
+  color: var(--text-white);
+  font-family: var(--font);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+}
+
+.instructor-wizard .form-input.no-icon {
+  padding-left: 16px;
+}
+
+.instructor-wizard .form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.instructor-wizard .form-input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(96, 163, 166, 0.15);
+}
+
+.instructor-wizard .form-input.error {
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(255, 64, 160, 0.15);
+}
+
+.instructor-wizard select.form-input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23BDC2C9' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  cursor: pointer;
+}
+
+.instructor-wizard .bio-input {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.instructor-wizard .categories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.instructor-wizard .cat-btn {
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-body);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.instructor-wizard .cat-btn:hover {
+  border-color: var(--teal);
+  color: var(--text-white);
+}
+
+.instructor-wizard .cat-btn.selected {
+  background: rgba(255, 64, 160, 0.15) !important;
+  border-color: var(--pink) !important;
+  color: var(--pink) !important;
+  font-weight: 600 !important;
+}
+
+.instructor-wizard .error-msg {
+  font-size: 12px;
+  color: var(--pink);
+  margin-top: 6px;
+  display: none;
+}
+
+.instructor-wizard .error-msg.show {
+  display: block;
+}
+
+.instructor-wizard .btn-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.instructor-wizard .help-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.instructor-wizard .help-btn:hover {
+  border-color: var(--pink);
+  color: var(--text-white);
+}
+
+@media (max-width: 640px) {
+  .instructor-wizard .form-card {
+    padding: 20px;
+  }
+  .instructor-wizard .form-row {
+    grid-template-columns: 1fr;
+  }
+  .instructor-wizard .categories-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .instructor-wizard .btn-row {
+    flex-direction: column;
+  }
+  .instructor-wizard .btn-continue {
+    width: 100%;
+    justify-content: center;
+  }
+}

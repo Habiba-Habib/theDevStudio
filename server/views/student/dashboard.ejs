@@ -6,11 +6,11 @@
   <title>Student Dashboard</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-   <link rel="stylesheet" href="../../../public/css/dashboards.css" />
-   <link rel="stylesheet" href="/public/css/navbar-css.css">
+   <link rel="stylesheet" href="/css/dashboards.css" />
+  
 </head>
 <body>
-
+<%- include('../partials/navbar') %>
   <main class="main-content">
     <div class="page-grid">
 
@@ -62,37 +62,43 @@
         <section class="section-block">
           <div class="section-header">
             <h2 class="section-title">My Current Courses</h2>
-            <a href="/my-courses"class="section-link">View All →</a>
+           <a href="/student/my-courses" class="section-link">View All</a>
           </div>
 
-          <!-- Card  -->
-           <% courses.forEach(function(course) { %>
+                    <div class="courses-list">
+          <% if (courses.length === 0) { %>
+            <p class="empty-courses">You haven't enrolled in any courses yet.</p>
+          <% } %>
+
+          <% courses.forEach(function(course) { %>
           <div class="course-progress-card">
-            <img src="<%= course.image %>" alt="<%= course.title %>" class="course-thumb" />
+            <img
+              src="<%= course.thumbnail || '/images/course1.jpg' %>"
+              alt="<%= course.title %>"
+              class="course-thumb"
+            />
             <div class="course-progress-info">
               <div class="course-progress-top">
                 <div>
                   <h3 class="course-progress-title"><%= course.title %></h3>
-                  <p class="course-progress-author">By <%= course.author %></p>
+                  <p class="course-progress-author">By <%= course.instructor %></p>
                 </div>
                 <span class="progress-badge"><%= course.progress %>% Complete</span>
               </div>
               <div class="progress-bar-wrapper">
                 <div class="progress-bar" data-width="<%= course.progress %>"></div>
               </div>
-              <a href="/course-description" class="btn-continue">Continue Learning</a>
+              <a href="/courses/<%= course._id %>" class="btn-continue">Continue Learning</a>
             </div>
           </div>
-              <% }); %>
+          <% }); %>
+          </div>
         
           <!-- Action Buttons -->
           <div class="courses-actions">
-            <a href="/all-courses" class="btn-explore">
+            <a href="/courses/all-courses" class="btn-explore">
               <i class="fa-solid fa-book-open"></i>
               Explore More Courses
-            </a>
-            <a href="/course-payment" class="btn-payment">
-              <i class="fa-solid fa-pen"></i> Test Payment Page →
             </a>
           </div>
         </section>
@@ -130,7 +136,7 @@
         <div class="leaderboard-card">
           <div class="leaderboard-header">
             <h2 class="leaderboard-title">Leaderboard</h2>
-            <a href="/leaderboard" class="leaderboard-link">View Full</a>
+            <a href="/student/leaderboard" class="leaderboard-link">View Full</a>
           </div>
           <div class="leaderboard-list">
 
@@ -159,7 +165,6 @@
     </div>
   </main>
 
-  <script src="../../../public/js/dashboards.js"></script>
-  <script src="/public/js/main-navbar.js"></script>
+  <script src="/js/dashboards.js"></script>
 </body>
 </html>

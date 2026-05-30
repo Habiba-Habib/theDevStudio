@@ -364,6 +364,63 @@ body {
   transition: border-color 0.2s;
 }
 .btn-social:hover { border-color: var(--text-muted); }
+.signup-popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 14, 39, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+}
+
+.signup-popup.hidden {
+  display: none;
+}
+
+.signup-popup-card {
+  width: min(360px, calc(100% - 32px));
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+}
+
+.signup-popup-icon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: rgba(96, 163, 166, 0.18);
+  color: var(--teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.signup-popup-icon.error {
+  background: rgba(255, 64, 160, 0.16);
+  color: var(--pink);
+}
+
+.signup-popup-card h3 {
+  color: var(--text-white);
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.signup-popup-card p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.terms-error-msg {
+  margin-top: -12px;
+  margin-bottom: 14px;
+}
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {

@@ -224,7 +224,7 @@
     .lang-select {
       background: rgba(255, 255, 255, 0.07);
       border: 1px solid var(--border);
-      color: var(--text-white);
+      color: var(--pink);
       font-family: var(--font);
       font-size: 14px;
       padding: 7px 14px;
@@ -234,7 +234,7 @@
       appearance: none;
       -webkit-appearance: none;
       padding-right: 30px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23BDC2C9' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ff40a0' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 10px center;
       transition: border-color 0.2s;
@@ -342,8 +342,7 @@
       box-shadow: 0 6px 20px rgba(255, 64, 160, 0.45);
     }
 
-    /* Output Console */
-    .console-card {}
+   
 
     .console-header {
       display: flex;

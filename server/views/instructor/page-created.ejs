@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Course Created!</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  //WARNING:NO CSS STYLESHEET IS LINKED
+</head>
+
+<body>
+<%- include('../partials/navbar') %>
+<div class="success-wrapper">
+
+  <div class="success-icon">🎉</div>
+
+  <h1 class="success-title">Course Created!</h1>
+
+  <p class="success-subtitle">
+    Your course "<%= courseTitle || 'Untitled Course' %>" has been published successfully.<br>
+    Students can now enroll and start learning.
+  </p>
+
+  <!-- countdown -->
+  <div class="countdown-wrapper">
+    <div class="countdown-ring">
+      <svg width="72" height="72" viewBox="0 0 72 72">
+        <circle class="ring-bg" cx="36" cy="36" r="32"/>
+        <circle class="ring-progress" id="ring" cx="36" cy="36" r="32"/>
+      </svg>
+      <div class="countdown-number" id="countdown">5</div>
+    </div>
+    <div class="countdown-text">Redirecting to dashboard...</div>
+  </div>
+
+  <!-- FIXED ROUTE -->
+  <a href="/dashboard" class="btn-dashboard">
+    Go to Dashboard
+  </a>
+
+</div>
+
+<script>
+  const ring = document.getElementById('ring');
+  const countdownEl = document.getElementById('countdown');
+
+  let seconds = 5;
+  const total = 5;
+  const circumference = 201;
+
+  const interval = setInterval(() => {
+    seconds--;
+    countdownEl.textContent = seconds;
+
+    const offset = circumference * (1 - seconds / total);
+    ring.style.strokeDashoffset = offset;
+
+    if (seconds <= 0) {
+      clearInterval(interval);
+
+      // FIXED EXPRESS ROUTE
+      window.location.href = '/dashboard';
+    }
+  }, 1000);
+</script>
+
+</body>
+</html>

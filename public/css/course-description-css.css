@@ -307,12 +307,12 @@ body {
 /* ── ENROLL BUTTON ── */
 .btn-enroll {
   display: block;
-  width: 100%;
+  width: 95%;
   background: linear-gradient(90deg, var(--pink), var(--pink-light));
   color: var(--text-white);
   font-size: 15px;
   font-weight: 700;
-  padding: 15px;
+  padding: 12px;
   border-radius: 24px;
   border: none;
   cursor: pointer;
@@ -320,6 +320,9 @@ body {
   margin-bottom: 28px;
   box-shadow: 0 0 20px rgba(255, 64, 160, 0.35);
   transition: opacity 0.2s, transform 0.15s;
+  text-decoration: none;
+  text-align: center;
+ 
 }
 .btn-enroll:hover {
   opacity: 0.9;

@@ -43,6 +43,10 @@ const challengeSchema = new mongoose.Schema(
       required: [true, "Points are required"],
       min: 0,
     },
+    dueDate: {
+      type: Date,
+      default: null,
+   },
     starterCode: {
       type: String,
       default: "// Write your solution here\n",

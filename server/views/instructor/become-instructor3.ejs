@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= user.name %> - Become an Instructor</title>
-  <link rel="stylesheet" href="../../../public/css/become-instructor3.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <title>Become an Instructor – TheDevStudio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/become-instructor-wizard.css" />
+  <link rel="stylesheet" href="/css/become-instructor3-overrides.css" /> 
 </head>
 <body>
-
-  <main class="main-content">
+<%- include('../partials/navbar') %>
+<main class="instructor-wizard main-content">
 
 
     <section class="hero-section">
@@ -33,7 +35,7 @@
       </div>
       <div class="step-line active"></div>
       <div class="step active" id="step3">
-        <div class="step-circle"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="step-circle"><i class="fa-solid fa-check"></i></div>
         <span class="step-label">Review &amp; Submit</span>
       </div>
     </div>
@@ -62,34 +64,42 @@
 
         <div class="summary-row">
           <span class="summary-label">Full Name</span>
-          <span class="summary-value" id="sumFullName">—</span>
+          <span class="summary-value" id="sumFullName"><%= application.fullName || user?.name || '—' %></span>
         </div>
         <div class="summary-row">
           <span class="summary-label">Professional Title</span>
-          <span class="summary-value" id="sumTitle">—</span>
+          <span class="summary-value" id="sumTitle"><%= application.jobTitle || '—' %></span>
         </div>
         <div class="summary-row">
           <span class="summary-label">Expertise</span>
-          <span class="summary-value" id="sumExpertise">—</span>
+          <span class="summary-value" id="sumExpertise"><%= application.experience || '—' %></span>
         </div>
         <div class="summary-row">
           <span class="summary-label">Experience</span>
-          <span class="summary-value" id="sumExperience">—</span>
+          <span class="summary-value" id="sumExperience"><%= application.expertise || '—' %></span>
         </div>
         <div class="summary-row">
           <span class="summary-label">Categories</span>
-          <span class="summary-value" id="sumCategories">None selected</span>
+          <span class="summary-value" id="sumCategories"><%= application.categories || 'None selected' %></span>
         </div>
         <div class="summary-row">
           <span class="summary-label">CV Upload</span>
-          <span class="summary-value status-missing" id="sumCV">
-            <i class="fa-solid fa-circle-exclamation"></i> Not uploaded
+                    <span class="summary-value" id="sumCV">
+            <% if (verification.cvUrl) { %>
+              <i class="fa-solid fa-circle-check"></i> Uploaded
+            <% } else { %>
+              <i class="fa-solid fa-circle-exclamation"></i> Not uploaded
+            <% } %>
           </span>
         </div>
         <div class="summary-row no-border">
           <span class="summary-label">Certificate</span>
-          <span class="summary-value status-missing" id="sumCert">
-            <i class="fa-solid fa-circle-exclamation"></i> Not uploaded
+              <span class="summary-value" id="sumCert">
+            <% if (verification.certificateUrl) { %>
+              <i class="fa-solid fa-circle-check"></i> Uploaded
+            <% } else { %>
+              <i class="fa-solid fa-circle-exclamation"></i> Not uploaded
+            <% } %>
           </span>
         </div>
 
@@ -97,6 +107,8 @@
     </div>
 
     
+        <form id="verificationForm" action="/become-instructor/step3" method="POST">
+
     <div class="card" id="agreementCard">
       <h2 class="card-title">Agreement</h2>
 
@@ -117,16 +129,20 @@
           <span class="checkbox-hint">Including content guidelines, student interaction policies, and payment terms</span>
         </span>
       </label>
+        </div>
+
+    <input type="hidden" name="agreeAccurate" id="agreeAccurateHidden" value="" />
+    <input type="hidden" name="agreePolicies" id="agreePoliciesHidden" value="" />
+
+    <div class="actions">
+      <a href="/become-instructor/step2" class="btn-back">Back</a>
+     <button type="submit" class="btn-submit" id="btnSubmit" disabled>Submit Verification</button>
     </div>
 
-    
-    <div class="actions">
-      <a href="/become-instructor2" class="btn-back">Back</a>
-      <button class="btn-submit" id="btnSubmit">Submit Verification</button>
-    </div>
+    </form>
 
   </main>
 
-  <script src="../../../public/js/become-instructor3.js"></script>
+  <script src="/js/become-instructor3.js"></script>
 </body>
 </html>

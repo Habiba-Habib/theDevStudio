@@ -12,11 +12,15 @@
   --font:       'Inter', sans-serif;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+.main-content,
+.main-content * {
+  box-sizing: border-box;
+}
 
 html { scroll-behavior: smooth; }
 
 body {
+  margin: 0;
   font-family: var(--font);
   background-color: var(--bg);
   color: var(--text-white);
@@ -316,3 +320,5 @@ body {
 @media (max-width: 640px) {
   .main-content { padding: 24px 20px 60px; }
 }
+
+

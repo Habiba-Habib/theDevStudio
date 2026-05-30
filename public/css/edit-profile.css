@@ -16,6 +16,7 @@ body {
     background-color: var(--bg);
     padding: 2rem;
     font-family: var(--font);
+    
 }
 
 .container {

@@ -1,24 +1,70 @@
 const Course = require('../models/Course');
 const User = require('../models/User');
+const Payment = require('../models/payment');
 //const upload = require('../config/cloudinary');
 
 // ─── DASHBOARD ────────────────────────────────────────────────
 
 exports.getDashboard = async (req, res) => {
   try {
-    const instructor = await User.findById(req.session.userId);
-    const courses = await Course.find({ instructor: req.session.userId });
+    const instructor = await User.findById(req.session.user._id);
+const courses = await Course.find({ instructor: req.session.user._id });
 
-    // Stats for dashboard
+const courseIds = courses.map(course => course._id);
+
+const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+const enrollmentData = new Array(6).fill(0);
+const revenueData = new Array(6).fill(0);
+
+courses.forEach(course => {
+  const createdMonth = course.createdAt ? course.createdAt.getMonth() : null;
+
+  if (createdMonth !== null && createdMonth < 6) {
+    enrollmentData[createdMonth] += course.students.length;
+  }
+});
+
+const payments = await Payment.find({
+  course: { $in: courseIds },
+  status: 'successful'
+});
+
+payments.forEach(payment => {
+  const paymentMonth = payment.createdAt ? payment.createdAt.getMonth() : null;
+
+  if (paymentMonth !== null && paymentMonth < 6) {
+    revenueData[paymentMonth] += payment.amount;
+  }
+});
+
+// Stats for dashboard
     const totalCourses = courses.length;
-    const totalStudents = courses.reduce((sum, c) => sum + c.enrolledCount, 0);
-    const totalRevenue = courses.reduce((sum, c) => sum + (c.price * c.enrolledCount), 0);
+    const totalStudents = courses.reduce((sum, c) => sum + c.students.length, 0);
+    const totalRevenue = courses.reduce((sum, c) => sum + (c.price * c.students.length), 0);
 
-    res.render('instructor/dashboard', {
-      instructor,
-      courses,
-      stats: { totalCourses, totalStudents, totalRevenue }
-    });
+   res.render('instructor/dashboard', {
+  instructor,
+  courses,
+  stats: {
+    totalCourses,
+    totalStudents,
+    totalRevenue,
+    studentsChange: '',
+    coursesChange: '',
+    revenueChange: '',
+    ratingChange: '',
+    avgRating: courses.length
+      ? (courses.reduce((sum, course) => sum + (course.rating || 0), 0) / courses.length).toFixed(1)
+      : '0.0'
+  },
+  chartData: {
+    months: monthLabels,
+    enrollments: enrollmentData,
+    revenue: revenueData
+  }
+});
+
   } catch (err) {
     console.error(err);
     res.status(500).render('error');
@@ -29,24 +75,42 @@ exports.getDashboard = async (req, res) => {
 
 exports.getProfile = async (req, res) => {
   try {
-    const instructor = await User.findById(req.session.userId)
-      .populate('completedCourses');
+    if (!req.session.user || !req.session.user._id) {
+      return res.redirect("/auth/login");
+    }
 
-    res.render('instructor/profile', {
+    const instructor = await User.findById(req.session.user._id);
+
+    if (!instructor) {
+      return res.status(404).render("public/page-404", {
+        message: "Instructor not found"
+      });
+    }
+
+    const instructorCourses = await Course.find({
+      instructor: req.session.user._id
+    });
+
+    res.render("shared/profile", {
       user: instructor,
-      completedCourses: instructor.completedCourses || [],
-      certificates: instructor.certificates || []
+      completedCourses: [],
+      certificates: [],
+      instructorCourses,
+      adminStats: null,
+      rank: null
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).render('error');
+    console.error("Instructor profile error:", err);
+    res.status(500).render("public/page-404", {
+      message: "Server error"
+    });
   }
 };
 
 exports.getEditProfile = async (req, res) => {
   try {
-    const instructor = await User.findById(req.session.userId);
-    res.render('instructor/edit-profile', { user: instructor, errors: [] });
+    const instructor = await User.findById(req.session.user._id);
+    res.render('shared/edit-profile', { user: instructor, errors: [] });
   } catch (err) {
     console.error(err);
     res.status(500).render('error');
@@ -55,16 +119,16 @@ exports.getEditProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    const { name, bio, location } = req.body;
+    const { name, username, email, bio, location, avatar } = req.body;
 
-    const updateData = { name, bio, location };
+    const updateData = { name, username, email, bio, location, avatar };
 
     // If a new avatar was uploaded, update it
     if (req.file) {
       updateData.avatar = req.file.path;
     }
 
-    await User.findByIdAndUpdate(req.session.userId, updateData);
+    await User.findByIdAndUpdate(req.session.user._id, updateData);
     res.redirect('/instructor/profile');
   } catch (err) {
     console.error(err);
@@ -80,8 +144,8 @@ exports.getCreateStep1 = async (req, res) => {
   try {
     // Check if there's an in-progress course to resume
     const draft = await Course.findOne({
-      instructor: req.session.userId,
-      status: 'draft'
+      instructor: req.session.user._id,
+      isPublished: false
     });
 
     res.render('instructor/create-step1', { draft, errors: [] });
@@ -97,8 +161,8 @@ exports.postCreateStep1 = async (req, res) => {
 
     // Check if a draft already exists — update it, don't create a new one
     let course = await Course.findOne({
-      instructor: req.session.userId,
-      status: 'draft'
+      instructor: req.session.user._id,
+      isPublished: false
     });
 
     const thumbnailUrl = req.file ? req.file.path : (course ? course.thumbnail : '');
@@ -107,8 +171,8 @@ exports.postCreateStep1 = async (req, res) => {
       // Update existing draft
       await Course.findByIdAndUpdate(course._id, {
         title,
-        summary: shortDescription,
-        description: fullDescription,
+        shortDescription,
+        fullDescription,
         category,
         level,
         thumbnail: thumbnailUrl
@@ -117,13 +181,13 @@ exports.postCreateStep1 = async (req, res) => {
       // Create new draft
       course = await Course.create({
         title,
-        summary: shortDescription,
-        description: fullDescription,
+        shortDescription,
+        fullDescription,
         category,
         level,
         thumbnail: thumbnailUrl,
-        instructor: req.session.userId,
-        status: 'draft'
+        instructor: req.session.user._id,
+        isPublished: false
       });
     }
 
@@ -141,8 +205,8 @@ exports.postCreateStep1 = async (req, res) => {
 exports.getCreateStep2 = async (req, res) => {
   try {
     const draft = await Course.findOne({
-      instructor: req.session.userId,
-      status: 'draft'
+      instructor: req.session.user._id,
+      isPublished: false
     });
 
     // If no draft exists, send back to step 1
@@ -169,8 +233,8 @@ exports.postCreateStep2 = async (req, res) => {
     const sectionsArray = JSON.parse(sections);
 
     const draft = await Course.findOne({
-      instructor: req.session.userId,
-      status: 'draft'
+      instructor: req.session.user._id,
+      isPublished : false
     });
 
     if (!draft) return res.redirect('/instructor/create/step1');
@@ -193,8 +257,8 @@ exports.postCreateStep2 = async (req, res) => {
 exports.getCreateStep3 = async (req, res) => {
   try {
     const draft = await Course.findOne({
-      instructor: req.session.userId,
-      status: 'draft'
+      instructor: req.session.user._id,
+      isPublished : false
     });
 
     if (!draft) return res.redirect('/instructor/create/step1');
@@ -211,8 +275,8 @@ exports.postCreateStep3 = async (req, res) => {
     const { price, duration } = req.body;
 
     const draft = await Course.findOne({
-      instructor: req.session.userId,
-      status: 'draft'
+      instructor: req.session.user._id,
+      isPublished : false
     });
 
     if (!draft) return res.redirect('/instructor/create/step1');
@@ -221,7 +285,7 @@ exports.postCreateStep3 = async (req, res) => {
     await Course.findByIdAndUpdate(draft._id, {
       price: Number(price),
       duration,
-      status: 'published'
+      isPublished : true
     });
 
     res.redirect('/instructor/dashboard');
@@ -237,7 +301,7 @@ exports.getEditCourse = async (req, res) => {
   try {
     const course = await Course.findOne({
       _id: req.params.id,
-      instructor: req.session.userId // security: only their own courses
+      instructor: req.session.user._id // security: only their own courses
     });
 
     if (!course) return res.status(404).render('public/error-404');
@@ -251,16 +315,24 @@ exports.getEditCourse = async (req, res) => {
 
 exports.updateCourse = async (req, res) => {
   try {
-    const { title, summary, description, category, level, price, duration } = req.body;
+    const { title, shortDescription, fullDescription, category, level, price, duration } = req.body;
 
-    const updateData = { title, summary, description, category, level, price, duration };
+    const updateData = {
+      title,
+      shortDescription,
+      fullDescription,
+      category,
+      level,
+      price,
+      duration
+    };
 
     if (req.file) {
       updateData.thumbnail = req.file.path;
     }
 
     await Course.findOneAndUpdate(
-      { _id: req.params.id, instructor: req.session.userId },
+      { _id: req.params.id, instructor: req.session.user._id },
       updateData
     );
 
@@ -277,7 +349,7 @@ exports.deleteCourse = async (req, res) => {
   try {
     await Course.findOneAndDelete({
       _id: req.params.id,
-      instructor: req.session.userId // security: only their own courses
+      instructor: req.session.user._id // security: only their own courses
     });
 
     res.redirect('/instructor/dashboard');
@@ -293,7 +365,7 @@ exports.getEnrolledStudents = async (req, res) => {
   try {
     const course = await Course.findOne({
       _id: req.params.id,
-      instructor: req.session.userId
+      instructor: req.session.user._id
     });
 
     if (!course) return res.status(404).render('public/error-404');

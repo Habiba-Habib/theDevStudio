@@ -19,10 +19,18 @@
   },
   "homepage": "https://github.com/nadineashmawey/theDevStudio#readme",
   "dependencies": {
+<<<<<<< HEAD
     "dotenv": "^17.4.2",
     "ejs": "^5.0.2",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "mongoose": "^9.6.3"
+=======
+    "@google/generative-ai": "^0.24.1",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "multer": "^2.1.1"
+>>>>>>> 333fadd42f5d4dd2a806dd698c3d20ab1463d369
   }
 }

@@ -10,7 +10,7 @@ const cancelBtn         = document.getElementById('cancelBtn');
 const generateBtn       = document.getElementById('generateBtn');
 
 const starterPlaceholder = `function solve() {\n  // Your code here\n}`;
-
+let generatedPoints = null;
 starterCodeArea.value = starterPlaceholder;
 starterCodeArea.classList.add('placeholder-active');
 
@@ -121,6 +121,45 @@ function updatePreview() {
     el.addEventListener('change', updatePreview);
 });
 
+function getPointsFromDifficulty(difficulty) {
+  const map = {
+    easy: 50,
+    medium: 100,
+    hard: 150
+  };
+  return map[difficulty.toLowerCase()] || 100;
+}
+
+function parseTestCases(text) {
+  const blocks = text.trim().split(/\n\s*\n/);
+  const cases = [];
+
+  blocks.forEach(block => {
+    const lines = block.split('\n');
+    let input = '';
+    let expectedOutput = '';
+
+    lines.forEach(line => {
+      if (/^Input:\s*/i.test(line)) {
+        input = line.replace(/^Input:\s*/i, '').trim();
+      }
+      if (/^Expected:\s*/i.test(line)) {
+        expectedOutput = line.replace(/^Expected:\s*/i, '').trim();
+      }
+    });
+
+    if (input && expectedOutput) {
+      cases.push({
+        input,
+        expectedOutput,
+        isHidden: false
+      });
+    }
+  });
+
+  return cases;
+}
+
 function validateForm() {
     let valid = true;
 
@@ -151,36 +190,120 @@ function validateForm() {
 }
 
 
-saveBtn.addEventListener('click', () => {
-    if (!validateForm()) return;
+saveBtn.addEventListener('click', async () => {
+  if (!validateForm()) return;
 
-    const challenge = {
-        title:       titleInput.value.trim(),
-        difficulty:  difficultySelect.value,
-        category:    categorySelect.value,
-        description: descriptionArea.value.trim(),
-        starterCode: starterCodeArea.classList.contains('placeholder-active')
-            ? ''
-            : starterCodeArea.value.trim(),
-        testCases:   testCasesArea.classList.contains('placeholder-active')
-            ? ''
-            : testCasesArea.value.trim(),
-        createdAt:   new Date().toISOString()
-    };
+  const testCasesText = testCasesArea.classList.contains('placeholder-active')
+    ? ''
+    : testCasesArea.value.trim();
 
-    console.log('Saving challenge:', challenge);
+  const parsedTestCases = parseTestCases(testCasesText);
+
+  if (parsedTestCases.length === 0) {
+    alert('Test cases must use this format:\nInput: ...\nExpected: ...');
+    return;
+  }
+
+  const payload = {
+    title: titleInput.value.trim(),
+    description: descriptionArea.value.trim(),
+    difficulty: difficultySelect.value.toLowerCase(),
+    category: categorySelect.value.trim(),
+    points: generatedPoints || getPointsFromDifficulty(difficultySelect.value),
+    starterCode: starterCodeArea.classList.contains('placeholder-active')
+      ? ''
+      : starterCodeArea.value.trim(),
+    testCases: parsedTestCases,
+    isPublished: false
+  };
+
+  saveBtn.disabled = true;
+  saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+  try {
+    const res = await fetch('/admin/create-challenge', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || 'Save failed');
+    }
 
     showToast('Challenge saved successfully!');
 
     setTimeout(() => {
-        window.location.href = '/public/pages/admin/manage-challenges.html';
+      window.location.href = '/admin/manage-challenges';
     }, 1000);
+
+  } catch (err) {
+    alert(err.message);
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Challenge';
+  }
 });
 
 cancelBtn.addEventListener('click', () => {
     history.back();
 });
 
+generateBtn.addEventListener('click', async () => {
+  generateBtn.disabled = true;
+  generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating...';
+
+  try {
+    const res = await fetch('/admin/generate-challenge', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topic: document.getElementById('aiTopic')?.value || '',
+        difficulty: document.getElementById('aiDifficulty')?.value || 'medium',
+        category: document.getElementById('aiCategory')?.value || 'Arrays'
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || 'Generation failed');
+    }
+
+    const c = data.challenge;
+    generatedPoints = c.points || null;
+
+    titleInput.value = c.title || '';
+    descriptionArea.value = c.description || '';
+
+    // Map lowercase DB difficulty to your select values
+    const diffMap = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
+    difficultySelect.value = diffMap[c.difficulty] || 'Medium';
+    categorySelect.value = c.category || 'Arrays';
+
+    starterCodeArea.value = c.starterCode || '';
+    starterCodeArea.classList.remove('placeholder-active');
+
+    // Convert structured test cases to your textarea format
+    if (Array.isArray(c.testCases)) {
+      testCasesArea.value = c.testCases
+        .map(tc => `Input: ${tc.input}\nExpected: ${tc.expectedOutput}`)
+        .join('\n\n');
+      testCasesArea.classList.remove('placeholder-active');
+    }
+
+    updatePreview();
+    showToast('Challenge generated! Review and edit before saving.');
+
+  } catch (err) {
+    alert(err.message);
+  } finally {
+    generateBtn.disabled = false;
+    generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generate';
+  }
+});
 
 function showToast(message) {
     const existing = document.querySelector('.toast');

@@ -16,25 +16,49 @@ if (togglePassword && passwordInput) {
 }
 
 if (signinForm) {
-  signinForm.addEventListener("submit", (e) => {
+  signinForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const email = document.getElementById("email").value.trim();
     const password = passwordInput.value.trim();
 
+
     formMessage.textContent = "";
 
-    if (!email || !password) {
+    if (!email || !password ) {
       formMessage.textContent = "Please fill in all fields.";
       formMessage.style.color = "red";
       return;
     }
 
-    formMessage.textContent = "Signing in...";
-    formMessage.style.color = "#60A3A6";
+    try {
+      formMessage.textContent = "Logging in...";
+      formMessage.style.color = "#60A3A6";
 
-    setTimeout(() => {
-      window.location.href = "../student/dashboard.html";
-    }, 300);
+      const res = await fetch("/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password})
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      const dashboards = {
+        student: "/student/dashboard",
+        instructor: "/instructor/dashboard",
+        admin: "/admin/dashboard"
+      };
+
+      window.location.href = dashboards[data.user.role] || "/";
+    } catch (err) {
+      formMessage.textContent = err.message;
+      formMessage.style.color = "red";
+    }
   });
 }

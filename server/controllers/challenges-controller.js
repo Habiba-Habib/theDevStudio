@@ -1,4 +1,4 @@
-const Challenge = require("../models/Challenge");
+const Challenge = require('../models/challenges');
 const User = require("../models/User");
 
 
@@ -15,7 +15,7 @@ exports.getAllChallenges = async (req, res) => {
       .populate("createdBy", "name")
       .sort({ createdAt: -1 });
 
-    res.render("public/coding-challenges", {
+    res.render("guest/challenge-description", {
       challenges,
       filters: { difficulty, category, search },
     });
@@ -40,7 +40,7 @@ exports.getChallengeById = async (req, res) => {
 
     const visibleTestCases = challenge.testCases.filter((tc) => !tc.isHidden);
 
-    res.render("public/challenge-description", {
+    res.render("challenges/challenge-description", {
       challenge,
       visibleTestCases,
     });

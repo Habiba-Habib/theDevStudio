@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Application Submitted – TheDevStudio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/become-instructor3.css" />
+</head>
+<body>
+<%- include('../partials/navbar') %>
+  <main class="main-content">
+
+    <section class="hero-section">
+      <div class="hero-icon">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <h1 class="hero-title">Application Submitted</h1>
+      <p class="hero-subtitle">
+        Your instructor verification has been received. Please wait for an admin to review your application.
+        You will be notified once it has been approved.
+      </p>
+    </section>
+
+    <div class="card" style="text-align: center;">
+      <p style="margin-bottom: 24px; color: var(--text-body);">
+        Review typically takes 24–72 hours. You can log in anytime while you wait.
+      </p>
+      <a href="/" class="btn-submit" style="display: inline-block; text-decoration: none;">
+        Go to Home
+      </a>
+    </div>
+
+  </main>
+
+  <script>
+    setTimeout(function () {
+      window.location.href = '/';
+    }, 5000);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Become an Instructor – TheDevStudio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/become-instructor-wizard.css" />
+  <link rel="stylesheet" href="/css/become-instructor-step1-forms.css" />
+</head>
+
+<body>
+<%- include('../partials/navbar') %>
+<% const fd = typeof formData !== 'undefined' ? formData : {}; %>
+<main class="instructor-wizard main-content">
+
+  <!-- HEADER -->
+     <section class="hero-section">
+      <div class="hero-icon">
+        <i class="fa-solid fa-graduation-cap"></i>
+      </div>
+      <h1 class="hero-title">Become an Instructor</h1>
+      <p class="hero-subtitle">Complete your verification to start teaching on The Dev Studio</p>
+    </section>
+
+  <!-- STEPPER -->
+    <div class="stepper">
+      <div class="step active" id="step1">
+        <div class="step-circle"><i class="fa-solid fa-user"></i></div>
+        <span class="step-label">Personal Info</span>
+      </div>
+      <div class="step-line active"></div>
+      <div class="step" id="step2">
+        <div class="step-circle"><i class="fa-solid fa-file-lines"></i></div>
+        <span class="step-label">Documents</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" id="step3">
+        <div class="step-circle"><i class="fa-solid fa-check"></i></div>
+        <span class="step-label">Review &amp; Submit</span>
+      </div>
+    </div>
+    <% if (locals.formError) { %>
+    <p class="error-msg show" id="form-error"><%= formError %></p>
+  <% } %>
+  <!-- STEP 1 FORM -->
+  <form class="form-section" id="section-1" action="/become-instructor" method="POST">
+
+    <div class="form-card">
+      <h2 class="card-title">Instructor Information</h2>
+      <p class="card-subtitle">Tell us about your professional background</p>
+
+      <!-- Row 1: Full Name + Job Title -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="full-name">Full Name <span>*</span></label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-user input-icon"></i>
+            <input class="form-input" id="full-name" name="fullName" value="<%= fd.fullName || '' %>" placeholder="e.g. Jane Smith"/>
+          </div>
+          <span class="error-msg" id="full-name-error">Full name is required.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="job-title">Job Title <span>*</span></label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-briefcase input-icon"></i>
+           <input class="form-input" id="job-title" name="jobTitle" value="<%= fd.jobTitle || '' %>" placeholder="e.g. Senior Software Engineer"/>
+          </div>
+          <span class="error-msg" id="job-title-error">Job title is required.</span>
+        </div>
+      </div>
+
+      <!-- Row 2: Primary Expertise + Years of Experience -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="expertise">Primary Expertise <span>*</span></label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-star input-icon"></i>
+           <input class="form-input" id="expertise" name="expertise" value="<%= fd.expertise || '' %>" placeholder="e.g. Web Development"/>
+          </div>
+          <span class="error-msg" id="expertise-error">Primary expertise is required.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="experience">Years of Experience <span>*</span></label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-clock input-icon"></i>
+            <select class="form-input" id="experience" name="experience">
+              <option value="">Select range…</option>
+              <option value="1-2" <%= fd.experience === '1-2' ? 'selected' : '' %>>1–2 years</option>
+              <option value="3-5" <%= fd.experience === '3-5' ? 'selected' : '' %>>3–5 years</option>
+              <option value="5-10" <%= fd.experience === '5-10' ? 'selected' : '' %>>5–10 years</option>
+              <option value="10+" <%= fd.experience === '10+' ? 'selected' : '' %>>10+ years</option>
+            </select>
+          </div>
+          <span class="error-msg" id="experience-error">Please select your years of experience.</span>
+        </div>
+      </div>
+
+      <!-- Professional Bio -->
+      <div class="form-group">
+        <label class="form-label" for="bio">Professional Bio <span>*</span></label>
+        <textarea class="form-input bio-input no-icon" id="bio" name="bio" placeholder="Describe your professional background..."><%= fd.bio || '' %></textarea>
+        <span class="error-msg" id="bio-error">A short professional bio is required.</span>
+      </div>
+    </div>
+          <div class="form-card">
+      <h2 class="card-title">Account Details</h2>
+      <p class="card-subtitle">Create your login - you can sign in while your application is reviewed</p>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address <span>*</span></label>
+          <div class="input-wrapper">
+            <i class="fa-regular fa-envelope input-icon"></i>
+       <input class="form-input" type="email" id="email" name="email" value="<%= fd.email || '' %>" placeholder="you@example.com"/>
+          </div>
+          <span class="error-msg" id="email-error">A valid email is required.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password <span>*</span></label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input class="form-input" type="password" id="password" name="password" placeholder="At least 6 characters"/>
+          </div>
+          <span class="error-msg" id="password-error">Password must be at least 6 characters.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="confirm-password">Confirm Password <span>*</span></label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock input-icon"></i>
+          <input class="form-input" type="password" id="confirm-password" placeholder="Repeat password"/>
+        </div>
+        <span class="error-msg" id="confirm-password-error">Passwords do not match.</span>
+      </div>
+    </div>
+  
+    <!-- TEACHING CATEGORIES -->
+    <div class="form-card">
+      <h2 class="card-title">Teaching Categories</h2>
+      <p class="card-subtitle">Select all the topics you plan to teach <span style="color:var(--pink)">*</span></p>
+
+      <div class="categories-grid">
+        <button type="button" class="cat-btn" data-cat="Web Development">🌐 Web Development</button>
+        <button type="button" class="cat-btn" data-cat="Mobile Development">📱 Mobile Development</button>
+        <button type="button" class="cat-btn" data-cat="Data Science">📊 Data Science</button>
+        <button type="button" class="cat-btn" data-cat="Machine Learning">🤖 Machine Learning</button>
+        <button type="button" class="cat-btn" data-cat="Cloud Computing">☁️ Cloud Computing</button>
+        <button type="button" class="cat-btn" data-cat="Cybersecurity">🔐 Cybersecurity</button>
+        <button type="button" class="cat-btn" data-cat="UI/UX Design">🎨 UI/UX Design</button>
+        <button type="button" class="cat-btn" data-cat="DevOps">⚙️ DevOps</button>
+        <button type="button" class="cat-btn" data-cat="Blockchain">🔗 Blockchain</button>
+      </div>
+      <span class="error-msg" id="categories-error">Please select at least one teaching category.</span>
+
+      <!-- Hidden input to carry selected categories to server -->
+      <input type="hidden" id="categories-hidden" name="categories" value="<%= fd.categories || '' %>" />
+    </div>
+    <div class="btn-row">
+      <button class="btn-continue" id="btn-continue-1" type="button">
+        Continue <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
+  </form>
+<!-- HELP -->
+<button class="help-btn">?</button>
+</main>
+
+
+
+<script src="/js/become-instructor.js"></script>
+
+
+</body>
+</html>

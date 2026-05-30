@@ -4,14 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><%= admin.name %>'s Dashboard</title>
-  <link rel="stylesheet" href="../../../public/css/dashboards.css" />
+  <link rel="stylesheet" href="/css/dashboards.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/public/css/navbar-css.css">
+
 </head>
 <body>
-
-  <!-- Navigation Bar -->
-
+<%- include('../partials/navbar') %>
   <main class="main-content">
 
     <!-- Header -->
@@ -113,15 +111,16 @@
       <div class="ad-chart-card ad-quick-actions-card">
         <h2 class="section-title">Quick Actions</h2>
         <div class="ad-actions-grid">
+
           <a href="#" class="ad-action-btn">
-            <i class="fa-solid fa-users ad-action-icon ad-icon--pink"></i>
-            <span>Manage Users</span>
+            <i class="fa-solid fa-arrow-trend-up ad-action-icon ad-icon--pink-light"></i>
+            <span>View Analytics</span>
           </a>
           <a href="/admin/users" class="ad-action-btn">
           <i class="fa-solid fa-users ad-action-icon ad-icon--pink"></i>
           <span>Manage Users</span>
         </a>
-        <a href="#" class="ad-action-btn">
+        <a href="/courses/all-courses" class="ad-action-btn">
           <i class="fa-solid fa-book-open ad-action-icon ad-icon--yellow"></i>
           <span>Manage Courses</span>
         </a>
@@ -152,7 +151,7 @@
 
   </main>
 
-  <script src="../../../public/js/dashboards.js"></script>
-  <script src="/public/js/main-navbar.js"></script>
+  <script src="/js/dashboards.js"></script>
+
 </body>
 </html>
