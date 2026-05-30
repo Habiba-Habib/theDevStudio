@@ -96,7 +96,35 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.forgotPassword = async (req, res) => {
+  const { email } = req.body;
 
+  const user = await User.findOne({ email });
+
+  // Always show same message for security
+  if (!user) {
+    return res.render("auth/forgot-password", {
+      successMessage: "If that email exists, a reset link has been sent.",
+      errorMessage: null
+    });
+  }
+
+  const token = crypto.randomBytes(32).toString("hex");
+
+  user.resetPasswordToken = crypto.createHash("sha256").update(token).digest("hex");
+  user.resetPasswordExpires = Date.now() + 1000 * 60 * 15;
+  await user.save();
+
+  const resetUrl = `${req.protocol}://${req.get("host")}/auth/reset-password/${token}`;
+
+  // For development, you can log it first
+  console.log("Password reset link:", resetUrl);
+
+  return res.render("auth/forgot-password", {
+    successMessage: "If that email exists, a reset link has been sent.",
+    errorMessage: null
+  });
+};
 /* =========================
    LOGOUT (Clear Session)
    ========================= */

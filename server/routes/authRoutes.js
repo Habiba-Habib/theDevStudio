@@ -10,9 +10,12 @@ router.get("/signup", (req, res) => {
   res.render("auth/signup");
 });
 router.get("/forgot-password", (req, res) => {
-  res.render("auth/forgot-password");
+  res.render("auth/forgot-password", {
+    successMessage: null,
+    errorMessage: null
+  });
 });
-
+router.post("/forgot-password", authController.forgotPassword);
 /* SIGNUP (student/instructor only) */
 router.post("/signup", authController.signup);
 

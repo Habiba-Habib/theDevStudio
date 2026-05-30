@@ -219,12 +219,18 @@ exports.getMyCourses = async (req, res) => {
         status: enrollment.progress >= 100 ? "completed" : "ongoing"
       }));
 
-    res.render("student/my-courses", {
-      courses,
-      totalCourses: courses.length,
-      inProgressCourses: courses.filter(course => course.status !== "completed").length,
-      completedCourses: courses.filter(course => course.status === "completed").length
-    });
+   const avgProgress = courses.length
+  ? Math.round(courses.reduce((sum, course) => sum + course.progress, 0) / courses.length)
+  : 0;
+
+res.render("student/my-courses", {
+  courses,
+  totalCourses: courses.length,
+  inProgressCourses: courses.filter(course => course.status !== "completed").length,
+  completedCourses: courses.filter(course => course.status === "completed").length,
+  avgProgress: `${avgProgress}%`
+});
+
   } catch (error) {
     console.log(error);
     res.status(500).send("Server error");
