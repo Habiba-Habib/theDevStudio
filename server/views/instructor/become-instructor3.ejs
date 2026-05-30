@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%= typeof user !== "undefined" && user ? user.name : "User" %> - Become an Instructor</title>
-  <link rel="stylesheet" href="/css/become-instructor3.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <title>Become an Instructor – TheDevStudio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/become-instructor-wizard.css" />
+  <link rel="stylesheet" href="/css/become-instructor3-overrides.css" /> 
 </head>
 <body>
 <%- include('../partials/navbar') %>
-  <main class="main-content">
+<main class="instructor-wizard main-content">
 
 
     <section class="hero-section">
@@ -33,7 +35,7 @@
       </div>
       <div class="step-line active"></div>
       <div class="step active" id="step3">
-        <div class="step-circle"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="step-circle"><i class="fa-solid fa-check"></i></div>
         <span class="step-label">Review &amp; Submit</span>
       </div>
     </div>
@@ -74,7 +76,7 @@
         </div>
         <div class="summary-row">
           <span class="summary-label">Experience</span>
-          <span class="summary-value" id="sumExperience"><%= application.experience || '—' %></span>
+          <span class="summary-value" id="sumExperience"><%= application.expertise || '—' %></span>
         </div>
         <div class="summary-row">
           <span class="summary-label">Categories</span>
@@ -127,11 +129,14 @@
           <span class="checkbox-hint">Including content guidelines, student interaction policies, and payment terms</span>
         </span>
       </label>
-    </div>
+        </div>
+
+    <input type="hidden" name="agreeAccurate" id="agreeAccurateHidden" value="" />
+    <input type="hidden" name="agreePolicies" id="agreePoliciesHidden" value="" />
 
     <div class="actions">
       <a href="/become-instructor/step2" class="btn-back">Back</a>
-      <button type="submit" class="btn-submit" id="btnSubmit">Submit Verification</button>
+     <button type="submit" class="btn-submit" id="btnSubmit" disabled>Submit Verification</button>
     </div>
 
     </form>

@@ -2,44 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Become an Instructor – TheDevStudio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="/css/become-instructor.css"/>
- 
+  <link rel="stylesheet" href="/css/become-instructor-wizard.css" />
+  <link rel="stylesheet" href="/css/become-instructor-step1-forms.css" />
 </head>
 
 <body>
 <%- include('../partials/navbar') %>
-<div class="page-wrapper">
+<% const fd = typeof formData !== 'undefined' ? formData : {}; %>
+<main class="instructor-wizard main-content">
 
   <!-- HEADER -->
-  <div class="page-header">
-    <div class="header-icon">
-      <i class="fa-solid fa-graduation-cap"></i>
-    </div>
-    <h1>Become an Instructor</h1>
-    <p>Complete your verification to start teaching on The Dev Studio</p>
-  </div>
+     <section class="hero-section">
+      <div class="hero-icon">
+        <i class="fa-solid fa-graduation-cap"></i>
+      </div>
+      <h1 class="hero-title">Become an Instructor</h1>
+      <p class="hero-subtitle">Complete your verification to start teaching on The Dev Studio</p>
+    </section>
 
   <!-- STEPPER -->
-  <div class="stepper">
-    <div class="step active" id="step-1">
-      <div class="step-circle"><i class="fa-solid fa-user"></i></div>
-      <span class="step-label">Personal Info</span>
+    <div class="stepper">
+      <div class="step active" id="step1">
+        <div class="step-circle"><i class="fa-solid fa-user"></i></div>
+        <span class="step-label">Personal Info</span>
+      </div>
+      <div class="step-line active"></div>
+      <div class="step" id="step2">
+        <div class="step-circle"><i class="fa-solid fa-file-lines"></i></div>
+        <span class="step-label">Documents</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" id="step3">
+        <div class="step-circle"><i class="fa-solid fa-check"></i></div>
+        <span class="step-label">Review &amp; Submit</span>
+      </div>
     </div>
-    <div class="step-line" id="line-1"></div>
-    <div class="step inactive" id="step-2">
-      <div class="step-circle"><i class="fa-solid fa-file-lines"></i></div>
-      <span class="step-label">Documents</span>
-    </div>
-    <div class="step-line" id="line-2"></div>
-    <div class="step inactive" id="step-3">
-      <div class="step-circle"><i class="fa-solid fa-circle-check"></i></div>
-      <span class="step-label">Review &amp; Submit</span>
-    </div>
-  </div>
     <% if (locals.formError) { %>
     <p class="error-msg show" id="form-error"><%= formError %></p>
   <% } %>
@@ -56,7 +57,7 @@
           <label class="form-label" for="full-name">Full Name <span>*</span></label>
           <div class="input-wrapper">
             <i class="fa-solid fa-user input-icon"></i>
-            <input class="form-input" id="full-name" name="fullName" placeholder="e.g. Jane Smith"/>
+            <input class="form-input" id="full-name" name="fullName" value="<%= fd.fullName || '' %>" placeholder="e.g. Jane Smith"/>
           </div>
           <span class="error-msg" id="full-name-error">Full name is required.</span>
         </div>
@@ -65,7 +66,7 @@
           <label class="form-label" for="job-title">Job Title <span>*</span></label>
           <div class="input-wrapper">
             <i class="fa-solid fa-briefcase input-icon"></i>
-            <input class="form-input" id="job-title" name="jobTitle" placeholder="e.g. Senior Software Engineer"/>
+           <input class="form-input" id="job-title" name="jobTitle" value="<%= fd.jobTitle || '' %>" placeholder="e.g. Senior Software Engineer"/>
           </div>
           <span class="error-msg" id="job-title-error">Job title is required.</span>
         </div>
@@ -77,7 +78,7 @@
           <label class="form-label" for="expertise">Primary Expertise <span>*</span></label>
           <div class="input-wrapper">
             <i class="fa-solid fa-star input-icon"></i>
-            <input class="form-input" id="expertise" name="expertise" placeholder="e.g. Web Development"/>
+           <input class="form-input" id="expertise" name="expertise" value="<%= fd.expertise || '' %>" placeholder="e.g. Web Development"/>
           </div>
           <span class="error-msg" id="expertise-error">Primary expertise is required.</span>
         </div>
@@ -88,10 +89,10 @@
             <i class="fa-solid fa-clock input-icon"></i>
             <select class="form-input" id="experience" name="experience">
               <option value="">Select range…</option>
-              <option value="1-2">1–2 years</option>
-              <option value="3-5">3–5 years</option>
-              <option value="5-10">5–10 years</option>
-              <option value="10+">10+ years</option>
+              <option value="1-2" <%= fd.experience === '1-2' ? 'selected' : '' %>>1–2 years</option>
+              <option value="3-5" <%= fd.experience === '3-5' ? 'selected' : '' %>>3–5 years</option>
+              <option value="5-10" <%= fd.experience === '5-10' ? 'selected' : '' %>>5–10 years</option>
+              <option value="10+" <%= fd.experience === '10+' ? 'selected' : '' %>>10+ years</option>
             </select>
           </div>
           <span class="error-msg" id="experience-error">Please select your years of experience.</span>
@@ -101,9 +102,10 @@
       <!-- Professional Bio -->
       <div class="form-group">
         <label class="form-label" for="bio">Professional Bio <span>*</span></label>
-        <textarea class="form-input bio-input no-icon" id="bio" name="bio" placeholder="Describe your professional background, teaching philosophy, and what students will learn from you…"></textarea>
+        <textarea class="form-input bio-input no-icon" id="bio" name="bio" placeholder="Describe your professional background..."><%= fd.bio || '' %></textarea>
         <span class="error-msg" id="bio-error">A short professional bio is required.</span>
       </div>
+    </div>
           <div class="form-card">
       <h2 class="card-title">Account Details</h2>
       <p class="card-subtitle">Create your login - you can sign in while your application is reviewed</p>
@@ -113,7 +115,7 @@
           <label class="form-label" for="email">Email Address <span>*</span></label>
           <div class="input-wrapper">
             <i class="fa-regular fa-envelope input-icon"></i>
-            <input class="form-input" type="email" id="email" name="email" placeholder="you@example.com"/>
+       <input class="form-input" type="email" id="email" name="email" value="<%= fd.email || '' %>" placeholder="you@example.com"/>
           </div>
           <span class="error-msg" id="email-error">A valid email is required.</span>
         </div>
@@ -137,8 +139,7 @@
         <span class="error-msg" id="confirm-password-error">Passwords do not match.</span>
       </div>
     </div>
-    </div>
-
+  
     <!-- TEACHING CATEGORIES -->
     <div class="form-card">
       <h2 class="card-title">Teaching Categories</h2>
@@ -158,9 +159,8 @@
       <span class="error-msg" id="categories-error">Please select at least one teaching category.</span>
 
       <!-- Hidden input to carry selected categories to server -->
-      <input type="hidden" id="categories-hidden" name="categories"/>
+      <input type="hidden" id="categories-hidden" name="categories" value="<%= fd.categories || '' %>" />
     </div>
-
     <div class="btn-row">
       <button class="btn-continue" id="btn-continue-1" type="button">
         Continue <i class="fa-solid fa-arrow-right"></i>
@@ -168,11 +168,11 @@
     </div>
 
   </form>
-
-</div>
-
 <!-- HELP -->
 <button class="help-btn">?</button>
+</main>
+
+
 
 <script src="/js/become-instructor.js"></script>
 
