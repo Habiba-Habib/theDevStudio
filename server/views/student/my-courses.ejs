@@ -20,6 +20,7 @@
 </head>
 
 <body>
+  <%- include('../partials/navbar') %>
   <main class="page">
 
     <section class="header">
@@ -125,10 +126,11 @@
               </p>
 
               <div class="progress-bar">
-                <div 
+                <div
                   class="progress-fill"
                   style="width: <%= course.progress !== undefined ? course.progress : 0 %>%;"
-                ></div>
+                  >
+                </div>
               </div>
 
               <div class="course-footer">
