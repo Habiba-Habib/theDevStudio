@@ -18,10 +18,16 @@
   --pink-gradient: linear-gradient(90deg, var(--pink) 0%, var(--pink-mid) 50%, var(--pink-light) 100%);
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* Shared wizard scale — do not override in step-specific CSS */
+.instructor-wizard {
+  --wiz-icon: 72px;
+  --wiz-step: 52px;
+  --wiz-step-icon: 20px;
+  --wiz-title: 32px;
+  --wiz-subtitle: 15px;
+  --wiz-label: 13px;
+  --wiz-card-radius: 16px;
+  --wiz-card-pad: 28px 32px;
 }
 
 body {
@@ -29,12 +35,22 @@ body {
   background-color: var(--bg);
   color: var(--text-body);
   min-height: 100vh;
+  margin: 0;
+  padding: 0; /* no padding on body — fixes navbar width */
+}
+
+.instructor-wizard {
+  max-width: 900px;
+  margin: 0 auto;
   padding: 48px 24px 80px;
 }
 
-.main-content {
+/* alias so step 2/3 markup still works */
+.main-content.instructor-wizard,
+.instructor-wizard.main-content {
   max-width: 900px;
   margin: 0 auto;
+  padding: 48px 24px 80px;
 }
 
 
@@ -105,9 +121,10 @@ body {
 }
 
 .step.completed .step-circle {
-  background: var(--teal);
+   background: linear-gradient(135deg, var(--pink), #ff85cc);
   border-color: transparent;
   color: var(--text-white);
+  box-shadow: 0 4px 18px rgba(255, 64, 160, 0.45);
 }
 
 .step.active .step-circle {
@@ -140,7 +157,7 @@ body {
 }
 
 .step-line.active {
-  background: var(--teal);
+ background: linear-gradient(90deg, var(--pink), var(--pink-light), transparent);
 }
 
 
@@ -406,13 +423,44 @@ body {
   font-size: 12px;
   flex-shrink: 0;
 }
+/* ── Navbar: injected by main-navbar.js — do not strip padding from resets ── */
+body > .top-navbar {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0 48px;
+  box-sizing: border-box;
+}
 
+body > .top-navbar .btn-login {
+  padding: 8px 16px;
+}
+
+body > .top-navbar .btn-signup {
+  padding: 9px 20px;
+}
+
+body > .top-navbar .nav-left {
+  padding: 0;
+}
+
+body > .top-navbar .nav-center a {
+  padding: 0;
+}
 
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
-  body { padding: 32px 16px 60px; }
+ .instructor-wizard {
+    padding: 32px 16px 60px;
+  }
+  body {
+    padding: 0;
+  }
   .card { padding: 20px; }
   .stepper { padding: 0; }
   .actions { flex-direction: column; }
   .btn-continue, .btn-back { width: 100%; justify-content: center; }
+}
+.instructor-wizard > .error-msg.show {
+  margin-bottom: 20px;
 }

@@ -110,5 +110,22 @@ document.getElementById('btn-continue-1').addEventListener('click', () => {
   document.getElementById('section-1').submit();
 
 });
+// Re-select category buttons after server validation error
+// Re-select category buttons after server validation error (value from hidden input)
+const savedCats = (document.getElementById('categories-hidden')?.value || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+savedCats.forEach((cat) => {
+  const btn = document.querySelector(`.cat-btn[data-cat="${cat}"]`);
+  if (btn && !btn.classList.contains('selected')) {
+    btn.classList.add('selected');
+    if (!selectedCategories.includes(cat)) selectedCategories.push(cat);
+  }
+});
+if (selectedCategories.length) {
+  document.getElementById('categories-hidden').value = selectedCategories.join(',');
+}
 
 
