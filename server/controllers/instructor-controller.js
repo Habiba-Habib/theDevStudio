@@ -1,5 +1,6 @@
 const Course = require('../models/Course');
 const User = require('../models/User');
+const Payment = require('../models/payment');
 //const upload = require('../config/cloudinary');
 
 // ─── DASHBOARD ────────────────────────────────────────────────
@@ -7,18 +8,63 @@ const User = require('../models/User');
 exports.getDashboard = async (req, res) => {
   try {
     const instructor = await User.findById(req.session.user._id);
-    const courses = await Course.find({ instructor: req.session.user._id });
+const courses = await Course.find({ instructor: req.session.user._id });
 
-    // Stats for dashboard
+const courseIds = courses.map(course => course._id);
+
+const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+const enrollmentData = new Array(6).fill(0);
+const revenueData = new Array(6).fill(0);
+
+courses.forEach(course => {
+  const createdMonth = course.createdAt ? course.createdAt.getMonth() : null;
+
+  if (createdMonth !== null && createdMonth < 6) {
+    enrollmentData[createdMonth] += course.students.length;
+  }
+});
+
+const payments = await Payment.find({
+  course: { $in: courseIds },
+  status: 'successful'
+});
+
+payments.forEach(payment => {
+  const paymentMonth = payment.createdAt ? payment.createdAt.getMonth() : null;
+
+  if (paymentMonth !== null && paymentMonth < 6) {
+    revenueData[paymentMonth] += payment.amount;
+  }
+});
+
+// Stats for dashboard
     const totalCourses = courses.length;
     const totalStudents = courses.reduce((sum, c) => sum + c.students.length, 0);
     const totalRevenue = courses.reduce((sum, c) => sum + (c.price * c.students.length), 0);
 
-    res.render('instructor/dashboard', {
-      instructor,
-      courses,
-      stats: { totalCourses, totalStudents, totalRevenue }
-    });
+   res.render('instructor/dashboard', {
+  instructor,
+  courses,
+  stats: {
+    totalCourses,
+    totalStudents,
+    totalRevenue,
+    studentsChange: '',
+    coursesChange: '',
+    revenueChange: '',
+    ratingChange: '',
+    avgRating: courses.length
+      ? (courses.reduce((sum, course) => sum + (course.rating || 0), 0) / courses.length).toFixed(1)
+      : '0.0'
+  },
+  chartData: {
+    months: monthLabels,
+    enrollments: enrollmentData,
+    revenue: revenueData
+  }
+});
+
   } catch (err) {
     console.error(err);
     res.status(500).render('error');

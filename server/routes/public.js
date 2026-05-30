@@ -61,8 +61,9 @@ router.get('/become-instructor', (req, res) => {
   });
 });
 
-router.post('/become-instructor', async (req, res) => {
+router.post('/become-instructor', async (req, res,) => {
   try {
+    console.log("BIO RECEIVED:", req.body.bio, "LENGTH:", req.body.bio?.trim().length);
     const error = validateStep1(req.body);
     if (error) {
       return res.render('instructor/become-instructor', {
@@ -95,12 +96,12 @@ router.post('/become-instructor', async (req, res) => {
 
     res.redirect('/become-instructor/step2');
   } catch (err) {
-    console.error(err);
-    res.render('instructor/become-instructor', {
-      formError: 'Something went wrong. Please try again.',
-      formData: req.body
-    });
-  }
+  console.error(err);
+  res.render('instructor/become-instructor', {
+    formError: 'Something went wrong. Please try again.',
+    formData: req.body
+  });
+}
 });
 
 router.get('/become-instructor/step2', (req, res) => {

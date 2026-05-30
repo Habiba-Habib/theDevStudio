@@ -93,11 +93,11 @@
       <h2 class="section-title" style="margin-bottom: 20px;">Your Courses</h2>
       <% courses.forEach(function(course) { %>
       <div class="id-course-card">
-        <img src="<%= course.image %>" alt="<%= course.title %>" class="course-thumb" />
+        <img src="<%= course.thumbnail %>" alt="<%= course.title %>" class="course-thumb" />
         <div class="id-course-info">
           <h3 class="course-progress-title"><%= course.title %></h3>
           <div class="id-course-meta">
-            <span><i class="fa-solid fa-users"></i> <%= course.students.toLocaleString() %> students</span>
+            <span><i class="fa-solid fa-users"></i> <%= course.students.length.toLocaleString() %> students</span>
             <span><i class="fa-solid fa-star"></i> <%= course.rating %></span>
             <span>$<%= course.price %></span>
           </div>

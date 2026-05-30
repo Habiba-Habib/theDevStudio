@@ -139,12 +139,11 @@
                 </span>
 
                 <a 
-                 href="/courses/<%= course._id || course.id || '' %>" 
-                  class="continue-btn"
-                >
-                  <%= course.status === "completed" ? "Review Course" : "Continue" %>
-                </a>
-              </div>
+  href="/courses/<%= course._id || course.id || '' %>" 
+  class="continue-btn"
+>
+          <%= course.status === "completed" ? "Review Course" : "Continue Learning" %>
+        </a>
             </div>
           </article>
 
