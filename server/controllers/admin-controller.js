@@ -231,6 +231,56 @@ exports.getCreateChallenge = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+exports.postCreateChallenge = async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      difficulty,
+      category,
+      points,
+      starterCode,
+      testCases,
+      isPublished
+    } = req.body;
+
+    if (!title || !description || !difficulty || !category) {
+      return res.status(400).json({ message: "Missing required fields." });
+    }
+
+    if (!Array.isArray(testCases) || testCases.length === 0) {
+      return res.status(400).json({ message: "At least one test case is required." });
+    }
+
+    const allowedDifficulties = ["easy", "medium", "hard"];
+    const normalizedDifficulty = String(difficulty).toLowerCase();
+
+    if (!allowedDifficulties.includes(normalizedDifficulty)) {
+      return res.status(400).json({ message: "Invalid difficulty value." });
+    }
+
+    const challenge = await Challenge.create({
+      title: title.trim(),
+      description: description.trim(),
+      difficulty: normalizedDifficulty,
+      category: category.trim(),
+      points: Number(points) || 100,
+      starterCode: starterCode || "// Write your solution here\n",
+      testCases,
+      createdBy: req.session.user._id,
+      isPublished: Boolean(isPublished)
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Challenge saved successfully.",
+      challengeId: challenge._id
+    });
+  } catch (err) {
+    console.error("postCreateChallenge error:", err);
+    res.status(500).json({ message: "Failed to save challenge." });
+  }
+};
 
 /* =========================
    LOGOUT

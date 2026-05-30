@@ -1,6 +1,7 @@
 const express    = require("express");
 const router     = express.Router();
 const controller = require("../controllers/admin-controller");
+const aiController = require("../controllers/ai-controller");
 
 // TEMP: fake admin session — remove before submission
 router.use((req, res, next) => {
@@ -20,4 +21,7 @@ router.post("/users/change-role",            controller.changeRole);
 router.post("/users/toggle-suspend/:userId", controller.toggleSuspend);
 router.get("/manage-challenges",             controller.getChallenges);
 router.get("/create-challenge",              controller.getCreateChallenge);
+router.post("/create-challenge", controller.postCreateChallenge);
+router.post("/generate-challenge", aiController.generateChallengeDraft);
+
 module.exports = router;
