@@ -6,7 +6,7 @@
   <title>Application Submitted – TheDevStudio</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link rel="stylesheet" href="/css/become-instructor3.css" />
+   <link rel="stylesheet" href="/css/become-instructor-wizard.css" />
 </head>
 <body>
 <%- include('../partials/navbar') %>
@@ -27,16 +27,16 @@
       <p style="margin-bottom: 24px; color: var(--text-body);">
         Review typically takes 24–72 hours. You can log in anytime while you wait.
       </p>
-      <a href="/" class="btn-submit" style="display: inline-block; text-decoration: none;">
-        Go to Home
+                <a href="/student/dashboard" class="btn-submit" style="display: inline-block; text-decoration: none;">
+        Go to Dashboard
       </a>
     </div>
 
   </main>
 
   <script>
-    setTimeout(function () {
-      window.location.href = '/';
+      setTimeout(function () {
+           window.location.href = '/student/dashboard';
     }, 5000);
   </script>
 

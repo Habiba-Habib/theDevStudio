@@ -72,13 +72,25 @@
         </div>
       </div>
 
-      <!-- Row 2: Primary Expertise + Years of Experience -->
-      <div class="form-row">
-        <div class="form-group">
+            <!-- Row 2: Primary Expertise + Years of Experience -->
+         <div class="form-group">
           <label class="form-label" for="expertise">Primary Expertise <span>*</span></label>
           <div class="input-wrapper">
             <i class="fa-solid fa-star input-icon"></i>
-           <input class="form-input" id="expertise" name="expertise" value="<%= fd.expertise || '' %>" placeholder="e.g. Web Development"/>
+            <select class="form-input" id="expertise" name="expertise">
+              <option value="">Select expertise...</option>
+              <option value="Web Development" <%= fd.expertise === 'Web Development' ? 'selected' : '' %>>Web Development</option>
+              <option value="Mobile Development" <%= fd.expertise === 'Mobile Development' ? 'selected' : '' %>>Mobile Development</option>
+              <option value="Data Science" <%= fd.expertise === 'Data Science' ? 'selected' : '' %>>Data Science</option>
+              <option value="Machine Learning" <%= fd.expertise === 'Machine Learning' ? 'selected' : '' %>>Machine Learning</option>
+              <option value="Cloud Computing" <%= fd.expertise === 'Cloud Computing' ? 'selected' : '' %>>Cloud Computing</option>
+              <option value="Cybersecurity" <%= fd.expertise === 'Cybersecurity' ? 'selected' : '' %>>Cybersecurity</option>
+              <option value="UI/UX Design" <%= fd.expertise === 'UI/UX Design' ? 'selected' : '' %>>UI/UX Design</option>
+              <option value="DevOps" <%= fd.expertise === 'DevOps' ? 'selected' : '' %>>DevOps</option>
+              <option value="Blockchain" <%= fd.expertise === 'Blockchain' ? 'selected' : '' %>>Blockchain</option>
+              <option value="Game Development" <%= fd.expertise === 'Game Development' ? 'selected' : '' %>>Game Development</option>
+              <option value="Artificial Intelligence" <%= fd.expertise === 'Artificial Intelligence' ? 'selected' : '' %>>Artificial Intelligence</option>
+            </select>
           </div>
           <span class="error-msg" id="expertise-error">Primary expertise is required.</span>
         </div>
@@ -97,7 +109,7 @@
           </div>
           <span class="error-msg" id="experience-error">Please select your years of experience.</span>
         </div>
-      </div>
+      
 
       <!-- Professional Bio -->
       <div class="form-group">
@@ -106,39 +118,12 @@
         <span class="error-msg" id="bio-error">A short professional bio is required.</span>
       </div>
     </div>
-          <div class="form-card">
-      <h2 class="card-title">Account Details</h2>
-      <p class="card-subtitle">Create your login - you can sign in while your application is reviewed</p>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label" for="email">Email Address <span>*</span></label>
-          <div class="input-wrapper">
-            <i class="fa-regular fa-envelope input-icon"></i>
-       <input class="form-input" type="email" id="email" name="email" value="<%= fd.email || '' %>" placeholder="you@example.com"/>
-          </div>
-          <span class="error-msg" id="email-error">A valid email is required.</span>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="password">Password <span>*</span></label>
-          <div class="input-wrapper">
-            <i class="fa-solid fa-lock input-icon"></i>
-            <input class="form-input" type="password" id="password" name="password" placeholder="At least 6 characters"/>
-          </div>
-          <span class="error-msg" id="password-error">Password must be at least 6 characters.</span>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="confirm-password">Confirm Password <span>*</span></label>
-        <div class="input-wrapper">
-          <i class="fa-solid fa-lock input-icon"></i>
-          <input class="form-input" type="password" id="confirm-password" placeholder="Repeat password"/>
-        </div>
-        <span class="error-msg" id="confirm-password-error">Passwords do not match.</span>
-      </div>
-    </div>
+  </div>
+    
+    
+          
+    
+  
   
     <!-- TEACHING CATEGORIES -->
     <div class="form-card">
