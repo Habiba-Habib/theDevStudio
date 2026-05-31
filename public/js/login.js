@@ -49,13 +49,9 @@ if (signinForm) {
         throw new Error(data.message || "Login failed");
       }
 
-      const dashboards = {
-        student: "/student/dashboard",
-        instructor: "/instructor/dashboard",
-        admin: "/admin/dashboard"
-      };
+      window.location.href = data.redirectUrl;
 
-      window.location.href = dashboards[data.user.role] || "/";
+   
     } catch (err) {
       formMessage.textContent = err.message;
       formMessage.style.color = "red";

@@ -421,6 +421,82 @@ body {
   margin-top: -12px;
   margin-bottom: 14px;
 }
+.terms-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--pink, #FF40A0);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.terms-modal-card {
+  max-width: 520px;
+  max-height: 80vh;
+  text-align: left;
+}
+
+.terms-modal-body {
+  max-height: 50vh;
+  overflow-y: auto;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted, #BDC2C9);
+}
+
+.terms-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.signup-popup-card.terms-modal-card {
+  position: relative;
+  width: min(520px, calc(100% - 32px));
+  text-align: left;
+}
+
+.terms-modal-body ul {
+  margin: 12px 0;
+  padding-left: 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.legal-full-link {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--pink);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.legal-full-link:hover {
+  text-decoration: underline;
+}
+.terms-row {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.terms-check-label {
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+.terms-label-text {
+  font-size: 13px;
+  color: var(--text-muted);
+}
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
