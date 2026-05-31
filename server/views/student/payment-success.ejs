@@ -48,7 +48,7 @@
             <div class="summary-row total">
               <span>Amount Paid</span>
               <span>
-                $<%= course.price ? Number(course.price).toFixed(2) : "0.00" %>
+                $<%= payment && payment.amount != null ? Number(payment.amount).toFixed(2) : "0.00" %>
               </span>
             </div>
           </div>

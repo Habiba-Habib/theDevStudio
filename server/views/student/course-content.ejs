@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title><%= course.title %> – Learn</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/course-content.css"/>
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+<%
+  let activeLesson       = null;
+  let activeSectionTitle = '';
+  let prevLessonId       = null;
+  let nextLessonId       = null;
+  const allLessons       = [];
+  course.sections.forEach(s => s.lessons.forEach(l => allLessons.push(l)));
+  const activeIndex = allLessons.findIndex(l => l._id.toString() === activeLessonId);
+  if (activeIndex !== -1) {
+    activeLesson  = allLessons[activeIndex];
+    prevLessonId  = activeIndex > 0 ? allLessons[activeIndex - 1]._id : null;
+    nextLessonId  = activeIndex < allLessons.length - 1 ? allLessons[activeIndex + 1]._id : null;
+  }
+  course.sections.forEach(s => {
+    if (s.lessons.some(l => l._id.toString() === activeLessonId)) activeSectionTitle = s.title;
+  });
+  const isActiveDone = activeLesson && completedLessons.includes(activeLesson._id.toString());
+  const sidebarPct   = totalLessons > 0 ? Math.round((completedLessons.length / totalLessons) * 100) : 0;
+%>
+
+<!-- ── COURSE HEADER (below navbar) ── -->
+<div class="course-header">
+  <div class="ch-left">
+    <div class="ch-course-title"><%= course.title %></div>
+    <% if (activeLesson) { %>
+      <div class="ch-lesson-name"><%= activeLesson.title %></div>
+    <% } %>
+  </div>
+  <div class="ch-right">
+    <span class="ch-prog-label">Course Progress</span>
+    <span class="ch-prog-pct" id="topbarPct"><%= enrollment.progress %>%</span>
+  </div>
+  <div class="ch-bar">
+    <div class="ch-bar-fill" id="topbarFill" style="width:<%= enrollment.progress %>%"></div>
+  </div>
+</div>
+
+<!-- ── PAGE BODY ── -->
+<div class="page-body">
+
+  <!-- LEFT COLUMN -->
+  <div class="left-col">
+
+    <!-- VIDEO CARD (only when a lesson is selected) -->
+    <% if (activeLesson) { %>
+      <div class="video-card">
+        <% if (activeLesson.type === 'video') { %>
+          <% if (activeLesson.videoUrl) { %>
+            <%
+              let embedUrl = activeLesson.videoUrl;
+              const ytMatch = embedUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+              if (ytMatch) embedUrl = 'https://www.youtube.com/embed/' + ytMatch[1];
+            %>
+            <iframe class="video-frame" src="<%= embedUrl %>" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
+          <% } else { %>
+            <div class="video-placeholder">
+              <div class="vp-play">&#9654;</div>
+              <p class="vp-title">Video Player</p>
+              <p class="vp-sub">Click to play lesson</p>
+            </div>
+          <% } %>
+        <% } %>
+        <% if (activeLesson.type === 'text') { %>
+          <div class="text-lesson">
+            <% if (activeLesson.content) { %>
+              <%- activeLesson.content %>
+            <% } else { %>
+              <p class="empty-text">No content added yet.</p>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+    <% } else { %>
+      <div class="no-lesson">
+        <i class="fa-solid fa-book-open"></i>
+        <p>Select a lesson from the sidebar to start learning.</p>
+      </div>
+    <% } %>
+
+    <!-- LESSON INFO CARD (always visible) -->
+    <div class="info-card">
+      <h2 class="info-title"><%= activeLesson ? activeLesson.title : course.title %></h2>
+      <p class="info-desc"><%= course.shortDescription || '' %></p>
+
+      <% if (course.learningOutcomes && course.learningOutcomes.length) { %>
+        <h4 class="info-heading">Learning Objectives</h4>
+        <ul class="objectives">
+          <% course.learningOutcomes.forEach(o => { %>
+            <li><i class="fa-solid fa-circle-check"></i><span><%= o %></span></li>
+          <% }) %>
+        </ul>
+      <% } %>
+
+      <h4 class="info-heading">Downloadable Resources</h4>
+      <div class="resources">
+        <p class="res-empty">No resources attached to this lesson.</p>
+      </div>
+    </div>
+
+    <!-- TABS CARD (always visible) -->
+    <div class="tabs-card">
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="overview">Overview</button>
+        <button class="tab-btn" data-tab="transcript">Transcript</button>
+        <button class="tab-btn" data-tab="notes">Notes</button>
+        <button class="tab-btn" data-tab="quiz">Assignment / Quiz</button>
+      </div>
+
+      <div class="tab-pane active" id="tab-overview">
+        <div class="instructor-row">
+          <img class="inst-avatar"
+            src="<%= course.instructor?.avatar || '/images/default-avatar.png' %>"
+            alt="<%= course.instructor?.name %>"/>
+          <div class="inst-info">
+            <span class="inst-label">Instructor</span>
+            <span class="inst-name"><%= course.instructor?.name || 'Unknown' %></span>
+          </div>
+        </div>
+        <p class="info-desc"><%= course.shortDescription || '' %></p>
+      </div>
+
+      <div class="tab-pane" id="tab-transcript">
+        <p class="pane-empty">Transcript not available for this lesson.</p>
+      </div>
+
+      <div class="tab-pane" id="tab-notes">
+        <p class="pane-empty">No notes yet.</p>
+      </div>
+
+      <div class="tab-pane" id="tab-quiz">
+        <p class="pane-empty">No assignment or quiz for this lesson.</p>
+      </div>
+    </div>
+
+  </div><!-- /left-col -->
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="sidebar-col">
+
+    <div class="sidebar-card">
+      <div class="sidebar-head">Course Curriculum</div>
+
+      <div class="sidebar-prog-wrap">
+        <div class="sidebar-prog-row">
+          <span class="sidebar-prog-label">Progress</span>
+          <span class="sidebar-prog-count" id="sidebarCount"><%= completedLessons.length %>/<%= totalLessons %></span>
+        </div>
+        <div class="sidebar-prog-track">
+          <div class="sidebar-prog-fill" id="sidebarFill" style="width:<%= sidebarPct %>%"></div>
+        </div>
+      </div>
+
+      <div class="sidebar-list">
+        <% course.sections.forEach(function(section) { %>
+
+          <div class="section-label"><%= section.title %></div>
+
+          <% section.lessons.forEach(function(lesson) {
+            const isDone   = completedLessons.includes(lesson._id.toString());
+            const isActive = lesson._id.toString() === activeLessonId;
+          %>
+            <a class="lesson-row <%= isActive ? 'is-active' : '' %> <%= isDone ? 'is-done' : '' %>"
+               href="/student/course/<%= course._id %>/learn?lesson=<%= lesson._id %>"
+               data-lesson-id="<%= lesson._id %>">
+              <span class="lesson-row-icon">
+                <% if (isDone) { %>
+                  <i class="fa-solid fa-circle-check"></i>
+                <% } else if (isActive) { %>
+                  <span class="play-tri">&#9654;</span>
+                <% } else { %>
+                  <i class="fa-regular fa-circle"></i>
+                <% } %>
+              </span>
+              <span class="lesson-row-body">
+                <span class="lesson-row-title"><%= lesson.title %></span>
+                <% if (lesson.duration) { %>
+                  <span class="lesson-row-dur"><%= lesson.duration %></span>
+                <% } %>
+              </span>
+            </a>
+          <% }) %>
+
+        <% }) %>
+      </div>
+    </div>
+
+  </aside>
+
+</div><!-- /page-body -->
+
+<!-- ── FIXED BOTTOM NAV ── -->
+<div class="bottom-nav">
+
+  <% if (prevLessonId) { %>
+    <a class="btn-prev" href="/student/course/<%= course._id %>/learn?lesson=<%= prevLessonId %>">
+      <i class="fa-solid fa-chevron-left"></i> Previous Lesson
+    </a>
+  <% } else { %>
+    <span class="btn-prev is-disabled">
+      <i class="fa-solid fa-chevron-left"></i> Previous Lesson
+    </span>
+  <% } %>
+
+  <% if (activeLesson) { %>
+    <button class="btn-mark <%= isActiveDone ? 'is-done' : '' %>"
+      id="btnComplete"
+      data-course-id="<%= course._id %>"
+      data-lesson-id="<%= activeLesson._id %>">
+      <i class="fa-solid fa-check"></i>
+      <%= isActiveDone ? 'Completed' : 'Mark Complete' %>
+    </button>
+  <% } else { %>
+    <span class="btn-mark is-disabled">
+      <i class="fa-solid fa-check"></i> Mark Complete
+    </span>
+  <% } %>
+
+  <% if (nextLessonId) { %>
+    <a class="btn-next" href="/student/course/<%= course._id %>/learn?lesson=<%= nextLessonId %>">
+      Next Lesson <i class="fa-solid fa-chevron-right"></i>
+    </a>
+  <% } else { %>
+    <span class="btn-next is-disabled">
+      Next Lesson <i class="fa-solid fa-chevron-right"></i>
+    </span>
+  <% } %>
+
+</div>
+
+<script src="/js/course-content.js"></script>
+</body>
+</html>

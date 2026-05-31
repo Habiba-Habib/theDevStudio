@@ -83,7 +83,7 @@
     </div>
 
     <!-- CURRICULUM -->
-    <h3 class="learn-title">Course Curriculum</h3>
+    <h3 class="learn-title" id="curriculum">Course Curriculum</h3>
 
     <% course.sections.forEach(section => { %>
       <div class="learn-box">
@@ -140,12 +140,26 @@
     <div class="pricing-card">
 
       <div class="pricing-top">
-        <div class="price">$<%= course.price %></div>
-        <div class="price-note">One-time payment • Full lifetime access</div>
-
-        <a href="/student/payment/<%= course._id %>" class="btn-enroll">
-          Enroll
-        </a>
+        <% if (!isEnrolled) { %>
+          <div class="price">$<%= course.price %></div>
+          <div class="price-note">One-time payment • Full lifetime access</div>
+          <a href="/student/payment/<%= course._id %>" class="btn-enroll">
+            Enroll
+          </a>
+        <% } else { %>
+          <div class="enrolled-badge">Enrolled</div>
+          <div class="price-note">You have lifetime access to this course</div>
+          <div class="enroll-progress-wrap">
+            <div class="enroll-progress-label">
+              <span>Your progress</span>
+              <span><%= progress %>%</span>
+            </div>
+            <div class="enroll-progress-bar">
+              <div class="enroll-progress-fill" data-progress="<%= progress %>"></div>
+            </div>
+          </div>
+          <a href="/student/course/<%= course._id %>/learn" class="btn-enroll">Continue Learning</a>
+        <% } %>
       </div>
 
       <hr class="pricing-divider">
@@ -185,13 +199,11 @@
 </div>
 
 <script>
-  // simple redirect (NO .html anymore)
-  document.getElementById('enrollBtn')?.addEventListener('click', () => {
-    window.location.href = "/student/payment/<%= course._id %>";
+  document.querySelectorAll('.enroll-progress-fill[data-progress]').forEach((el) => {
+    const value = Number(el.getAttribute('data-progress'));
+    el.style.width = (Number.isFinite(value) ? value : 0) + '%';
   });
 </script>
-
-
 
 </body>
 </html>

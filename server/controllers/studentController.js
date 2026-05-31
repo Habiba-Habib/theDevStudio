@@ -3,6 +3,31 @@ const Course = require("../models/Course");
 const User = require("../models/User");
 const Challenge = require("../models/challenges");
 
+const TAX_RATE = 0.14;
+const PROMO_CODES = {
+  SAVE10: 0.1,
+  EDU20: 0.2,
+};
+
+function calculateOrderTotal(coursePrice, promoCode) {
+  const basePrice = Number(coursePrice) || 0;
+  let subtotal = basePrice;
+  const code = (promoCode || "").trim().toUpperCase();
+
+  if (code && PROMO_CODES[code]) {
+    subtotal = basePrice * (1 - PROMO_CODES[code]);
+  }
+
+  const tax = subtotal * TAX_RATE;
+  const total = subtotal + tax;
+
+  return {
+    subtotal: Math.round(subtotal * 100) / 100,
+    tax: Math.round(tax * 100) / 100,
+    total: Math.round(total * 100) / 100,
+  };
+}
+
 exports.getPaymentPage = async (req, res) => {
   try {
     if (!req.session.userId) {
@@ -51,10 +76,15 @@ if (cleanCardNumber.length === 16) {
   paymentStatus = "successful";
 }
 
+    const { total: amountPaid } = calculateOrderTotal(
+      course.price,
+      req.body.promo
+    );
+
     const payment = await Payment.create({
       student: req.session.userId,
       course: course._id,
-      amount: course.price,
+      amount: amountPaid,
       paymentMethod: paymentMethod,
       status: paymentStatus,
     });

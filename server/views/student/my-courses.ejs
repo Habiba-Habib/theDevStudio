@@ -138,8 +138,8 @@
                   <%= course.duration || "12 hours" %>
                 </span>
 
-                <a 
-  href="/courses/<%= course._id || course.id || '' %>" 
+                <a
+  href="<%= course.status === 'completed' ? '/courses/' + (course._id || course.id || '') : '/student/course/' + (course._id || course.id || '') + '/learn' %>"
   class="continue-btn"
 >
           <%= course.status === "completed" ? "Review Course" : "Continue Learning" %>
