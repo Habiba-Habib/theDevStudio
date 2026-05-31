@@ -26,6 +26,15 @@ router.post("/login", authController.login);
 /* LOGOUT */
 router.post("/logout", authController.logout);
 
+//Terms and conditions 
+router.get("/terms-of-services", (req, res) => {
+  res.render("auth/terms-of-services");
+});
+
+//Privacy Policy
+router.get("/privacy-policy", (req, res) => {
+  res.render("auth/privacy-policy");
+});
 module.exports = router;
 
 router.get(
