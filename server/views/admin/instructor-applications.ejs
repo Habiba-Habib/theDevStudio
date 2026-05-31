@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instructor Applications – EduPlatform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/instructor-applications.css"/>
+</head>
+<body>
+
+  <%- include('../partials/navbar') %>
+
+  <div class="page-wrapper">
+
+    <!-- ── HEADER ── -->
+    <div class="page-header">
+      <h1>Instructor Applications</h1>
+      <p>Review and manage instructor verification requests</p>
+    </div>
+
+    <!-- ── SEARCH + FILTER ── -->
+    <div class="toolbar">
+      <div class="search-wrapper">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="search-input" class="search-input" placeholder="Search by name or email..."/>
+      </div>
+      <div class="custom-select" id="status-select">
+        <div class="select-selected" id="select-selected">
+          All Applications
+          <i class="fa-solid fa-chevron-down select-arrow"></i>
+        </div>
+        <div class="select-items hidden" id="select-items">
+          <div class="select-item active" data-value="all">All Applications <i class="fa-solid fa-check"></i></div>
+          <div class="select-item" data-value="pending">Pending</div>
+          <div class="select-item" data-value="approved">Approved</div>
+          <div class="select-item" data-value="rejected">Rejected</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── COUNT ── -->
+    <div class="showing-count" id="showing-count">
+      Showing <%= applications.length %> application<%= applications.length !== 1 ? 's' : '' %>
+    </div>
+
+    <!-- ── TABLE ── -->
+    <div class="table-card">
+      <table class="app-table">
+        <thead>
+          <tr>
+            <th>Applicant</th>
+            <th>Experience</th>
+            <th>Expertise</th>
+            <th>Application Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <% applications.forEach(function(app) { %>
+            <tr class="app-row" data-status="<%= app.status.toLowerCase() %>" data-name="<%= app.name.toLowerCase() %>" data-email="<%= app.email.toLowerCase() %>">
+              <!-- Applicant -->
+              <td class="applicant-cell">
+                <img src="/public/images/avatars/<%= app.avatar %>" alt="<%= app.name %>" class="applicant-avatar"/>
+                <div>
+                  <div class="applicant-name"><%= app.name %></div>
+                  <div class="applicant-email"><%= app.email %></div>
+                </div>
+              </td>
+
+              <!-- Experience -->
+              <td class="experience-cell"><%= app.experience %></td>
+
+              <!-- Expertise -->
+              <td class="expertise-cell">
+                <% app.expertise.slice(0, 2).forEach(function(tag) { %>
+                  <span class="tag"><%= tag %></span>
+                <% }) %>
+              </td>
+
+              <!-- Date -->
+              <td class="date-cell"><%= new Date(app.applicationDate).toLocaleDateString('en-GB') %></td>
+
+              <!-- Status -->
+              <td>
+                <span class="status-badge status-<%= app.status.toLowerCase() %>"><%= app.status %></span>
+              </td>
+
+              <!-- Actions -->
+              <td class="actions-cell">
+                <button class="btn-review" onclick="openModal('<%= app._id %>')">
+                  <i class="fa-regular fa-eye"></i> Review
+                </button>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+<div>
+ 
+</div>
+<div class="button-container">
+    <a href="/admin/dashboard" class="back-to-dashboard-btn">
+        Back to Dashboard
+    </a>
+</div>
+
+  </div>
+  
+
+  <!-- ── MODAL ── -->
+  <div class="modal-overlay hidden" id="modal-overlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <div>
+          <h2>Application Review</h2>
+          <p>Review instructor application and make a decision</p>
+        </div>
+        <button class="modal-close" onclick="closeModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" id="modal-body">
+        <!-- filled by JS -->
+      </div>
+    </div>
+    
+  </div>
+
+
+
+  <script src="/js/instructor-applications.js"></script>
+<div id="rejectModal" class="reject-modal hidden">
+  <div class="modal-content">
+    <h3>Reject Application</h3>
+    <p>Please provide a reason for rejection:</p>
+
+    <textarea
+      id="rejectReason"
+      placeholder="Enter reason for rejection..."
+      rows="4"
+    ></textarea>
+
+    <div class="modal-actions">
+      <button onclick="closeRejectModal()" class="btn-cancel">
+        Cancel
+      </button>
+
+      <button onclick="confirmReject()" class="btn-reject">
+        Reject
+      </button>
+    </div>
+  </div>
+</div>
+  <!-- ── APPLICATION DATA FOR JS ── -->
+  <script>
+    const applications = <%- JSON.stringify(applications) %>;
+  </script>
+</body>
+</html>
