@@ -5,9 +5,22 @@ const userSchema = new mongoose.Schema(
     name: String,
     fullname: String,
     username: { type: String, unique: true, sparse: true },
+
+
     email: { type: String, unique: true },
-    password: String,
-    avatar: { type: String, default: "" },
+password: String,
+
+googleId: { type: String, sparse: true },
+githubId: { type: String, sparse: true },
+authProvider: {
+  type: String,
+  enum: ["local", "google", "github"],
+  default: "local"
+},
+
+avatar: { type: String, default: "" },
+
+
     bio: { type: String, default: "" },
     location: { type: String, default: "" },
     role: {
