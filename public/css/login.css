@@ -1,23 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --pink:       #FF40A0;
+  --pink: #FF40A0;
   --pink-light: #FFB7E6;
-  --yellow:     #F0FE72;
-  --teal:       #60A3A6;
-  --bg:         #0A0E27;
-  --surface:    #1A203A;
-  --border:     rgba(255, 255, 255, 0.08);
+  --yellow: #F0FE72;
+  --teal: #60A3A6;
+  --bg: #0A0E27;
+  --surface: #1A203A;
+  --border: rgba(255, 255, 255, 0.08);
   --text-white: #FFFFFC;
   --text-muted: #BDC2C9;
-  --text-body:  #C8D0E7;
-  --font:       'Inter', sans-serif;
+  --text-body: #C8D0E7;
+  --font: 'Inter', sans-serif;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
 }
 
 body {
@@ -46,9 +51,11 @@ input {
   flex-direction: column;
 }
 
+/* Navbar */
+
 .navbar {
-  height: 72px;
-  padding: 0 48px;
+  height: 58px;
+  padding: 0 180px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -64,33 +71,32 @@ input {
 }
 
 .brand-icon {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--pink), var(--pink-light));
   display: grid;
   place-items: center;
-  font-size: 14px;
-  box-shadow: 0 8px 24px rgba(255, 64, 160, 0.28);
+  font-size: 13px;
+  box-shadow: 0 8px 24px rgba(255, 64, 160, 0.35);
 }
 
 .nav-links {
   display: flex;
-  gap: 32px;
+  gap: 34px;
 }
 
 .nav-links a,
 .login-link {
   color: var(--text-white);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  opacity: 0.95;
 }
 
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 20px;
 }
 
 .signup-btn.small {
@@ -98,30 +104,31 @@ input {
   color: var(--text-white);
   font-size: 12px;
   font-weight: 700;
-  padding: 8px 14px;
-  border-radius: 999px;
+  padding: 8px 15px;
+  border-radius: 8px;
   box-shadow: 0 8px 24px rgba(255, 64, 160, 0.25);
 }
+
+/* Main Layout */
 
 .hero {
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 430px;
+  grid-template-columns: 410px 410px;
   align-items: center;
-  gap: 40px;
-  max-width: 1120px;
+  justify-content: center;
+  gap: 36px;
   width: 100%;
-  margin: 0 auto;
-  padding: 40px 32px 60px;
+  padding: 52px 32px;
 }
 
+/* Welcome Card */
+
 .welcome-card {
-  max-width: 370px;
-  margin-left: 30px;
   background: rgba(26, 32, 58, 0.75);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 34px 34px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 16px;
+  padding: 38px 36px;
   box-shadow:
     0 10px 40px rgba(0, 0, 0, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
@@ -129,11 +136,11 @@ input {
 }
 
 .welcome-card h1 {
-  font-size: 22px;
-  line-height: 1.25;
+  font-size: 28px;
+  line-height: 1.1;
   font-weight: 800;
-  margin-bottom: 12px;
-  letter-spacing: -0.3px;
+  margin-bottom: 18px;
+  letter-spacing: -0.5px;
 }
 
 .welcome-card h1 span {
@@ -142,7 +149,7 @@ input {
 
 .welcome-card p {
   color: var(--text-body);
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.7;
   margin-bottom: 24px;
 }
@@ -159,77 +166,44 @@ input {
   align-items: center;
   gap: 12px;
   color: var(--text-white);
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .number {
-  width: 28px;
-  height: 28px;
-  border-radius: 10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 9px;
   background: linear-gradient(180deg, var(--pink-light), var(--pink));
   color: var(--text-white);
   font-weight: 700;
   display: grid;
   place-items: center;
-  font-size: 14px;
+  font-size: 12px;
   flex-shrink: 0;
 }
 
+/* Sign In Card */
+
 .signin-card {
   background: rgba(26, 32, 58, 0.92);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 34px 32px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 16px;
+  padding: 36px 36px 32px;
   box-shadow:
     0 12px 40px rgba(0, 0, 0, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .signin-card h2 {
-  font-size: 40px;
+  font-size: 24px;
   font-weight: 800;
   margin-bottom: 8px;
-  letter-spacing: -0.8px;
 }
 
 .subtitle {
   color: var(--text-muted);
-  font-size: 14px;
-  margin-bottom: 28px;
-}
-
-.role-section label,
-.form-group label {
-  display: block;
-  color: var(--text-body);
   font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 10px;
-}
-
-.role-tabs {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-.role-btn {
-  height: 42px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: #09112f;
-  color: #b8c7ff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-.role-btn.active {
-  background: linear-gradient(90deg, var(--pink), var(--pink-light));
-  color: var(--text-white);
-  border-color: transparent;
-  box-shadow: 0 10px 24px rgba(255, 64, 160, 0.28);
+  margin-bottom: 26px;
 }
 
 .signin-form {
@@ -238,23 +212,31 @@ input {
 }
 
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  color: var(--text-body);
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 9px;
 }
 
 .input-box {
-  height: 46px;
+  height: 36px;
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #09112f;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 0 14px;
+  background: #080d28;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  padding: 0 12px;
 }
 
 .input-icon {
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
   width: 16px;
   text-align: center;
 }
@@ -266,7 +248,7 @@ input {
   border: none;
   outline: none;
   color: var(--text-white);
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .input-box input::placeholder {
@@ -278,7 +260,7 @@ input {
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .form-options {
@@ -293,9 +275,9 @@ input {
 .checkbox-wrap {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .checkbox-wrap input {
@@ -304,17 +286,23 @@ input {
 
 .forgot-link {
   color: var(--pink);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
 }
 
+.form-message {
+  font-size: 12px;
+  margin-bottom: 10px;
+  min-height: 14px;
+}
+
 .signin-btn {
-  height: 48px;
+  height: 36px;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   background: linear-gradient(90deg, var(--pink), var(--pink-light));
   color: var(--text-white);
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 14px 28px rgba(255, 64, 160, 0.25);
@@ -328,8 +316,8 @@ input {
 .signup-text {
   text-align: center;
   color: var(--text-muted);
-  font-size: 14px;
-  margin: 18px 0 22px;
+  font-size: 12px;
+  margin: 18px 0 24px;
 }
 
 .signup-text a {
@@ -349,7 +337,7 @@ input {
   left: 0;
   right: 0;
   top: 50%;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
   transform: translateY(-50%);
 }
 
@@ -359,7 +347,7 @@ input {
   background: rgba(26, 32, 58, 0.92);
   padding: 0 12px;
   color: #7e88a8;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .social-buttons {
@@ -369,34 +357,34 @@ input {
 }
 
 .social-btn {
-  height: 44px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: #09112f;
+  height: 36px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #080d28;
   color: var(--text-white);
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   transition: 0.2s ease;
 }
 
-.social-btn:hover,
-.role-btn:hover {
+.social-btn:hover {
   transform: translateY(-1px);
 }
 
-@media (max-width: 980px) {
+/* Responsive */
+
+@media (max-width: 1000px) {
+  .navbar {
+    padding: 0 32px;
+  }
+
   .hero {
     grid-template-columns: 1fr;
     justify-items: center;
-    padding-top: 32px;
   }
 
-  .welcome-card {
-    margin-left: 0;
-    max-width: 430px;
-    width: 100%;
-  }
-
+  .welcome-card,
   .signin-card {
     width: 100%;
     max-width: 430px;
@@ -413,20 +401,11 @@ input {
   }
 
   .hero {
-    padding: 20px 16px 40px;
+    padding: 24px 16px 40px;
   }
 
   .signin-card,
   .welcome-card {
-    padding: 24px 20px;
-  }
-
-  .signin-card h2 {
-    font-size: 32px;
-  }
-
-  .role-tabs,
-  .social-buttons {
-    grid-template-columns: 1fr;
+    padding: 26px 22px;
   }
 }

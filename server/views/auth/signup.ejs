@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Account – EduPlatform</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/signup.css"/>
+  
+</head>
+
+<body>
+    <%- include('../partials/navbar') %>
+
+<div class="signup-layout">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="left-content">
+      <h1>
+        Join<br>
+        <span class="gradient">EduPlatform Today</span>
+      </h1>
+      <p>Start your journey to becoming a skilled professional.</p>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="form-card">
+
+      <h2>Create Account</h2>
+      <p class="subtitle">Sign up to start your learning journey</p>
+
+      <!-- ROLE -->
+       <form action="/auth/signup" method="POST">
+      <div class="role-label">I want to join as</div>
+      <div class="role-buttons">
+        <button class="btn-role active" type="button" onclick="setRole(this, 'student')">Student</button>
+<button class="btn-role" type="button" onclick="window.location.href='/become-instructor'">Instructor</button>
+      </div>
+      <input type="hidden" id="role" name="role" value="student">
+      <!-- NAME -->
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" class="form-input" id="name" name ="name" placeholder="John Doe">
+      </div>
+
+      <!-- EMAIL -->
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" class="form-input" id="email" name="email" placeholder="you@example.com">
+      </div>
+
+      <!-- PASSWORD -->
+     <div class="form-group">
+  <label>Password</label>
+  <div class="input-wrapper">
+    <input type="password" class="form-input" id="password" name="password" placeholder="Create password">
+    <button type="button" class="btn-toggle-pw" data-target="password">
+      <i class="fa-regular fa-eye"></i>
+    </button>
+  </div>
+  <span class="error-msg" id="password-error">Password is too easy. Use at least 8 characters with letters and numbers.</span>
+</div>
+
+<div class="form-group">
+  <label>Confirm Password</label>
+  <div class="input-wrapper">
+  <input type="password" class="form-input" id="confirm-password" placeholder="Confirm password">
+  <button type="button" class="btn-toggle-pw" data-target="confirm-password">
+    <i class="fa-regular fa-eye"></i>
+  </button>
+</div>
+<span class="error-msg" id="confirm-password-error">Passwords do not match.</span>
+</div>
+
+            <!-- TERMS + PRIVACY -->
+         <div class="terms-row">
+        <input type="checkbox" id="terms">
+        <label for="terms" class="terms-check-label">I agree to the</label>
+        <button type="button" class="terms-link-btn" id="open-terms">Terms of Service</button>
+        <span class="terms-label-text"> and </span>
+        <button type="button" class="terms-link-btn" id="open-privacy">Privacy Policy</button>
+      </div>
+
+      <!-- BUTTON -->
+      <button type="button" class="btn-create" id="btn-create">Create Account</button>
+      </form>
+      <!-- LOGIN -->
+      <div class="signin-row">
+        Already have an account?
+        <a href="/auth/login">Log In</a>
+      </div>
+
+    </div>
+  </div>
+  
+
+</div>
+<div class="signup-popup hidden" id="signup-popup">
+  <div class="signup-popup-card">
+    <div class="signup-popup-icon" id="signup-popup-icon">
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
+    <h3 id="signup-popup-title">Account Created</h3>
+    <p id="signup-popup-message">Please log in to continue.</p>
+  </div>
+</div>
+
+<!-- Terms popup (summary) -->
+<div class="signup-popup hidden" id="terms-modal" aria-hidden="true">
+  <div class="signup-popup-card terms-modal-card" role="dialog">
+    <button type="button" class="terms-modal-close" id="terms-modal-close" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h3>Terms of Service</h3>
+    <div class="terms-modal-body">
+      <p>By using TheDevStudio you agree to:</p>
+      <ul>
+        <li>Provide accurate account information</li>
+        <li>Use courses and challenges honestly</li>
+        <li>Follow instructor verification rules if applying to teach</li>
+        <li>Not upload harmful, illegal, or infringing content</li>
+      </ul>
+      <a href="/auth/terms-of-services" target="_blank" rel="noopener noreferrer" class="legal-full-link">Read full Terms of Service</a>
+    </div>
+    <button type="button" class="btn-create terms-modal-close-btn" id="terms-modal-close-btn">Close</button>
+  </div>
+</div>
+
+<!-- Privacy popup (summary) -->
+<div class="signup-popup hidden" id="privacy-modal" aria-hidden="true">
+  <div class="signup-popup-card terms-modal-card" role="dialog">
+    <button type="button" class="terms-modal-close" id="privacy-modal-close" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h3>Privacy Policy</h3>
+    <div class="terms-modal-body">
+      <p>We collect data needed to run the platform, including:</p>
+      <ul>
+        <li>Name, email, and account details</li>
+        <li>Course progress and challenge submissions</li>
+        <li>Instructor verification documents if you apply</li>
+      </ul>
+      <p>We do not sell your personal data.</p>
+      <a href="/auth/privacy-policy" target="_blank" rel="noopener noreferrer" class="legal-full-link">Read full Privacy Policy</a>
+    </div>
+    <button type="button" class="btn-create terms-modal-close-btn" id="privacy-modal-close-btn">Close</button>
+  </div>
+</div>
+
+<!-- JS -->
+<script src="/js/signup.js"></script>
+
+
+</body>
+</html>

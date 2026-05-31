@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TheDevStudio - Log In</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/css/login.css" />
+</head>
+
+<body>
+  <%- include('../partials/navbar') %>
+  <div class="page">
+    <main class="hero">
+
+      <section class="welcome-card">
+        <h1>
+          Welcome Back to <br />
+          <span>TheDevStudio</span>
+        </h1>
+        <p>Continue your learning journey and achieve your goals.</p>
+        <ul class="feature-list">
+          <li><span class="number">1</span><span>Access your enrolled courses</span></li>
+          <li><span class="number">2</span><span>Track your progress</span></li>
+          <li><span class="number">3</span><span>Compete in coding challenges</span></li>
+          <li><span class="number">4</span><span>Earn certificates</span></li>
+        </ul>
+      </section>
+
+      <section class="signin-card">
+        <h2>Log In</h2>
+        <p class="subtitle">Enter your credentials to access your account</p>
+
+        <% if (locals.error) { %>
+          <div class="alert alert-error"><%= error %></div>
+        <% } %>
+
+        <% if (locals.success) { %>
+          <div class="alert alert-success"><%= success %></div>
+        <% } %>
+
+        <form class="signin-form" id="signinForm" action="/auth/login" method="POST">
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <div class="input-box">
+              <span class="input-icon"><i class="fa-regular fa-envelope"></i></span>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="you@example.com"
+                value="<%= locals.email || '' %>"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-box">
+              <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+              />
+              <button type="button" class="toggle-password" id="togglePassword">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-wrap">
+              <input type="checkbox" name="rememberMe" />
+              <span>Remember me</span>
+            </label>
+            <a href="/auth/forgot-password">Forgot password?</a>
+          </div>
+
+          <span id="form-message" class="form-message"></span>
+
+          <button type="submit" class="signin-btn">Log In</button>
+
+          <p class="signup-text">
+            Don't have an account?
+          <a href="/auth/signup">Sign Up</a>
+
+          </p>
+
+          <div class="divider"><span>Or continue with</span></div>
+
+          <div class="social-buttons">
+            <button type="button" class="social-btn" onclick="window.location.href='/auth/google'">
+  Google
+</button>
+
+<button type="button" class="social-btn" onclick="window.location.href='/auth/github'">
+  GitHub
+</button>
+          </div>
+
+        </form>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="/js/login.js"></script>
+</body>
+</html>

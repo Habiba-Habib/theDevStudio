@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enrolled Students – <%= course.title %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/enrolled-students.css"/>
+</head>
+<body>
+
+  <%- include('../partials/navbar') %>
+
+  <a href="/instructor/dashboard" class="back-link">
+    <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+  </a>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1>Enrolled Students</h1>
+    <p><span><%= course.title %></span> • <%= students.length %> students</p>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <div class="stat-icon pink">
+        <i class="fa-solid fa-arrow-trend-up"></i>
+      </div>
+      <div class="stat-info">
+        <h3><%= avgProgress %>%</h3>
+        <p>Average Progress</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon teal">
+        <i class="fa-regular fa-clock"></i>
+      </div>
+      <div class="stat-info">
+        <h3><%= activeToday %></h3>
+        <p>Active Today</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon yellow">
+        <i class="fa-solid fa-arrow-trend-up"></i>
+      </div>
+      <div class="stat-info">
+        <h3><%= nearCompletion %></h3>
+        <p>Near Completion</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-bar">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search students..."
+    />
+  </div>
+
+  <!-- RESULTS COUNT -->
+  <p class="results-count" id="resultsCount">
+    Showing <%= students.length %> students
+  </p>
+
+  <!-- STUDENT CARDS -->
+  <div class="students-list" id="studentsList">
+
+    <% if (students.length === 0) { %>
+      <div class="empty-state">
+        <i class="fa-solid fa-users-slash"></i>
+        <p>No students enrolled in this course yet.</p>
+      </div>
+    <% } %>
+
+    <% students.forEach(student => { %>
+      <div class="student-card"
+           data-name="<%= student.name.toLowerCase() %>"
+           data-email="<%= student.email.toLowerCase() %>">
+
+        <div class="student-top">
+          <div class="student-info">
+            <img
+              src="/images/avatars/<%= student.avatar %>"
+              alt="<%= student.name %>"
+              class="student-avatar"
+              onerror="this.src='/images/avatars/default.png'"
+            />
+            <div>
+              <div class="student-name"><%= student.name %></div>
+              <div class="student-email"><%= student.email %></div>
+            </div>
+          </div>
+
+          <a href="mailto:<%= student.email %>" class="contact-btn">
+            <i class="fa-regular fa-envelope"></i> Contact
+          </a>
+        </div>
+
+        <div class="progress-label">
+          <span>Progress</span>
+          <span><%= student.progress %>%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" data-progress="<%= student.progress %>"></div>
+        </div>
+
+        <div class="student-meta">
+          <span>
+            <i class="fa-regular fa-clock"></i>
+            Last active: <%= student.lastActive %>
+          </span>
+          <span>
+            <i class="fa-regular fa-calendar"></i>
+            Enrolled: <%= new Date(student.enrolledAt).toLocaleDateString() %>
+          </span>
+        </div>
+
+      </div>
+    <% }) %>
+
+  </div>
+
+  <script src="/js/instructor/enrolled-students.js"></script>
+</body>
+</html>

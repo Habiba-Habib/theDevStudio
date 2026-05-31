@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="/css/edit-profile.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+   
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+    <div class="container">
+
+        <h4 class="back-link">
+            <i class="fa-solid fa-arrow-left"></i>
+           <a href="javascript:history.back()">Back</a>
+        </h4>
+
+        <h1 class="edit-title">Edit Profile</h1>
+
+       
+        <div class="avatar-card">
+            <h2 style="margin-bottom: 16px;">Choose Your Avatar</h2>
+            <div class="grid-avatars">
+                <img src="/images/avatars/avatar1g.png" alt="Avatar 1">
+                <img src="/images/avatars/avatar2g.png" alt="Avatar 2">
+                <img src="/images/avatars/avatar3g.png" alt="Avatar 3">
+                <img src="/images/avatars/avatar4b.png" alt="Avatar 4">
+                <img src="/images/avatars/avatar5g.png" alt="Avatar 5">
+                <img src="/images/avatars/avatar6g.png" alt="Avatar 6">
+                <img src="/images/avatars/avatar7b.png" alt="Avatar 7">
+                <img src="/images/avatars/avatar8g.png" alt="Avatar 8">
+                <img src="/images/avatars/avatar9b.png" alt="Avatar 9">
+                <img src="/images/avatars/avatar10b.png" alt="Avatar 10">
+            </div>
+            <div class="selected-avatar">
+                <img id="selected-img" src="/images/avatars/avatar1g.png" alt="Selected Avatar">
+                <div class="selected-info">
+                    <p class="selected-title">Selected Avatar</p>
+                    <p class="selected-desc">This will be your new profile picture</p>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="profile-info">
+            <h2 class="section-title">Profile Information</h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <div class="input-wrapper">
+                         <span class="input-icon"><i class="fa-regular fa-user "></i></span>
+                        <input type="text" id="fullname" placeholder="Jana mohamed" value= "<%= user.fullname %>">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Username</label>
+                    <div class="input-wrapper">
+                       <span class="input-icon"><i class="fa-regular fa-user "></i></span>
+                        <input type="text" id="username" placeholder="jana" value="<%= user.username %>">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <div class="input-wrapper">
+                 <span class="input-icon"><i class="fa-regular fa-envelope"></i></span>
+                    <input type="email" id="email" placeholder="jana@gmail.com" value="<%= user.email %>">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Location</label>
+                <div class="input-wrapper">
+                   <span class="input-icon"><i class="fa-solid fa-location-dot "></i></span>
+                    <input type="text" id="location" placeholder="Egypt, Cai" value="<%= user.location || '' %>">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Bio</label>
+                <textarea id="bio" placeholder="Passionate learner exploring web development and data science. Love solving coding challenges!"><%= user.bio || '' %></textarea>
+            </div>
+        </div>
+
+       
+        <div class="pass-change">
+            <div class="pass-change-header">
+                <h2>Change Password</h2>
+                <p class="pass-subtitle">Leave blank if you don't want to change your password</p>
+            </div>
+
+            <div class="field-group">
+                <label for="currentpass" class="labels">Current Password</label>
+                <div class="input-box">
+                    <span class="field-icon"><i class="fa-solid fa-lock"></i></span>
+                    <input type="password" id="currentpass" class="pass-input" placeholder="Enter current password"/>
+                </div>
+                <a href="/forgot-password" class="forgot-link">Forgot Password?</a>
+            </div>
+
+            <div class="field-group">
+                <label for="newpass" class="labels">New Password</label>
+                <div class="input-box">
+                    <span class="field-icon"><i class="fa-solid fa-lock"></i></span>
+                    <input type="password" id="newpass" class="pass-input" placeholder="Enter new password"/>
+                </div>
+                    <span class="error-msg" id="err-new"></span>  
+
+            </div>
+
+            <div class="field-group">
+                <label for="confirmpass" class="labels">Confirm New Password</label>
+                <div class="input-box">
+                    <span class="field-icon"><i class="fa-solid fa-lock"></i></span>
+                    <input type="password" id="confirmpass" class="pass-input" placeholder="Confirm new password"/>
+                </div>
+                    <span class="error-msg" id="err-confirmpass"></span>  
+
+            </div>
+        </div>
+
+       
+     <div class="bttns">
+       <button class="save-bttn" id="save-bttn">Save Changes</button>
+       <button class="cancel-bttn" id="cancel-bttn">Cancel</button>
+     </div>
+
+    </div>
+<script src="/js/edit-Profile.js"></script>
+
+   
+</body>
+</html>

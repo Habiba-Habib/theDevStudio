@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= instructor.name %>'s Dashboard</title>
+  <link rel="stylesheet" href="/css/dashboards.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+<%- include('../partials/navbar') %>
+
+  <main class="main-content">
+
+    <!-- Welcome Section -->
+    <section class="id-welcome-section">
+      <div>
+        <h1 class="welcome-title">Welcome, <%= instructor.name %>!</h1>
+        <p class="welcome-subtitle"><%= instructor.welcomeMessage %></p>
+      </div>
+      <a href="/create-course" class="id-btn-create">
+        <i class="fa-solid fa-plus"></i> Create New Course
+      </a>
+    </section>
+
+    <!-- Stats Grid -->
+    <section class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon--pink">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <div class="id-stat-change">↗ <%= stats.studentsChange %></div>
+        <div class="stat-value"><%= stats.totalStudents.toLocaleString() %></div>
+        <div class="stat-label">Total Students</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon--green">
+          <i class="fa-solid fa-book-open"></i>
+        </div>
+        <div class="id-stat-change">↗ <%= stats.coursesChange %></div>
+        <div class="stat-value"><%= stats.totalCourses %></div>
+        <div class="stat-label">Courses Created</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon--teal">
+          <i class="fa-solid fa-dollar-sign"></i>
+        </div>
+        <div class="id-stat-change">↗ <%= stats.revenueChange %></div>
+        <div class="stat-value">$<%= stats.totalRevenue.toLocaleString() %></div>
+        <div class="stat-label">Total Revenue</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon--purple">
+          <i class="fa-solid fa-arrow-trend-up"></i>
+        </div>
+        <div class="id-stat-change">↗ <%= stats.ratingChange %></div>
+        <div class="stat-value"><%= stats.avgRating %></div>
+        <div class="stat-label">Avg. Rating</div>
+      </div>
+
+    </section>
+
+    <!-- Charts Section -->
+    <div class="id-charts-grid">
+
+      <!-- Line Chart -->
+      <div class="id-chart-card">
+        <h2 class="section-title">Student Enrollments</h2>
+        <div class="id-chart-wrapper">
+          <canvas id="enrollmentsChart"></canvas>
+          <div class="id-chart-tooltip hidden" id="enrollTooltip"></div>
+        </div>
+      </div>
+
+      <!-- Bar Chart -->
+      <div class="id-chart-card">
+        <h2 class="section-title">Monthly Revenue</h2>
+        <div class="id-chart-wrapper">
+          <canvas id="revenueChart"></canvas>
+          <div class="id-chart-tooltip hidden" id="revenueTooltip"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Your Courses -->
+    <section class="section-block">
+      <h2 class="section-title" style="margin-bottom: 20px;">Your Courses</h2>
+      <% courses.forEach(function(course) { %>
+      <div class="id-course-card">
+        <img src="<%= course.thumbnail %>" alt="<%= course.title %>" class="course-thumb" />
+        <div class="id-course-info">
+          <h3 class="course-progress-title"><%= course.title %></h3>
+          <div class="id-course-meta">
+            <span><i class="fa-solid fa-users"></i> <%= course.students.length.toLocaleString() %> students</span>
+            <span><i class="fa-solid fa-star"></i> <%= course.rating %></span>
+            <span>$<%= course.price %></span>
+          </div>
+        </div>
+        <a href="/course-description" class="id-btn-view">View Details</a>
+      </div>
+      <% }); %>
+    </section>
+
+  </main>
+
+  <script src="/js/dashboards.js"></script>
+ 
+</body>
+</html>

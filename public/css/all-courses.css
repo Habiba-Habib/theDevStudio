@@ -5,17 +5,22 @@
   --bg:         #0A0E27;
   --surface:    #1A203A;
   --border:     rgba(255, 255, 255, 0.08);
+   --yellow:     #F0FE72; 
   --text-white: #FFFFFC;
   --text-muted: #BDC2C9;
   --text-body:  #C8D0E7;
   --font:       'Inter', sans-serif;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+.main-content,
+.main-content * {
+  box-sizing: border-box;
+}
 
 html { scroll-behavior: smooth; }
 
 body {
+  margin: 0;
   font-family: var(--font);
   background-color: var(--bg);
   color: var(--text-white);
@@ -315,3 +320,5 @@ body {
 @media (max-width: 640px) {
   .main-content { padding: 24px 20px 60px; }
 }
+
+

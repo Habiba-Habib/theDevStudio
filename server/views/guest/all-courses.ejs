@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduPlatform - Explore All Courses</title>
+
+ <link rel="stylesheet" href="/css/all-courses.css" />
+<link rel="stylesheet" href="/css/footer.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<%- include('../partials/navbar') %>
+  <main class="main-content">
+
+    <section class="hero-section">
+      <h1 class="hero-title">Explore All Courses</h1>
+     <p class="hero-subtitle">Discover <span id="course-count"><%= courses.length %></span> expert-led courses to advance your career</p>
+    </section>
+
+    <section class="search-filter-section">
+      <div class="search-bar-wrapper">
+        <span class="search-icon">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search courses..." />
+      </div>
+    </section>
+
+    <section class="filter-section">
+      <div class="filter-row" id="categoryPills">
+        <button class="filter-btn filter-btn-category active" data-category="all">All</button>
+        <button class="filter-btn filter-btn-category" data-category="Web Development">Web Development</button>
+        <button class="filter-btn filter-btn-category" data-category="Data Science">Data Science</button>
+        <button class="filter-btn filter-btn-category" data-category="Mobile Development">Mobile Development</button>
+        <button class="filter-btn filter-btn-category" data-category="Design">Design</button>
+        <button class="filter-btn filter-btn-category" data-category="Machine Learning">Machine Learning</button>
+      </div>
+      <div class="filter-row" id="levelPills">
+        <button class="filter-btn filter-btn-level active" data-level="all">All</button>
+        <button class="filter-btn filter-btn-level" data-level="Beginner">Beginner</button>
+        <button class="filter-btn filter-btn-level" data-level="Intermediate">Intermediate</button>
+        <button class="filter-btn filter-btn-level" data-level="Advanced">Advanced</button>
+      </div>
+    </section>
+
+    <p class="showing-count" id="showingCount">Showing <%= courses.length %> courses</p>
+
+    <section class="course-grid">
+
+      <!-- Card -->
+       <% courses.forEach(function(course) { %>
+      <article class="course-card" data-category="<%= course.category %>" data-level="<%= course.level %>">
+        <div class="card-image-wrapper">
+          <img src="<%= course.thumbnail %>" alt="<%= course.title %>" class="card-image" />
+          <span class="badge badge-<%= course.level.toLowerCase() %>"><%= course.level %></span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-category"><%= course.category %></span>
+            <span class="card-dot">•</span>
+           <span class="card-hours"><%= course.duration || "0 hours" %> </span>
+             </div>
+          <h2 class="card-title"><%= course.title %></h2>
+          <p class="card-desc"><%= course.shortDescription %></p>
+          <p class="card-author">By <%= course.instructor?.name || "Unknown Instructor" %></p>
+          <div class="card-stats">
+            <span class="card-rating">
+              <i class="fa-solid fa-star"></i>
+              <%= course.rating %> <span class="rating-count">(<%= (course.students?.length || 0).toLocaleString() %>)</span>
+            </span>
+            <span class="card-students">
+              <i class="fa-solid fa-users"></i>
+              <%= (course.students?.length || 0).toLocaleString() %>
+            </span>
+          </div>
+          <div class="card-footer">
+           <span class="card-price">$<%= course.price %></span>
+             <a href="/courses/<%= course._id %>" class="btn-view-details">View Details</a>
+          </div>
+        </div>
+      </article>
+        <% }); %>
+    </section>
+
+    <p class="no-results hidden" id="noResults">No courses found matching your criteria.</p>
+
+  </main>
+
+  <script src="/js/all-courses.js"></script>
+  <script src="/js/footer.js"></script>
+</body>
+</html>

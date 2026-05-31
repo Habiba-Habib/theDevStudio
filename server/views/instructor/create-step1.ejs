@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title><%= title || 'Create New Course – EduPlatform' %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="<%= basePath || '../../' %>css/create-step1-css.css">
+ 
+</head>
+<body>
+<%- include('../partials/navbar') %>
+  <div class="page-wrapper">
+
+    <!-- HEADER -->
+    <h1 class="course-title"><%= pageTitle || 'Create New Course' %></h1>
+    <p class="course-decription"><%= pageDescription || 'Share your knowledge with students worldwide' %></p>
+
+    <!-- STEPPER -->
+    <div class="stepper">
+      <div class="step active">
+        <div class="step-circle">1</div>
+        <div class="step-label">Basic Info</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step inactive">
+        <div class="step-circle">2</div>
+        <div class="step-label">Curriculum</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step inactive">
+        <div class="step-circle">3</div>
+        <div class="step-label">Pricing</div>
+      </div>
+    </div>
+
+    <!-- FORM CARD — reusing learn-box -->
+    <div class="learn-box">
+
+      <form action="/instructor/create/step1" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+          <label class="lessons">Course Title <span>*</span></label>
+          <input type="text" class="form-input" name="title" placeholder="e.g., Complete Web Development Bootcamp" value="<%= courseTitle || '' %>" required />
+        </div>
+
+        <div class="form-group">
+          <label class="lessons">Short Description <span>*</span></label>
+          <input type="text" class="form-input" name="shortDescription" placeholder="Brief one-line description" value="<%= shortDescription || '' %>" required />
+        </div>
+
+        <div class="form-group">
+          <label class="lessons">Full Description <span>*</span></label>
+          <textarea class="form-input" name="fullDescription" placeholder="Detailed course description..." required><%= fullDescription || '' %></textarea>
+        </div>
+
+        <!-- reusing learn-grid for two columns -->
+        <div class="learn-grid">
+          <div class="form-group">
+            <label class="lessons">Category <span>*</span></label>
+            <select class="form-input" name="category" required>
+              <option value="Web Development" <%= category === 'Web Development' ? 'selected' : '' %>>Web Development</option>
+              <option value="Data Science" <%= category === 'Data Science' ? 'selected' : '' %>>Data Science</option>
+              <option value="Design" <%= category === 'Design' ? 'selected' : '' %>>Design</option>
+              <option value="Business" <%= category === 'Business' ? 'selected' : '' %>>Business</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="lessons">Level <span>*</span></label>
+            <select class="form-input" name="level" required>
+              <option value="Beginner" <%= level === 'Beginner' ? 'selected' : '' %>>Beginner</option>
+              <option value="Intermediate" <%= level === 'Intermediate' ? 'selected' : '' %>>Intermediate</option>
+              <option value="Advanced" <%= level === 'Advanced' ? 'selected' : '' %>>Advanced</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="lessons">Course Thumbnail</label>
+          <div class="upload-area" id="upload-area">
+            <input type="file" id="file-input" name="thumbnail" accept="image/*" style="display:none">
+            <div class="upload-icon">
+              <i class="fa-solid fa-arrow-up-from-bracket"></i>
+            </div>
+            <div class="upload-text">Click to upload or drag and drop</div>
+            <div class="upload-hint">PNG, JPG up to 5MB</div>
+          </div>
+          <% if (locals.thumbnailError) { %>
+            <div class="error-message"><%= thumbnailError %></div>
+          <% } %>
+        </div>
+
+        <!-- reusing btn-enroll -->
+        <button type="submit" class="btn-enroll"><%= submitButtonText || 'Next: Add Curriculum' %></button>
+      </form>
+
+    </div>
+
+  </div>
+  <script src="<%= basePath || '../../' %>js/create-step1-js.js" defer></script>
+ 
+</body>
+</html>
