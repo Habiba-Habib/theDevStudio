@@ -329,6 +329,48 @@ body {
   transform: translateY(-1px);
 }
 
+.enrolled-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--teal);
+  background: rgba(96, 163, 166, 0.14);
+  border: 1px solid rgba(96, 163, 166, 0.35);
+  border-radius: 999px;
+  padding: 6px 12px;
+  margin-bottom: 10px;
+}
+
+.enroll-progress-wrap {
+  width: 95%;
+  margin: 14px 0 18px;
+}
+
+.enroll-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.enroll-progress-bar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.enroll-progress-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--teal), #9cefe6);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+
 /* ── PRICING FEATURES ── */
 .pricing-features {
   padding: 20px 28px 28px;
