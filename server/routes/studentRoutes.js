@@ -2,7 +2,20 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const studentController = require("../controllers/studentController");
-const session = require('express-session');
+
+function requireStudentSession(req, res, next) {
+  if (!req.session || !req.session.userId) {
+    return res.redirect("/auth/login");
+  }
+
+  if (req.session.role !== "student") {
+    return res.redirect("/dashboard");
+  }
+
+  next();
+}
+
+router.use(requireStudentSession);
 
 router.get("/dashboard", studentController.getDashboard);
 router.get("/leaderboard", studentController.getLeaderboard);
