@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Solution Review – <%= review.challengeTitle %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/challenge-review.css"/>
+</head>
+<body>
+<%- include('../partials/navbar') %>
+
+<div class="review-wrapper">
+
+  <!-- HEADER CARD -->
+  <div class="review-header-card">
+    <div class="rh-left">
+      <div class="rh-badge badge-<%= review.difficulty %>"><%= review.difficulty %></div>
+      <h1 class="rh-title"><%= review.challengeTitle %></h1>
+      <p class="rh-sub">Solution Review</p>
+    </div>
+
+    <div class="rh-right">
+      <% if (review.allPassed) { %>
+        <div class="verdict verdict-pass">
+          <i class="fa-solid fa-circle-check"></i> All Tests Passed
+        </div>
+      <% } else { %>
+        <div class="verdict verdict-fail">
+          <i class="fa-solid fa-circle-xmark"></i> Some Tests Failed
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- STATS ROW -->
+  <div class="stats-row">
+
+    <div class="stat-card">
+      <div class="stat-icon stat-icon-teal">
+        <i class="fa-solid fa-flask-vial"></i>
+      </div>
+      <div class="stat-body">
+        <div class="stat-value"><%= review.passed %>/<%= review.total %></div>
+        <div class="stat-label">Tests Passed</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon stat-icon-yellow">
+        <i class="fa-solid fa-bolt"></i>
+      </div>
+      <div class="stat-body">
+        <div class="stat-value">
+          <% if (review.allPassed) { %>
+            +<%= review.totalPoints %>
+          <% } else { %>
+            0
+          <% } %>
+        </div>
+        <div class="stat-label">Points Earned</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon stat-icon-pink">
+        <i class="fa-solid fa-chart-simple"></i>
+      </div>
+      <div class="stat-body">
+        <div class="stat-value"><%= Math.round((review.passed / review.total) * 100) %>%</div>
+        <div class="stat-label">Score</div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon stat-icon-purple">
+        <i class="fa-solid fa-code"></i>
+      </div>
+      <div class="stat-body">
+        <div class="stat-value"><%= review.language.toUpperCase() %></div>
+        <div class="stat-label">Language</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TEST RESULTS -->
+  <div class="section-card">
+    <h2 class="section-title">Test Case Results</h2>
+
+    <div class="test-list">
+      <% review.results.forEach(function(result, i) { %>
+        <div class="test-item <%= result.passed ? 'test-pass' : 'test-fail' %>">
+          <div class="test-header">
+            <div class="test-badge">
+              <% if (result.passed) { %>
+                <i class="fa-solid fa-circle-check"></i> Test <%= i + 1 %> — Passed
+              <% } else { %>
+                <i class="fa-solid fa-circle-xmark"></i> Test <%= i + 1 %> — Failed
+              <% } %>
+              <% if (result.isHidden) { %><span class="hidden-badge">Hidden</span><% } %>
+            </div>
+          </div>
+
+          <% if (!result.isHidden) { %>
+            <div class="test-details">
+              <div class="test-row">
+                <span class="test-key">Input</span>
+                <code class="test-val"><%= result.input %></code>
+              </div>
+              <div class="test-row">
+                <span class="test-key">Expected</span>
+                <code class="test-val test-expected"><%= result.expected %></code>
+              </div>
+              <div class="test-row">
+                <span class="test-key">Your Output</span>
+                <code class="test-val <%= result.passed ? 'test-correct' : 'test-wrong' %>">
+                  <%= result.actual || '(no output)' %>
+                </code>
+              </div>
+              <% if (result.error) { %>
+                <div class="test-row">
+                  <span class="test-key">Error</span>
+                  <code class="test-val test-wrong"><%= result.error %></code>
+                </div>
+              <% } %>
+            </div>
+          <% } else { %>
+            <div class="test-hidden-msg">Hidden test case — input and output not shown.</div>
+          <% } %>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <!-- YOUR CODE -->
+  <div class="section-card">
+    <h2 class="section-title">Your Submitted Code</h2>
+    <pre class="code-block"><%= review.code %></pre>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="actions-row">
+    <a href="/student/start-challenge/<%= review.challengeId %>" class="btn-retry">
+      <i class="fa-solid fa-rotate-left"></i> Try Again
+    </a>
+    <a href="/challenges" class="btn-challenges">
+      <i class="fa-solid fa-list"></i> Back to Challenges
+    </a>
+    <% if (review.allPassed) { %>
+      <a href="/student/dashboard" class="btn-dashboard">
+        <i class="fa-solid fa-house"></i> Go to Dashboard
+      </a>
+    <% } %>
+  </div>
+
+</div>
+
+</body>
+</html>

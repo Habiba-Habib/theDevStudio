@@ -25,6 +25,9 @@ router.get("/my-courses", studentController.getMyCourses);
 router.get("/start-challenge/:id", studentController.getStartChallenge);
 router.post("/payment/:courseId", studentController.processPayment);
 router.post("/activate-instructor", studentController.activateInstructorAccount);
+router.post("/challenge/:id/run",    studentController.runCode);
+router.post("/challenge/:id/submit", studentController.submitChallenge);
+router.get("/challenge/:id/review",  studentController.getChallengeReview);
 
 // ── COURSE PLAYER ──
 router.get("/course/:courseId/learn", async (req, res) => {
