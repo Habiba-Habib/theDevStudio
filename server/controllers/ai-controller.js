@@ -1,4 +1,4 @@
-const { generateChallenge } = require("../services/geminiService");
+const { generateChallenge } = require("../services/groqService");
 
 exports.generateChallengeDraft = async (req, res) => {
   try {
@@ -6,8 +6,8 @@ exports.generateChallengeDraft = async (req, res) => {
       return res.status(403).json({ message: "Admin only" });
     }
 
-    if (!process.env.GEMINI_API_KEY) {
-      return res.status(500).json({ message: "Gemini API key not configured" });
+    if (!process.env.GROQ_API_KEY) {
+      return res.status(500).json({ message: "Groq API key not configured" });
     }
 
     const { topic, difficulty, category } = req.body;
@@ -16,7 +16,7 @@ exports.generateChallengeDraft = async (req, res) => {
 
     res.json({ success: true, challenge: draft });
   } catch (err) {
-    console.error("Gemini error:", err);
+    console.error("Groq error:", err);
     res.status(500).json({
       message: "Failed to generate challenge. Try again.",
     });
