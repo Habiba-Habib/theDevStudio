@@ -63,7 +63,7 @@
             <tr class="app-row" data-status="<%= app.status.toLowerCase() %>" data-name="<%= app.name.toLowerCase() %>" data-email="<%= app.email.toLowerCase() %>">
               <!-- Applicant -->
               <td class="applicant-cell">
-                <img src="/public/images/avatars/<%= app.avatar %>" alt="<%= app.name %>" class="applicant-avatar"/>
+                <img src="<%= app.avatar %>" alt="<%= app.name %>" class="applicant-avatar"/>
                 <div>
                   <div class="applicant-name"><%= app.name %></div>
                   <div class="applicant-email"><%= app.email %></div>
@@ -75,7 +75,7 @@
 
               <!-- Expertise -->
               <td class="expertise-cell">
-                <% app.expertise.slice(0, 2).forEach(function(tag) { %>
+              <% (Array.isArray(app.expertise) ? app.expertise : [app.expertise]).filter(Boolean).slice(0, 2).forEach(function(tag) { %>
                   <span class="tag"><%= tag %></span>
                 <% }) %>
               </td>
@@ -133,7 +133,7 @@
 
 
 
-  <script src="/js/instructor-applications.js"></script>
+  
 <div id="rejectModal" class="reject-modal hidden">
   <div class="modal-content">
     <h3>Reject Application</h3>
@@ -158,7 +158,8 @@
 </div>
   <!-- ── APPLICATION DATA FOR JS ── -->
   <script>
-    const applications = <%- JSON.stringify(applications) %>;
-  </script>
+  const applications = <%- JSON.stringify(applications || []) %>;
+</script>
+<script src="/js/instructor-applications.js"></script>
 </body>
 </html>
