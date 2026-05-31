@@ -159,12 +159,58 @@
                   <% }); %>
                   </div>
           </div>
+                            <!-- Instructor Application Status -->
+        <section class="section-block">
+         
+          <% if (user.instructorStatus === 'approved') { %>
+            <div class="instructor-status-card approved">
+              <div class="status-icon"><i class="fa-solid fa-check-circle"></i></div>
+              <div class="status-content">
+                <h3>Application Approved</h3>
+              </div>
+              <button onclick="activateInstructor()" class="btn-primary">Activate</button>
+            </div>
+          <% } else if (user.instructorStatus === 'pending') { %>
+            <div class="instructor-status-card pending">
+              <div class="status-icon"><i class="fa-solid fa-clock"></i></div>
+              <div class="status-content">
+                <h3>Application Pending</h3>
+              </div>
+            </div>
+          <% } else if (user.instructorStatus === 'rejected') { %>
+    <div class="instructor-status-card rejected" data-reason="<%= user.instructorVerification?.rejectionReason || 'No reason provided' %>">
+  <div class="status-icon"><i class="fa-solid fa-times-circle"></i></div>
+  <div class="status-content">
+    <h3>Application Rejected</h3>
+    <p>Your application was not approved.</p>
+    <button onclick="showRejectionReason(this)" class="btn-secondary">View Reason</button>
+  </div>
+</div>
+
+        
+          <% } else if (user.instructorStatus === 'none') { %>
+            <div class="instructor-status-card none">
+              <div class="status-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+              <div class="status-content">
+                <h3>Become an Instructor</h3>
+              </div>
+              <a href="/become-instructor" class="btn-primary">Apply Now</a>
+            </div>
+          <% } %>
+        </section>
+          
         </div>
       </aside>
 
     </div>
   </main>
-
+        <div id="reasonModal" class="reason-modal" style="display: none;">
+      <div class="reason-modal-content">
+        <h3>Rejection Reason</h3>
+        <p id="rejectionReasonText"></p>
+        <button onclick="closeReasonModal()" class="btn-close">Close</button>
+      </div>
+    </div>
   <script src="/js/dashboards.js"></script>
 </body>
 </html>
