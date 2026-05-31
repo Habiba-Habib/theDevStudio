@@ -8,7 +8,7 @@ function requireStudentSession(req, res, next) {
     return res.redirect("/auth/login");
   }
 
-  if (req.session.role !== "student") {
+  if (req.session.role !== "student" && req.session.role !== "instructor") {
     return res.redirect("/dashboard");
   }
 
@@ -23,7 +23,7 @@ router.get("/payment/:courseId", studentController.getPaymentPage);
 router.get("/my-courses", studentController.getMyCourses);
 router.get("/start-challenge/:id", studentController.getStartChallenge);
 router.post("/payment/:courseId", studentController.processPayment);
-
+router.post("/activate-instructor", studentController.activateInstructorAccount);
 
 router.get("/profile", async (req, res) => {
   if (!req.session.userId) return res.redirect("/auth/login");

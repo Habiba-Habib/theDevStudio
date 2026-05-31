@@ -295,3 +295,33 @@ exports.getStartChallenge = async (req, res) => {
     });
   }
 };
+exports.activateInstructorAccount = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.instructorStatus !== 'approved') {
+      return res.status(400).json({ message: "Your application is not approved yet" });
+    }
+
+    // Change role from student to instructor
+    await User.findByIdAndUpdate(req.session.userId, {
+      role: 'instructor'
+    });
+
+    // Update session
+  req.session.role = 'instructor';
+if (req.session.user) {
+  req.session.user.role = 'instructor';
+}
+
+
+    res.json({ success: true, redirectUrl: '/instructor/dashboard' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
