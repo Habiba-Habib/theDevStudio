@@ -382,11 +382,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const revenueCanvas = document.getElementById('revenueChart');
 
   if (enrollCanvas && revenueCanvas) {
+    const chartData = window.instructorChartData || {};
 
-    const instrMonths      = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-    const enrollData       = [120, 175, 245, 220, 265, 320];
-    const instrRevenueData = [4200, 7200, 9500, 8800, 11200, 13800];
-
+      const instrMonths = chartData.months || [];
+      const enrollData = chartData.enrollments || [];
+      const instrRevenueData = chartData.revenue || [];
     // ---- Line Chart: Student Enrollments ----
     function drawLineChart() {
       const canvas  = enrollCanvas;
@@ -397,7 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const PAD    = { top: 20, right: 20, bottom: 40, left: 44 };
       const chartW = W - PAD.left - PAD.right;
       const chartH = H - PAD.top  - PAD.bottom;
-      const maxVal = 360;
+   const maxVal = Math.max(...enrollData, 1);
 
       function xPos(i)   { return PAD.left + (i / (instrMonths.length - 1)) * chartW; }
       function yPos(val) { return PAD.top  + chartH - (val / maxVal) * chartH; }
@@ -405,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
       function draw(hoverIdx = -1) {
         ctx.clearRect(0, 0, W, H);
 
-        const yTicks = [0, 80, 160, 240, 320];
+        const yTicks = [0, maxVal * 0.25, maxVal * 0.5, maxVal * 0.75, maxVal];
         ctx.font      = '11px Inter, sans-serif';
         ctx.fillStyle = MUTED;
         ctx.textAlign = 'right';
@@ -502,8 +502,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const PAD    = { top: 20, right: 20, bottom: 40, left: 56 };
       const chartW = W - PAD.left - PAD.right;
       const chartH = H - PAD.top  - PAD.bottom;
-      const maxVal = 14000;
-      const yTicks = [0, 3500, 7000, 10500, 14000];
+      const maxVal = Math.max(...instrRevenueData, 1);
+      const yTicks = [0, maxVal * 0.25, maxVal * 0.5, maxVal * 0.75, maxVal];
       const barW   = (chartW / instrMonths.length) * 0.55;
 
       function xCenter(i) { return PAD.left + (i + 0.5) * (chartW / instrMonths.length); }
