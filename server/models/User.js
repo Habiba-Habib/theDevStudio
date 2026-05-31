@@ -28,6 +28,11 @@ avatar: { type: String, default: "" },
       enum: ["student", "instructor", "admin"],
       default: "student",
     },
+        instructorStatus: {
+        type: String,
+        enum: ["none", "pending", "approved", "rejected"],
+        default: "none"
+   },
 
     status: {
       type: String,
@@ -60,12 +65,13 @@ avatar: { type: String, default: "" },
       expertise: String,
       experience: String,
       categories: String,
-      status: {
+            status: {
         type: String,
         enum: ["not_submitted", "pending", "approved", "rejected"],
         default: "not_submitted"
       },
-      submittedAt: Date
+      submittedAt: Date,
+       rejectionReason: String
     },
     
     enrolledCourses: [

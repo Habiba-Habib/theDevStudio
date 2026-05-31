@@ -589,3 +589,30 @@ document.addEventListener('DOMContentLoaded', () => {
   } 
 
 }); 
+function activateInstructor() {
+  fetch('/student/activate-instructor', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      window.location.href = data.redirectUrl;
+    } else {
+      alert(data.message);
+    }
+  })
+  .catch(err => alert('Something went wrong: ' + err.message)); // ← add this
+}
+
+function showRejectionReason(btn) {
+  const card = btn.closest('.instructor-status-card');
+  const reason = card.dataset.reason;
+  document.getElementById('rejectionReasonText').textContent = reason;
+  document.getElementById('reasonModal').style.display = 'flex';
+}
+
+
+function closeReasonModal() {
+  document.getElementById('reasonModal').style.display = 'none';
+}
