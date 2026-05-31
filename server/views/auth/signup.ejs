@@ -77,14 +77,14 @@
 <span class="error-msg" id="confirm-password-error">Passwords do not match.</span>
 </div>
 
-      <!-- TERMS -->
-      <div class="terms-row">
+                <!-- TERMS + PRIVACY -->
+         <div class="terms-row">
         <input type="checkbox" id="terms">
-        <label for="terms">
-          I agree to the Terms of Service
-        </label>
+        <label for="terms" class="terms-check-label">I agree to the</label>
+        <button type="button" class="terms-link-btn" id="open-terms">Terms of Service</button>
+        <span class="terms-label-text"> and </span>
+        <button type="button" class="terms-link-btn" id="open-privacy">Privacy Policy</button>
       </div>
-     <span class="error-msg terms-error-msg" id="terms-error">Please confirm the Terms of Service.</span>
       <!-- BUTTON -->
       <button type="button" class="btn-create" id="btn-create">Create Account</button>
       </form>
@@ -108,10 +108,51 @@
     <p id="signup-popup-message">Please log in to continue.</p>
   </div>
 </div>
+<!-- Terms popup (summary) -->
+<div class="signup-popup hidden" id="terms-modal" aria-hidden="true">
+  <div class="signup-popup-card terms-modal-card" role="dialog">
+    <button type="button" class="terms-modal-close" id="terms-modal-close" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h3>Terms of Service</h3>
+    <div class="terms-modal-body">
+      <p>By using TheDevStudio you agree to:</p>
+      <ul>
+        <li>Provide accurate account information</li>
+        <li>Use courses and challenges honestly</li>
+        <li>Follow instructor verification rules if applying to teach</li>
+        <li>Not upload harmful, illegal, or infringing content</li>
+      </ul>
+      <a href="/auth/terms-of-services" target="_blank" rel="noopener noreferrer" class="legal-full-link">Read full Terms of Service</a>
+    </div>
+    <button type="button" class="btn-create terms-modal-close-btn" id="terms-modal-close-btn">Close</button>
+  </div>
+</div>
+
+<!-- Privacy popup (summary) -->
+<div class="signup-popup hidden" id="privacy-modal" aria-hidden="true">
+  <div class="signup-popup-card terms-modal-card" role="dialog">
+    <button type="button" class="terms-modal-close" id="privacy-modal-close" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h3>Privacy Policy</h3>
+    <div class="terms-modal-body">
+      <p>We collect data needed to run the platform, including:</p>
+      <ul>
+        <li>Name, email, and account details</li>
+        <li>Course progress and challenge submissions</li>
+        <li>Instructor verification documents if you apply</li>
+      </ul>
+      <p>We do not sell your personal data.</p>
+      <a href="/auth/privacy-policy" target="_blank" rel="noopener noreferrer" class="legal-full-link">Read full Privacy Policy</a>
+    </div>
+    <button type="button" class="btn-create terms-modal-close-btn" id="privacy-modal-close-btn">Close</button>
+  </div>
+</div>
 
 <!-- JS -->
 <script src="/js/signup.js"></script>
-<script src="/js/main-navbar.js"></script>
+
 
 </body>
 </html>

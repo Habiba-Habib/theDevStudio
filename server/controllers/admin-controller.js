@@ -154,6 +154,64 @@ exports.getChallenges = async (req, res) => {
     res.render("admin/manage-challenges", { challenges: [], recentlyDeleted: [] });
   }
 };
+exports.getInstructorApplications = async (req, res) => {
+  try {
+    const users = await User.find({ 
+      "instructorVerification.status": { $ne: "not_submitted" }
+    }).sort({ "instructorVerification.submittedAt": -1 });
+
+    const applications = users.map(u => ({
+      _id: u._id,
+      name: u.name,
+      email: u.email,
+      avatar: u.avatar || "/images/avatars/avatar1g.png",
+      experience: u.instructorVerification?.experience || "N/A",
+      expertise: u.instructorVerification?.expertise?.split(",").map(e => e.trim()) || [],
+      applicationDate: u.instructorVerification?.submittedAt || u.createdAt,
+      status: u.instructorVerification?.status || "pending",
+      bio: u.bio || "",
+      jobTitle: u.instructorVerification?.jobTitle || "",
+      cvUrl: u.instructorVerification?.cvUrl || "",
+      certificateUrl: u.instructorVerification?.certificateUrl || "",
+      linkedinUrl: u.instructorVerification?.linkedinUrl || "",
+      portfolioUrl: u.instructorVerification?.portfolioUrl || ""
+    }));
+
+    res.render("admin/instructor-applications", { applications });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+};
+
+exports.approveInstructor = async (req, res) => {
+  try {
+    await User.findByIdAndUpdate(req.params.userId, {
+         instructorStatus: 'approved',
+      'instructorVerification.status': 'approved'
+    });
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
+};
+
+exports.rejectInstructor = async (req, res) => {
+  try {
+    const { reason } = req.body;
+    await User.findByIdAndUpdate(req.params.userId, {
+      instructorStatus: 'rejected',
+      'instructorVerification.status': 'rejected',
+      'instructorVerification.rejectionReason': reason || 'No reason provided'
+    });
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
+};
+
 const users = []; // temporary memory DB (later MongoDB)
 
 /* =========================

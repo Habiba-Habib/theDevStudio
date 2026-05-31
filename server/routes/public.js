@@ -11,7 +11,7 @@ const EXPERIENCE_VALUES = ['1-2', '3-5', '5-10', '10+'];
 
 // Server-side validation for step 1 (matches become-instructor.js)
 function validateStep1(body) {
-  const { fullName, jobTitle, expertise, experience, bio, categories, email, password } = body;
+   const { fullName, jobTitle, expertise, experience, bio, categories } = body;
   if (!fullName?.trim() || !jobTitle?.trim() || !expertise?.trim()) {
     return 'Please fill in all required fields.';
   }
@@ -23,13 +23,6 @@ function validateStep1(body) {
   }
   if (!categories?.trim()) {
     return 'Please select at least one teaching category.';
-  }
-  const emailNorm = email?.trim().toLowerCase();
-  if (!emailNorm || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNorm)) {
-    return 'A valid email is required.';
-  }
-  if (!password || password.length < 6) {
-    return 'Password must be at least 6 characters.';
   }
   return null; // OK
 }
@@ -72,26 +65,14 @@ router.post('/become-instructor', async (req, res,) => {
       });
     }
 
-    const email = req.body.email.trim().toLowerCase();
-    const exists = await User.findOne({ email });
-    if (exists) {
-      return res.render('instructor/become-instructor', {
-        formError: 'An account with this email already exists. Please log in.',
-        formData: req.body
-      });
-    }
 
-    const passwordHash = await bcrypt.hash(req.body.password, 10);
-
-    req.session.instructorApplication = {
+       req.session.instructorApplication = {
       fullName: req.body.fullName.trim(),
       jobTitle: req.body.jobTitle.trim(),
       expertise: req.body.expertise.trim(),
       experience: req.body.experience,
       bio: req.body.bio.trim(),
-      categories: req.body.categories,
-      email,
-      passwordHash
+      categories: req.body.categories
     };
 
     res.redirect('/become-instructor/step2');
@@ -160,7 +141,7 @@ router.get('/become-instructor/step3', (req, res) => {
 router.post('/become-instructor/step3', async (req, res) => {
   try {
     const app = req.session.instructorApplication;
-    if (!app?.fullName || !app.cvUrl || !app.passwordHash) {
+    if(!app?.fullName || !app.cvUrl) {
       return res.redirect('/become-instructor');
     }
 
@@ -168,17 +149,9 @@ router.post('/become-instructor/step3', async (req, res) => {
       return res.status(400).send('You must accept both agreements.');
     }
 
-    const exists = await User.findOne({ email: app.email });
-    if (exists) {
-      return res.redirect('/auth/login');
-    }
-
-    const user = await User.create({
-      name: app.fullName,
-      email: app.email,
-      password: app.passwordHash,
+        // User is already logged in
+    await User.findByIdAndUpdate(req.session.userId, {
       bio: app.bio,
-      role: 'student',
       instructorVerification: {
         jobTitle: app.jobTitle,
         expertise: app.expertise,
@@ -191,17 +164,9 @@ router.post('/become-instructor/step3', async (req, res) => {
         websiteUrl: app.websiteUrl,
         status: 'pending',
         submittedAt: new Date()
-      }
+      },
+      instructorStatus: 'pending'
     });
-
-    req.session.userId = user._id;
-    req.session.role = user.role;
-    req.session.user = {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role
-    };
     delete req.session.instructorApplication;
 
     res.render('instructor/application-submitted');
