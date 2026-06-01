@@ -382,7 +382,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const revenueCanvas = document.getElementById('revenueChart');
 
   if (enrollCanvas && revenueCanvas) {
-    const chartData = window.instructorChartData || {};
+    const chartDataEl = document.getElementById('instructorChartData');
+const chartData = chartDataEl ? JSON.parse(chartDataEl.textContent) : {};
 
       const instrMonths = chartData.months || [];
       const enrollData = chartData.enrollments || [];
