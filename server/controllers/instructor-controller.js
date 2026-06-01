@@ -148,7 +148,20 @@ exports.getCreateStep1 = async (req, res) => {
       isPublished: false
     });
 
-    res.render('instructor/create-step1', { draft, errors: [] });
+   res.render('instructor/create-step1', {
+  draft,
+  errors: [],
+  title: 'Create New Course - EduPlatform',
+  basePath: '/',
+  pageTitle: 'Create New Course',
+  pageDescription: 'Share your knowledge with students worldwide',
+  courseTitle: draft?.title || '',
+  shortDescription: draft?.shortDescription || '',
+  fullDescription: draft?.fullDescription || '',
+  category: draft?.category || 'Web Development',
+  level: draft?.level || 'Beginner',
+  submitButtonText: 'Next: Add Curriculum'
+});
   } catch (err) {
     console.error(err);
     res.status(500).render('error');
