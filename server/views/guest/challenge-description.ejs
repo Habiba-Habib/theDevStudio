@@ -72,17 +72,6 @@
             </div>
 
             <div class="challenge-card">
-                <div class="solution-header">
-                    <h2>Your Solution</h2>
-                    <select id="lang-select">
-                        <option>JavaScript</option>
-                        <option>Python</option>
-                        <option>Java</option>
-                    </select>
-                </div>
-
-                <textarea id="code-editor" spellcheck="false"><%= challenge.defaultCode %></textarea>
-
                 <button class="start-btn" id="startBtn">Start Challenge</button>
             </div>
 
@@ -161,10 +150,6 @@
 <script>
     document.getElementById('startBtn').addEventListener('click', () => {
         window.location.href = '/student/start-challenge/<%= challenge._id %>';
-    });
-
-    document.getElementById('lang-select').addEventListener('change', (e) => {
-        console.log('Language changed to:', e.target.value);
     });
 </script>
 
