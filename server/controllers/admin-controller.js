@@ -154,6 +154,42 @@ exports.getChallenges = async (req, res) => {
     res.render("admin/manage-challenges", { challenges: [], recentlyDeleted: [] });
   }
 };
+exports.deleteChallenge = async (req, res) => {
+  try {
+    await Challenge.findByIdAndUpdate(req.params.id, {
+      deletedAt: new Date()
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("deleteChallenge error:", err);
+    res.status(500).json({ success: false, message: "Failed to delete challenge." });
+  }
+};
+
+exports.restoreChallenge = async (req, res) => {
+  try {
+    await Challenge.findByIdAndUpdate(req.params.id, {
+      deletedAt: null
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("restoreChallenge error:", err);
+    res.status(500).json({ success: false, message: "Failed to restore challenge." });
+  }
+};
+
+exports.permanentlyDeleteChallenge = async (req, res) => {
+  try {
+    await Challenge.findByIdAndDelete(req.params.id);
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("permanentlyDeleteChallenge error:", err);
+    res.status(500).json({ success: false, message: "Failed to permanently delete challenge." });
+  }
+};
 exports.getInstructorApplications = async (req, res) => {
   try {
     const users = await User.find({ 

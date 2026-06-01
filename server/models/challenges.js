@@ -63,6 +63,10 @@ const challengeSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    deletedAt: {
+    type: Date,
+    default: null,
+    },
     isPublished: {
       type: Boolean,
       default: false,
@@ -70,6 +74,7 @@ const challengeSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 
 module.exports =
   mongoose.models.Challenge ||
