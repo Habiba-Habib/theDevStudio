@@ -3,7 +3,6 @@ const router = express.Router();
 const Course = require('../models/Course');
 const User = require('../models/User');
 const multer = require("multer");
-const bcrypt = require("bcryptjs");
 const upload = multer({ dest: "uploads/instructor-verification/" });
 
 // Allowed values for the experience dropdown (must match become-instructor.ejs)
@@ -39,22 +38,38 @@ router.get('/', async (req, res, next) => {
     next(err);
   }
 });
-router.get('/home', (req, res) => res.render('public/home'));
-router.get('/page-404', (req, res) => res.render('public/page-404'));
+router.get('/home', (req, res, next) => {
+  try {
+    res.render('public/home');
+  } catch (err) {
+    next(err);
+  }
+});
+router.get('/page-404', (req, res, next) => {
+  try {
+    res.render('public/page-404');
+  } catch (err) {
+    next(err);
+  }
+});
 
 
 
 
 // Instructor application — step 1 & 2 = session only; step 3 = create user + pending
 
-router.get('/become-instructor', (req, res) => {
-  res.render('instructor/become-instructor', {
-    formError: null,
-    formData: {}
-  });
+router.get('/become-instructor', (req, res, next) => {
+  try {
+    res.render('instructor/become-instructor', {
+      formError: null,
+      formData: {}
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
-router.post('/become-instructor', async (req, res,) => {
+router.post('/become-instructor', async (req, res, next) => {
   try {
     console.log("BIO RECEIVED:", req.body.bio, "LENGTH:", req.body.bio?.trim().length);
     const error = validateStep1(req.body);
@@ -85,17 +100,22 @@ router.post('/become-instructor', async (req, res,) => {
 }
 });
 
-router.get('/become-instructor/step2', (req, res) => {
-  if (!req.session.instructorApplication?.fullName) {
-    return res.redirect('/become-instructor');
+router.get('/become-instructor/step2', (req, res, next) => {
+  try {
+    if (!req.session.instructorApplication?.fullName) {
+      return res.redirect('/become-instructor');
+    }
+
+    res.render('instructor/become-instructor2');
+  } catch (err) {
+    next(err);
   }
-  res.render('instructor/become-instructor2');
 });
 
 router.post('/become-instructor/step2', upload.fields([
   { name: 'cv', maxCount: 1 },
   { name: 'certificate', maxCount: 1 }
-]), async (req, res) => {
+]), async (req, res, next) => {
   try {
     if (!req.session.instructorApplication?.fullName) {
       return res.redirect('/become-instructor');
@@ -121,25 +141,36 @@ router.post('/become-instructor/step2', upload.fields([
   }
 });
 
-router.get('/become-instructor/step3', (req, res) => {
-  const application = req.session.instructorApplication;
-  if (!application?.fullName) return res.redirect('/become-instructor');
-  if (!application.cvUrl) return res.redirect('/become-instructor/step2');
-
-  res.render('instructor/become-instructor3', {
-    application,
-    verification: {
-      cvUrl: application.cvUrl,
-      certificateUrl: application.certificateUrl,
-      linkedinUrl: application.linkedinUrl || '',
-      portfolioUrl: application.portfolioUrl || '',
-      websiteUrl: application.websiteUrl || ''
+router.get('/become-instructor/step3', (req, res, next) => {
+  try {
+    if (!req.session.userId) {
+      return res.redirect('/auth/login');
     }
-  });
+    const application = req.session.instructorApplication;
+
+    if (!application?.fullName) return res.redirect('/become-instructor');
+    if (!application.cvUrl) return res.redirect('/become-instructor/step2');
+
+    res.render('instructor/become-instructor3', {
+      application,
+      verification: {
+        cvUrl: application.cvUrl,
+        certificateUrl: application.certificateUrl,
+        linkedinUrl: application.linkedinUrl || '',
+        portfolioUrl: application.portfolioUrl || '',
+        websiteUrl: application.websiteUrl || ''
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.post('/become-instructor/step3', async (req, res) => {
   try {
+    if (!req.session.userId) {
+      return res.redirect('/auth/login');
+    }
     const app = req.session.instructorApplication;
     if(!app?.fullName || !app.cvUrl) {
       return res.redirect('/become-instructor');
