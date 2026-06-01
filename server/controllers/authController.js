@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
-
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 /* =========================
    SIGN UP (Save to MongoDB)
    ========================= */
@@ -145,32 +146,130 @@ exports.adminLogin = async (req, res) => {
 };
 
 exports.forgotPassword = async (req, res) => {
-  const { email } = req.body;
+  try {
+    const { email } = req.body;
 
-  const user = await User.findOne({ email });
+    const user = await User.findOne({ email });
 
-  // Always show same message for security
-  if (!user) {
+    const successMessage = "If that email exists, a reset link has been sent.";
+
+    if (!user) {
+      return res.render("auth/forgot-password", {
+        successMessage,
+        errorMessage: null
+      });
+    }
+
+    const token = crypto.randomBytes(32).toString("hex");
+
+    user.resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
+
+    user.resetPasswordExpires = Date.now() + 1000 * 60 * 15;
+    await user.save();
+
+    const resetUrl = `${req.protocol}://${req.get("host")}/auth/reset-password/${token}`;
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: Number(process.env.EMAIL_PORT),
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_FROM,
+      to: user.email,
+      subject: "Reset your TheDevStudio password",
+      html: `
+        <h2>Password Reset</h2>
+        <p>Click the link below to reset your password. This link expires in 15 minutes.</p>
+        <a href="${resetUrl}">${resetUrl}</a>
+      `
+    });
+
     return res.render("auth/forgot-password", {
-      successMessage: "If that email exists, a reset link has been sent.",
+      successMessage,
       errorMessage: null
+    });
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    return res.render("auth/forgot-password", {
+      successMessage: null,
+      errorMessage: "Could not send reset email. Please try again."
+    });
+  }
+};
+
+exports.getResetPassword = async (req, res) => {
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordExpires: { $gt: Date.now() }
+  });
+
+  if (!user) {
+    return res.render("auth/reset-password", {
+      token: null,
+      errorMessage: "Reset link is invalid or expired.",
+      successMessage: null
     });
   }
 
-  const token = crypto.randomBytes(32).toString("hex");
+  res.render("auth/reset-password", {
+    token: req.params.token,
+    errorMessage: null,
+    successMessage: null
+  });
+};
 
-  user.resetPasswordToken = crypto.createHash("sha256").update(token).digest("hex");
-  user.resetPasswordExpires = Date.now() + 1000 * 60 * 15;
+exports.postResetPassword = async (req, res) => {
+  const { password, confirmPassword } = req.body;
+
+  if (!password || password !== confirmPassword) {
+    return res.render("auth/reset-password", {
+      token: req.params.token,
+      errorMessage: "Passwords do not match.",
+      successMessage: null
+    });
+  }
+
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordExpires: { $gt: Date.now() }
+  });
+
+  if (!user) {
+    return res.render("auth/reset-password", {
+      token: null,
+      errorMessage: "Reset link is invalid or expired.",
+      successMessage: null
+    });
+  }
+
+  user.password = await bcrypt.hash(password, 10);
+  user.resetPasswordToken = null;
+  user.resetPasswordExpires = null;
   await user.save();
 
-  const resetUrl = `${req.protocol}://${req.get("host")}/auth/reset-password/${token}`;
-
-  // For development, you can log it first
-  console.log("Password reset link:", resetUrl);
-
-  return res.render("auth/forgot-password", {
-    successMessage: "If that email exists, a reset link has been sent.",
-    errorMessage: null
+  res.render("auth/reset-password", {
+    token: null,
+    errorMessage: null,
+    successMessage: "Password reset successful. You can now log in."
   });
 };
 /* =========================

@@ -16,6 +16,8 @@ router.get("/forgot-password", (req, res) => {
     errorMessage: null
   });
 });
+router.get("/reset-password/:token", authController.getResetPassword);
+router.post("/reset-password/:token", authController.postResetPassword);
 router.post("/forgot-password", authController.forgotPassword);
 /* SIGNUP (student/instructor only) */
 router.post("/signup", authController.signup);
