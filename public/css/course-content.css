@@ -529,3 +529,35 @@ body {
   .tab-btn      { font-size: 12px; padding: 13px 8px; }
   .ch-prog-pct  { font-size: 20px; }
 }
+
+
+
+/* ── UPLOAD RESOURCE ── */ /* added */
+.upload-resource-wrap { /* added */
+  display: flex; /* added */
+  align-items: center; /* added */
+  gap: 12px; /* added */
+  margin-top: 14px; /* added */
+} /* added */
+
+.btn-upload-res { /* added */
+  display: inline-flex; /* added */
+  align-items: center; /* added */
+  gap: 8px; /* added */
+  padding: 9px 18px; /* added */
+  background: linear-gradient(90deg, var(--pink), var(--pink-light)); /* added */
+  color: #fff; /* added */
+  border: none; /* added */
+  border-radius: 8px; /* added */
+  cursor: pointer; /* added */
+  font-size: 13px; /* added */
+  font-weight: 600; /* added */
+  font-family: var(--font); /* added */
+  transition: opacity 0.2s; /* added */
+} /* added */
+.btn-upload-res:hover { opacity: 0.85; } /* added */
+
+#uploadStatus { /* added */
+  font-size: 13px; /* added */
+  font-weight: 500; /* added */
+} /* added */
