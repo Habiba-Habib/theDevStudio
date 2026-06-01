@@ -31,7 +31,9 @@
   const isActiveDone = activeLesson && completedLessons.includes(activeLesson._id.toString());
   const sidebarPct   = totalLessons > 0 ? Math.round((completedLessons.length / totalLessons) * 100) : 0;
 %>
+<% console.log('activeLesson resources:', JSON.stringify(activeLesson?.resources)); %> <!-- add this line -->
 
+<% console.log('full activeLesson:', JSON.stringify(activeLesson)); %> //added
 <!-- ── COURSE HEADER (below navbar) ── -->
 <div class="course-header">
   <div class="ch-left">
@@ -107,10 +109,36 @@
         </ul>
       <% } %>
 
-      <h4 class="info-heading">Downloadable Resources</h4>
-      <div class="resources">
-        <p class="res-empty">No resources attached to this lesson.</p>
-      </div>
+    <h4 class="info-heading">Downloadable Resources</h4> <%# added %>
+<div class="resources" id="resourcesList"> <%# added %>
+  <% if (activeLesson && activeLesson.resources && activeLesson.resources.length > 0) { %> <%# added %>
+    <% activeLesson.resources.forEach(resource => { %> <%# added %>
+      <a class="resource-item" href="<%= resource.format === 'pdf' ? resource.url.replace('/upload/', '/upload/fl_attachment/') : resource.url %>" target="_blank"> 
+        <span class="res-file-icon"> <%# added %>
+         <i class="fa-solid <%= resource.format === 'pdf' ? 'fa-file-pdf' : ['mp4','mkv','avi','mov'].includes(resource.format) ? 'fa-file-video' : ['doc','docx'].includes(resource.format) ? 'fa-file-word' : ['ppt','pptx'].includes(resource.format) ? 'fa-file-powerpoint' : 'fa-file' %>"></i> <%# added %>
+        </span> <%# added %>
+        <div class="res-info"> <%# added %>
+          <div class="res-name"><%= resource.name %></div> <%# added %>
+          <div class="res-size"><%= resource.format.toUpperCase() %></div> <%# added %>
+        </div> <%# added %>
+        <span class="res-dl"><i class="fa-solid fa-download"></i></span> <%# added %>
+      </a> <%# added %>
+    <% }) %> <%# added %>
+  <% } else { %> <%# added %>
+    <p class="res-empty" id="resEmpty">No resources attached to this lesson.</p> <%# added %>
+  <% } %> <%# added %>
+</div> <%# added %>
+
+<% if (activeLesson && (user.role === 'instructor' || user.role === 'admin')) { %> <%# added %>
+  <div class="upload-resource-wrap"> <%# added %>
+    <input type="file" id="resourceFile" <%# added %>
+      accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.mkv,.avi,.mov" hidden/> <%# added %>
+    <button class="btn-upload-res" onclick="document.getElementById('resourceFile').click()"> <%# added %>
+      <i class="fa-solid fa-upload"></i> Upload Resource <%# added %>
+    </button> <%# added %>
+    <span id="uploadStatus"></span> <%# added %>
+  </div> <%# added %>
+<% } %> <%# added %>
     </div>
 
     <!-- TABS CARD (always visible) -->

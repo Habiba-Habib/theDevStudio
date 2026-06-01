@@ -40,6 +40,7 @@ const adminRoutes      = require("./routes/adminRoutes");
 const challengeRoutes  = require("./routes/challenges");
 const coursesRoutes     = require("./routes/coursesRoutes");
 const publicRoutes     = require("./routes/public");  
+const uploadRoute = require('./routes/upload'); //added
 
 app.use("/auth",       authRoutes);
 app.use("/student",    studentRoutes);
@@ -47,6 +48,7 @@ app.use("/instructor", instructorRoutes);
 app.use("/admin",      adminRoutes);
 app.use("/challenges", challengeRoutes);
 app.use("/courses", coursesRoutes);
+app.use('/api', uploadRoute); //added
 app.use("/",           publicRoutes);
 
 app.get("/me", (req, res) => res.json(req.session.user || null));
@@ -72,3 +74,9 @@ app.use((err, req, res, next) => {
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Server running on port ${process.env.PORT || 3000}`);
 });
+
+
+
+
+
+

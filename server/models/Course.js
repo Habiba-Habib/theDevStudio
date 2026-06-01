@@ -5,7 +5,17 @@ const lessonSchema = new mongoose.Schema({
   type:     { type: String, enum: ['video', 'text'], default: 'video' },
   videoUrl: { type: String, default: '' },
   content:  { type: String, default: '' },
-  duration: { type: String, default: '' }
+  duration: { type: String, default: '' },
+
+resources: [ //added
+  new mongoose.Schema({ //added
+    name:   { type: String }, //added
+    url:    { type: String }, //added
+    format: { type: String }  //added
+  }, { _id: false }) //added
+] //added
+
+
 });
 
 const sectionSchema = new mongoose.Schema({
