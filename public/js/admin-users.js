@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('umSearch');
   const showing     = document.getElementById('umShowing');
   const noResults   = document.getElementById('umNoResults');
-  const rows        = document.querySelectorAll('.row');
+ const rows        = document.querySelectorAll('#umTableBody > .row');
 
   //  Dropdown 
   const dropdown = document.getElementById('umDropdown');
@@ -180,4 +180,5 @@ confirmUnblock.addEventListener('click', async () => {
   }
   window.location.reload();
 
+});
 });
