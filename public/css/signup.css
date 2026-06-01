@@ -204,7 +204,7 @@ body {
 .input-icon {
   position: absolute;
   left: 14px;
-  color: var(--text-muted);
+  color: var(--text-white);
   font-size: 14px;
   pointer-events: none;
 }
@@ -239,7 +239,7 @@ body {
   right: 14px;
   background: none;
   border: none;
-  color: var(--text-muted);
+ color: var(--text-white);
   cursor: pointer;
   font-size: 14px;
   padding: 0;
@@ -509,6 +509,10 @@ input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
 }
 
+.btn-toggle-pw i.fa-eye,
+.btn-toggle-pw i.fa-eye-slash {
+  color: #fffffc !important;
+}
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   body { grid-template-columns: 1fr; }

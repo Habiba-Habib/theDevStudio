@@ -38,20 +38,27 @@
       <!-- NAME -->
       <div class="form-group">
         <label>Full Name</label>
-        <input type="text" class="form-input" id="name" name ="name" placeholder="John Doe">
+       <div class="input-wrapper">
+  <i class="fa-regular fa-user input-icon"></i>
+  <input type="text" class="form-input" id="name" name="name" placeholder="Full Name">
+</div>
       </div>
 
       <!-- EMAIL -->
       <div class="form-group">
         <label>Email</label>
-        <input type="email" class="form-input" id="email" name="email" placeholder="you@example.com">
+        <div class="input-wrapper">
+          <i class="fa-regular fa-envelope input-icon"></i>
+          <input type="email" class="form-input" id="email" name="email" placeholder="you@example.com">
+        </div>
       </div>
 
       <!-- PASSWORD -->
      <div class="form-group">
   <label>Password</label>
-  <div class="input-wrapper">
-    <input type="password" class="form-input" id="password" name="password" placeholder="Create password">
+ <div class="input-wrapper">
+  <i class="fa-solid fa-lock input-icon"></i>
+  <input type="password" class="form-input" id="password" name="password" placeholder="Create password">
     <button type="button" class="btn-toggle-pw" data-target="password">
       <i class="fa-regular fa-eye"></i>
     </button>
@@ -62,6 +69,7 @@
 <div class="form-group">
   <label>Confirm Password</label>
   <div class="input-wrapper">
+  <i class="fa-solid fa-lock input-icon"></i>
   <input type="password" class="form-input" id="confirm-password" placeholder="Confirm password">
   <button type="button" class="btn-toggle-pw" data-target="confirm-password">
     <i class="fa-regular fa-eye"></i>
