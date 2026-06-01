@@ -38,7 +38,7 @@ router.get('/create/step3',  getCreateStep3);
 router.post('/create/step3', postCreateStep3);
 
 router.get('/courses/:id/edit',     getEditCourse);
-router.post('/courses/:id/edit',    updateCourse);
+router.post('/courses/:id/edit', upload.single('thumbnail'), updateCourse);
 router.post('/courses/:id/delete',  deleteCourse);
 router.get('/courses/:id/students', getEnrolledStudents);
 

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Course – <%= course.title %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/create-step1-css.css"/>
+</head>
+<body>
+<%- include('../partials/navbar') %>
+<div class="page-wrapper">
+
+  <h1 class="course-title">Edit Course</h1>
+  <p class="course-decription">Update your course details, curriculum and pricing</p>
+
+  <form action="/instructor/courses/<%= course._id %>/edit" method="POST" enctype="multipart/form-data">
+
+    <!-- SECTION 1 — BASIC INFO -->
+    <div class="learn-box">
+      <h2 class="learn-title">Basic Information</h2>
+
+      <div class="form-group">
+        <label class="lessons">Course Title <span>*</span></label>
+        <input type="text" class="form-input" name="title" value="<%= course.title %>" required/>
+      </div>
+
+      <div class="form-group">
+        <label class="lessons">Short Description <span>*</span></label>
+        <input type="text" class="form-input" name="shortDescription" value="<%= course.shortDescription %>"/>
+      </div>
+
+      <div class="form-group">
+        <label class="lessons">Full Description</label>
+        <textarea class="form-input bio-input no-icon" name="fullDescription"><%= course.fullDescription %></textarea>
+      </div>
+
+      <div class="learn-grid">
+        <div class="form-group">
+          <label class="lessons">Category <span>*</span></label>
+          <select class="form-input" name="category">
+            <option value="Web Development"    <%= course.category === 'Web Development'    ? 'selected' : '' %>>Web Development</option>
+            <option value="Data Science"       <%= course.category === 'Data Science'       ? 'selected' : '' %>>Data Science</option>
+            <option value="Design"             <%= course.category === 'Design'             ? 'selected' : '' %>>Design</option>
+            <option value="Business"           <%= course.category === 'Business'           ? 'selected' : '' %>>Business</option>
+            <option value="Mobile Development" <%= course.category === 'Mobile Development' ? 'selected' : '' %>>Mobile Development</option>
+            <option value="Machine Learning"   <%= course.category === 'Machine Learning'   ? 'selected' : '' %>>Machine Learning</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="lessons">Level <span>*</span></label>
+          <select class="form-input" name="level">
+            <option value="Beginner"     <%= course.level === 'Beginner'     ? 'selected' : '' %>>Beginner</option>
+            <option value="Intermediate" <%= course.level === 'Intermediate' ? 'selected' : '' %>>Intermediate</option>
+            <option value="Advanced"     <%= course.level === 'Advanced'     ? 'selected' : '' %>>Advanced</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="lessons">Thumbnail</label>
+        <% if (course.thumbnail) { %>
+          <img src="<%= course.thumbnail %>" style="width:100%; border-radius:10px; margin-bottom:10px; max-height:200px; object-fit:cover;"/>
+        <% } %>
+        <div class="upload-area" id="upload-area">
+          <input type="file" id="file-input" name="thumbnail" accept="image/*" style="display:none"/>
+          <div class="upload-icon"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
+          <div class="upload-text">Click to upload new thumbnail</div>
+          <div class="upload-hint">PNG, JPG up to 5MB — leave empty to keep current</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 — PRICING -->
+    <div class="learn-box">
+      <h2 class="learn-title">Pricing & Duration</h2>
+      <div class="learn-grid">
+        <div class="form-group">
+          <label class="lessons">Price ($) <span>*</span></label>
+          <input type="number" class="form-input" name="price" value="<%= course.price %>" required/>
+        </div>
+        <div class="form-group">
+          <label class="lessons">Duration</label>
+          <input type="text" class="form-input" name="duration" value="<%= course.duration %>" placeholder="e.g., 40 hours"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3 — OUTCOMES -->
+    <div class="learn-box">
+      <h2 class="learn-title">What will students learn?</h2>
+      <div id="outcomes-list">
+        <% (course.learningOutcomes || []).forEach((outcome, i) => { %>
+          <div class="outcome-item">
+            <input type="text" class="form-input" name="outcomes[]" value="<%= outcome %>"/>
+            <button type="button" class="btn-remove"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        <% }) %>
+        <% if (!course.learningOutcomes || course.learningOutcomes.length === 0) { %>
+          <div class="outcome-item">
+            <input type="text" class="form-input" name="outcomes[]" placeholder="e.g., Build responsive websites"/>
+            <button type="button" class="btn-remove"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        <% } %>
+      </div>
+      <button type="button" id="add-outcome" class="btn-add">
+        <i class="fa-solid fa-plus"></i> Add Outcome
+      </button>
+    </div>
+
+    <!-- SECTION 4 — CURRICULUM -->
+    <div class="learn-box">
+      <h2 class="learn-title">Course Curriculum</h2>
+      <div id="sections-list">
+        <% (course.sections || []).forEach((section, si) => { %>
+          <div class="section-card">
+            <div class="form-group">
+              <input type="text" class="form-input" name="sections[<%= si %>][title]" value="<%= section.title %>" placeholder="Section title"/>
+            </div>
+            <div class="lesson-container">
+              <% (section.lessons || []).forEach((lesson, li) => { %>
+                <div class="form-group lesson-item">
+                  <div class="outcome-item">
+                    <input type="text" class="form-input" name="sections[<%= si %>][lessons][]" value="<%= lesson.title %>" placeholder="Lesson title"/>
+                    <button type="button" class="btn-remove"><i class="fa-solid fa-xmark"></i></button>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+             <button type="button" class="btn-add">
+            <i class="fa-solid fa-plus"></i> Add Lesson
+          </button>
+          </div>
+        <% }) %>
+      </div>
+      <button type="button" id="add-section" class="btn-add-section">
+        <i class="fa-solid fa-plus"></i> Add Section
+      </button>
+    </div>
+
+    <!-- SUBMIT -->
+  <div class="btn-row">
+  <a href="/courses/<%= course._id %>" class="btn-back" style="text-decoration:none; display:flex; align-items:center; justify-content:center;">Cancel</a>
+  <button type="submit" class="btn-enroll">Save Changes</button>
+</div>
+
+  </form>
+</div>
+
+<script src="/js/edit-course-js.js"></script>
+</body>
+</html>

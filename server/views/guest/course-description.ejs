@@ -120,17 +120,19 @@
     <div class="pricing-card">
 
       <div class="pricing-top">
-  <% if (isOwner) { %>
+<% if (isOwner) { %>
   <div class="owner-top">
     <div class="owner-icon">
       <i class="fa-solid fa-graduation-cap"></i>
     </div>
     <h3 class="owner-title">Your Course</h3>
-    <p class="owner-desc">You can edit content, manage students, and track performance from your instructor dashboard.</p>
+    <p class="owner-desc">Edit content, manage students, and track performance.</p>
   </div>
-  <a href="/instructor/dashboard" class="btn-enroll">
-    <i class="fa-solid fa-chart-line"></i> Go to Dashboard
+  <a href="/instructor/courses/<%= course._id %>/edit" class="btn-enroll">
+    <i class="fa-solid fa-pen-to-square"></i> Edit Course
   </a>
+
+
 
 
 <% }else if (!isEnrolled) { %>

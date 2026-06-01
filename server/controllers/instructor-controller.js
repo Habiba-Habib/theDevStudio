@@ -177,7 +177,7 @@ exports.postCreateStep1 = async (req, res) => {
       instructor: req.session.user._id,
       isPublished: false
     });
-    
+
 const thumbnailUrl = req.file ? `/uploads/${req.file.filename}` : (course?.thumbnail || '');
 
     if (course) {
@@ -344,31 +344,41 @@ exports.updateCourse = async (req, res) => {
   try {
     const { title, shortDescription, fullDescription, category, level, price, duration } = req.body;
 
-    const updateData = {
-      title,
-      shortDescription,
-      fullDescription,
-      category,
-      level,
-      price,
-      duration
-    };
+    const updateData = { title, shortDescription, fullDescription, category, level, price, duration };
 
     if (req.file) {
-      updateData.thumbnail = req.file.path;
+      updateData.thumbnail = `/uploads/${req.file.filename}`;
     }
+
+    // outcomes
+    let outcomesArray = req.body['outcomes[]'] || req.body.outcomes || [];
+    if (!Array.isArray(outcomesArray)) outcomesArray = [outcomesArray];
+    updateData.learningOutcomes = outcomesArray.map(o => o.trim()).filter(o => o);
+
+    // sections
+    const rawSections = req.body.sections || {};
+    updateData.sections = Object.keys(rawSections).map(i => {
+      const sec = rawSections[i];
+      let lessons = sec.lessons || [];
+      if (!Array.isArray(lessons)) lessons = [lessons];
+      return {
+        title: sec.title || '',
+        lessons: lessons.map(l => ({ title: l.trim() })).filter(l => l.title)
+      };
+    }).filter(s => s.title);
 
     await Course.findOneAndUpdate(
       { _id: req.params.id, instructor: req.session.user._id },
       updateData
     );
 
-    res.redirect('/instructor/dashboard');
+    res.redirect(`/courses/${req.params.id}`);
   } catch (err) {
     console.error(err);
     res.status(500).render('error');
   }
 };
+
 
 // ─── DELETE COURSE ────────────────────────────────────────────
 
