@@ -1,15 +1,4 @@
 
-    // track selected role
-    let selectedRole = 'student';
-
-    function setRole(btn, role) {
-      document.querySelectorAll('.btn-role').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      selectedRole = role;
-
-      const roleInput = document.getElementById('role');
-      if (roleInput) roleInput.value = role;
-    }
 
     // password toggle
     const togglePw = document.getElementById('toggle-pw');
@@ -170,12 +159,12 @@
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          name: name.value.trim(),
-          email: email.value.trim(),
-          password: password.value,
-          role: selectedRole
-        })
+      body: JSON.stringify({
+  name: name.value.trim(),
+  email: email.value.trim(),
+  password: password.value,
+  role: 'student'      
+})
       })
        .then(async (res) => {
   const data = await res.json();

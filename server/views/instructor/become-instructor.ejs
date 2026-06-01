@@ -113,10 +113,15 @@
 
       <!-- Professional Bio -->
       <div class="form-group">
-        <label class="form-label" for="bio">Professional Bio <span>*</span></label>
-        <textarea class="form-input bio-input no-icon" id="bio" name="bio" placeholder="Describe your professional background..."><%= fd.bio || '' %></textarea>
-        <span class="error-msg" id="bio-error">A short professional bio is required.</span>
-      </div>
+  <label class="form-label" for="bio">Professional Bio <span>*</span></label>
+  <div class="input-wrapper">
+    <textarea class="form-input bio-input no-icon" id="bio" name="bio" 
+      placeholder="Describe your professional background..." 
+      style="width:100%; box-sizing:border-box;"><%= fd.bio || '' %></textarea>
+  </div>
+  <span class="error-msg" id="bio-error">A short professional bio is required.</span>
+</div>
+
     </div>
   </div>
     

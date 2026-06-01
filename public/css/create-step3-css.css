@@ -90,10 +90,10 @@
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     .form-input::placeholder { color: var(--text-muted); }
-    .form-input:focus {
-      border-color: var(--pink);
-      box-shadow: 0 0 0 3px rgba(255,64,160,0.1);
-    }
+.form-input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(96,163,166,0.15);
+}
 
     /* ── STEPPER ── */
     .stepper {
@@ -198,13 +198,13 @@
     .btn-back:hover { border-color: var(--text-muted); }
 
     .btn-publish {
-      background: linear-gradient(90deg, var(--teal), var(--yellow));
+ background: linear-gradient(135deg, var(--pink), var(--pink-light));
       border: none;
       border-radius: 12px;
       padding: 18px;
       font-size: 16px;
       font-weight: 700;
-      color: var(--bg);
+     color: #fff;
       font-family: var(--font);
       cursor: pointer;
       transition: opacity 0.2s, transform 0.15s;

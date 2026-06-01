@@ -51,7 +51,7 @@ app.use("/",           publicRoutes);
 
 app.get("/me", (req, res) => res.json(req.session.user || null));
 app.get("/dashboard", (req, res) => {
-  const role = req.session.user?.role;
+ const role = req.session.role;
   const dashboards = {
     student:    "/student/dashboard",
     instructor: "/instructor/dashboard",

@@ -24,3 +24,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   updateSubmitState();
 });
+// Instructor Policy Modal
+const policyModal   = document.getElementById('instructor-policy-modal');
+const openPolicyBtn = document.getElementById('open-instructor-policy');
+
+function closePolicyModal() {
+  policyModal?.classList.add('hidden');
+}
+
+openPolicyBtn?.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  policyModal?.classList.remove('hidden');
+});
+
+document.getElementById('instr-policy-close')?.addEventListener('click', closePolicyModal);
+document.getElementById('instr-policy-close-btn')?.addEventListener('click', closePolicyModal);
+
+policyModal?.addEventListener('click', (e) => {
+  if (e.target === policyModal) closePolicyModal();
+});

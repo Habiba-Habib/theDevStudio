@@ -74,7 +74,7 @@ nextBtn.addEventListener('click', () => {
     return;
   }
 
-  window.location.href = "../../pages/instructor/create-step2.ejs";
+
 });
 
 // ── CLEAR ERROR ON TYPING ──

@@ -62,7 +62,7 @@ body {
 }
 
 .gradient {
-  background: linear-gradient(90deg, var(--yellow), var(--teal));
+  background: linear-gradient(90deg, var(--pink), var(--pink-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -295,8 +295,9 @@ body {
 .btn-create {
   display: block;
   width: 100%;
-  background: linear-gradient(90deg, var(--yellow), var(--teal));
-  color: var(--bg);
+ 
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  color: #fff; /* white text instead of dark */
   font-size: 15px;
   font-weight: 700;
   padding: 14px;
@@ -496,6 +497,16 @@ body {
 .terms-label-text {
   font-size: 13px;
   color: var(--text-muted);
+}
+/* Override browser autofill background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #0d1117 inset !important;
+  -webkit-text-fill-color: var(--text-white) !important;
+  caret-color: var(--text-white);
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 /* ── RESPONSIVE ── */

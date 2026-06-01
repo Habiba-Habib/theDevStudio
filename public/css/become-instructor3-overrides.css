@@ -219,3 +219,111 @@
 .btn-submit:not(:disabled):active {
   transform: translateY(0);
 }
+/* Policy link button — inline in checkbox text */
+.policy-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  color: var(--pink);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Modal overlay */
+.instr-policy-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 14, 39, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+}
+
+.instr-policy-modal.hidden {
+  display: none;
+}
+
+/* Modal card */
+.instr-policy-card {
+  position: relative;
+  width: min(520px, calc(100% - 32px));
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.instr-policy-card h3 {
+  color: var(--text-white);
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+/* Scrollable body */
+.instr-policy-body {
+  max-height: 50vh;
+  overflow-y: auto;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.instr-policy-body ul {
+  padding-left: 20px;
+  margin: 4px 0 8px;
+}
+
+.instr-policy-body p strong {
+  color: var(--text-white);
+  font-size: 0.9rem;
+}
+
+.instr-policy-full-link {
+  display: inline-block;
+  margin-top: 4px;
+  color: var(--pink);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+.instr-policy-full-link:hover { text-decoration: underline; }
+
+/* Close X button */
+.instr-policy-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 18px;
+  transition: color 0.2s;
+}
+.instr-policy-close:hover { color: var(--text-white); }
+
+/* Close button at bottom */
+.instr-policy-close-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, var(--pink), var(--pink-light));
+  color: #fff;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.instr-policy-close-btn:hover { opacity: 0.88; }

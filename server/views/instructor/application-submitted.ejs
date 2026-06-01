@@ -4,41 +4,102 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Application Submitted – TheDevStudio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-   <link rel="stylesheet" href="/css/become-instructor-wizard.css" />
+  <link rel="stylesheet" href="/css/become-instructor-wizard.css" />
 </head>
 <body>
 <%- include('../partials/navbar') %>
-  <main class="main-content">
 
-    <section class="hero-section">
-      <div class="hero-icon">
-        <i class="fa-solid fa-circle-check"></i>
+<main class="instructor-wizard main-content">
+
+  <!-- HERO -->
+  <section class="hero-section">
+    <div class="hero-icon" style="background: linear-gradient(135deg, var(--pink), var(--pink-light)); border: none; color: #fff; box-shadow: 0 8px 32px rgba(255,64,160,0.4);">
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
+    <h1 class="hero-title">Application Submitted!</h1>
+    <p class="hero-subtitle">
+      Your instructor verification has been received.<br/>
+      Sit tight — an admin will review it shortly.
+    </p>
+  </section>
+
+  <!-- STEPPER — all steps completed -->
+  <div class="stepper">
+    <div class="step completed">
+      <div class="step-circle"><i class="fa-solid fa-user"></i></div>
+      <span class="step-label">Personal Info</span>
+    </div>
+    <div class="step-line active"></div>
+    <div class="step completed">
+      <div class="step-circle"><i class="fa-solid fa-file-lines"></i></div>
+      <span class="step-label">Documents</span>
+    </div>
+    <div class="step-line active"></div>
+    <div class="step completed">
+      <div class="step-circle"><i class="fa-solid fa-check"></i></div>
+      <span class="step-label">Review &amp; Submit</span>
+    </div>
+  </div>
+
+  <!-- WHAT HAPPENS NEXT -->
+  <div class="card">
+    <h2 class="card-title">What happens next?</h2>
+
+    <div style="display: flex; flex-direction: column; gap: 0;">
+
+      <div style="display: flex; align-items: flex-start; gap: 16px; padding: 4px 0;">
+        <div style="width:44px; height:44px; border-radius:12px; background:rgba(255,64,160,0.12); color:var(--pink); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0;">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div>
+          <p style="font-size:0.95rem; font-weight:700; color:var(--text-white); margin-bottom:4px;">Admin Review</p>
+          <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">Our team will verify your credentials and documents within 24–72 hours.</p>
+        </div>
       </div>
-      <h1 class="hero-title">Application Submitted</h1>
-      <p class="hero-subtitle">
-        Your instructor verification has been received. Please wait for an admin to review your application.
-        You will be notified once it has been approved.
-      </p>
-    </section>
 
-    <div class="card" style="text-align: center;">
-      <p style="margin-bottom: 24px; color: var(--text-body);">
-        Review typically takes 24–72 hours. You can log in anytime while you wait.
-      </p>
-                <a href="/student/dashboard" class="btn-submit" style="display: inline-block; text-decoration: none;">
-        Go to Dashboard
+      <div style="width:2px; height:20px; background:var(--border); margin-left:21px;"></div>
+
+      <div style="display: flex; align-items: flex-start; gap: 16px; padding: 4px 0;">
+        <div style="width:44px; height:44px; border-radius:12px; background:rgba(96,163,166,0.12); color:var(--teal); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0;">
+          <i class="fa-solid fa-bell"></i>
+        </div>
+        <div>
+          <p style="font-size:0.95rem; font-weight:700; color:var(--text-white); margin-bottom:4px;">You'll Be Notified</p>
+          <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">Check your student dashboard for the approval status update.</p>
+        </div>
+      </div>
+
+      <div style="width:2px; height:20px; background:var(--border); margin-left:21px;"></div>
+
+      <div style="display: flex; align-items: flex-start; gap: 16px; padding: 4px 0;">
+        <div style="width:44px; height:44px; border-radius:12px; background:rgba(240,254,114,0.12); color:var(--yellow); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0;">
+          <i class="fa-solid fa-bolt-lightning"></i>
+        </div>
+        <div>
+          <p style="font-size:0.95rem; font-weight:700; color:var(--text-white); margin-bottom:4px;">Activate Your Account</p>
+          <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">Once approved, hit Activate on your dashboard to switch to instructor mode.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER NOTE + BUTTON -->
+  <div class="card" style="text-align:center; gap: 16px;">
+    <p style="color:var(--text-muted); font-size:0.9rem;">
+      <i class="fa-regular fa-clock" style="margin-right:6px;"></i>
+      Review typically takes 24–72 hours. You can continue learning while you wait.
+    </p>
+    <div class="actions" style="justify-content: center;">
+      <a href="/student/dashboard" class="btn-continue" style="text-decoration:none;">
+        <i class="fa-solid fa-house"></i> Go to Dashboard
       </a>
     </div>
+  </div>
 
-  </main>
-
-  <script>
-      setTimeout(function () {
-           window.location.href = '/student/dashboard';
-    }, 5000);
-  </script>
+</main>
 
 </body>
 </html>

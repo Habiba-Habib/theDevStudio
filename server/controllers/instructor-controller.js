@@ -236,23 +236,31 @@ exports.getCreateStep2 = async (req, res) => {
 
 exports.postCreateStep2 = async (req, res) => {
   try {
-    const { learningOutcomes, sections } = req.body;
-
-    // learningOutcomes comes as a string with one per line
-    const outcomesArray = learningOutcomes
-      .split('\n')
-      .map(o => o.trim())
-      .filter(o => o);
-
-    // sections comes as a JSON string from the frontend
-    const sectionsArray = JSON.parse(sections);
-
     const draft = await Course.findOne({
       instructor: req.session.user._id,
-      isPublished : false
+      isPublished: false
     });
 
     if (!draft) return res.redirect('/instructor/create/step1');
+
+    // outcomes[] comes as array from form
+    let outcomesArray = req.body['outcomes[]'] || req.body.outcomes || [];
+    if (!Array.isArray(outcomesArray)) outcomesArray = [outcomesArray];
+    outcomesArray = outcomesArray.map(o => o.trim()).filter(o => o);
+
+    // sections come as sections[0][title], sections[0][lessons][] etc.
+    const rawSections = req.body.sections || {};
+    const sectionsArray = Object.keys(rawSections).map(i => {
+      const sec = rawSections[i];
+      let lessons = sec.lessons || [];
+      if (!Array.isArray(lessons)) lessons = [lessons];
+      return {
+        title: sec.title || '',
+        lessons: lessons
+          .map(l => ({ title: l.trim() }))
+          .filter(l => l.title)
+      };
+    }).filter(s => s.title);
 
     await Course.findByIdAndUpdate(draft._id, {
       learningOutcomes: outcomesArray,
@@ -262,9 +270,10 @@ exports.postCreateStep2 = async (req, res) => {
     res.redirect('/instructor/create/step3');
   } catch (err) {
     console.error(err);
-    res.status(500).render('error');
+    res.status(500).render('public/page-404', { message: 'Failed to save curriculum' });
   }
 };
+
 
 // ─── CREATE COURSE — STEP 3 ───────────────────────────────────
 // Collects: price, duration — shows preview — final publish
@@ -291,24 +300,27 @@ exports.postCreateStep3 = async (req, res) => {
 
     const draft = await Course.findOne({
       instructor: req.session.user._id,
-      isPublished : false
+      isPublished: false
     });
 
     if (!draft) return res.redirect('/instructor/create/step1');
 
-    // Final save — change status from draft to published
     await Course.findByIdAndUpdate(draft._id, {
       price: Number(price),
       duration,
-      isPublished : true
+      isPublished: true
     });
 
-    res.redirect('/instructor/dashboard');
+    // RENDER success page instead of redirect
+    res.render('instructor/page-created', {
+      courseTitle: draft.title
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).render('error');
+    res.status(500).render('public/page-404', { message: 'Failed to publish course' });
   }
 };
+
 
 // ─── EDIT COURSE ──────────────────────────────────────────────
 

@@ -971,6 +971,68 @@ body {
   color: var(--text-white);
   cursor: pointer;
 }
+/* Activate Modal extras */
+.activate-modal-content {
+  text-align: center;
+}
+
+.activate-modal-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 64, 160, 0.15);
+  color: var(--pink);
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.activate-modal-icon--success {
+  background: rgba(96, 163, 166, 0.15);
+  color: var(--teal);
+}
+
+.activate-modal-list {
+  list-style: none;
+  text-align: left;
+  margin: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.activate-modal-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--text-body);
+}
+
+.activate-modal-list li i {
+  color: var(--teal);
+  flex-shrink: 0;
+}
+
+.activate-modal-note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.activate-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.activate-modal-actions .btn-close {
+  width: auto;
+  padding: 10px 20px;
+}
+
 /* ========================================
    Responsive
    ======================================== */

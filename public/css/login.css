@@ -1,275 +1,207 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --pink: #FF40A0;
+  --pink:       #FF40A0;
   --pink-light: #FFB7E6;
-  --yellow: #F0FE72;
-  --teal: #60A3A6;
-  --bg: #0A0E27;
-  --surface: #1A203A;
-  --border: rgba(255, 255, 255, 0.08);
+  --yellow:     #F0FE72;
+  --teal:       #60A3A6;
+  --bg:         #0A0E27;
+  --surface:    #1A203A;
+  --border:     rgba(255, 255, 255, 0.08);
   --text-white: #FFFFFC;
   --text-muted: #BDC2C9;
-  --text-body: #C8D0E7;
-  --font: 'Inter', sans-serif;
+  --text-body:  #C8D0E7;
+  --font:       'Inter', sans-serif;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html,
-body {
-  min-height: 100%;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   font-family: var(--font);
-  background:
-    radial-gradient(circle at 18% 50%, rgba(255, 64, 160, 0.10), transparent 20%),
-    radial-gradient(circle at 30% 70%, rgba(96, 163, 166, 0.08), transparent 25%),
-    linear-gradient(180deg, #090d25 0%, var(--bg) 100%);
+  background: var(--bg);
   color: var(--text-white);
+  min-height: 100vh;
+  display: block;
+}
+
+a { text-decoration: none; color: inherit; }
+button, input { font: inherit; }
+
+/* ── LAYOUT ── */
+.login-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   min-height: 100vh;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-button,
-input {
-  font: inherit;
-}
-
-.page {
-  min-height: 100vh;
+/* ── LEFT PANEL ── */
+.left-panel {
+  background: #080b1f;
   display: flex;
-  flex-direction: column;
-}
-
-/* Navbar */
-
-.navbar {
-  height: 58px;
-  padding: 0 180px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  color: var(--text-white);
-}
-
-.brand-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--pink), var(--pink-light));
-  display: grid;
-  place-items: center;
-  font-size: 13px;
-  box-shadow: 0 8px 24px rgba(255, 64, 160, 0.35);
-}
-
-.nav-links {
-  display: flex;
-  gap: 34px;
-}
-
-.nav-links a,
-.login-link {
-  color: var(--text-white);
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.signup-btn.small {
-  background: linear-gradient(90deg, var(--pink), var(--pink-light));
-  color: var(--text-white);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 8px 15px;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(255, 64, 160, 0.25);
-}
-
-/* Main Layout */
-
-.hero {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 410px 410px;
   align-items: center;
   justify-content: center;
-  gap: 36px;
+  padding: 60px 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.left-panel::before {
+  content: '';
+  position: absolute;
+  top: 10%; left: 5%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(96,163,166,0.1), transparent 70%);
+  pointer-events: none;
+}
+
+.left-content {
+  position: relative;
+  z-index: 1;
+  max-width: 400px;
   width: 100%;
-  padding: 52px 32px;
 }
 
-/* Welcome Card */
-
-.welcome-card {
-  background: rgba(26, 32, 58, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 16px;
-  padding: 38px 36px;
-  box-shadow:
-    0 10px 40px rgba(0, 0, 0, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(6px);
-}
-
-.welcome-card h1 {
-  font-size: 28px;
-  line-height: 1.1;
+.left-content h1 {
+  font-size: 36px;
   font-weight: 800;
-  margin-bottom: 18px;
-  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 12px;
+  color: var(--text-white);
 }
 
-.welcome-card h1 span {
-  color: var(--pink);
+.gradient {
+  background: linear-gradient(90deg, var(--pink), var(--pink-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.welcome-card p {
-  color: var(--text-body);
+.left-content p {
   font-size: 14px;
+  color: var(--text-muted);
   line-height: 1.7;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .feature-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .feature-list li {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: var(--text-white);
+  font-size: 14px;
+  color: var(--text-body);
+}
+
+.feature-list li i {
+  color: var(--pink);
   font-size: 13px;
-}
-
-.number {
-  width: 24px;
-  height: 24px;
-  border-radius: 9px;
-  background: linear-gradient(180deg, var(--pink-light), var(--pink));
-  color: var(--text-white);
-  font-weight: 700;
-  display: grid;
-  place-items: center;
-  font-size: 12px;
   flex-shrink: 0;
+  margin-top: 2px;
 }
 
-/* Sign In Card */
 
-.signin-card {
-  background: rgba(26, 32, 58, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: 16px;
-  padding: 36px 36px 32px;
-  box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+/* ── RIGHT PANEL ── */
+.right-panel {
+  background: #080b1f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
 }
 
-.signin-card h2 {
-  font-size: 24px;
+/* ── FORM CARD ── */
+.form-card {
+  width: 100%;
+  max-width: 420px;
+  background: #111827;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 32px;
+}
+
+.form-card h2 {
+  font-size: 26px;
   font-weight: 800;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  color: var(--text-white);
 }
 
 .subtitle {
+  font-size: 14px;
   color: var(--text-muted);
-  font-size: 13px;
-  margin-bottom: 26px;
+  margin-bottom: 24px;
 }
 
-.signin-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group {
-  margin-bottom: 18px;
-}
+/* ── FORM FIELDS ── */
+.form-group { margin-bottom: 16px; }
 
 .form-group label {
   display: block;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--text-body);
-  font-size: 12px;
-  font-weight: 500;
-  margin-bottom: 9px;
+  margin-bottom: 8px;
 }
 
-.input-box {
-  height: 36px;
+.input-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: #080d28;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 7px;
-  padding: 0 12px;
 }
 
 .input-icon {
+  position: absolute;
+  left: 14px;
   color: var(--text-muted);
-  font-size: 13px;
-  width: 16px;
-  text-align: center;
+  font-size: 14px;
+  pointer-events: none;
 }
 
-.input-box input {
-  flex: 1;
-  height: 100%;
-  background: transparent;
-  border: none;
-  outline: none;
+.form-input {
+  width: 100%;
+  background: #0d1117;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 13px 18px 13px 40px;
+  font-size: 14px;
   color: var(--text-white);
-  font-size: 12px;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.input-box input::placeholder {
-  color: #7d87a8;
+.form-input::placeholder { color: var(--text-muted); }
+
+.form-input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(96,163,166,0.15);
 }
 
-.toggle-password {
-  background: transparent;
+.btn-toggle-pw {
+  position: absolute;
+  right: 14px;
+  background: none;
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
+  padding: 0;
+  transition: color 0.2s;
 }
+.btn-toggle-pw:hover { color: var(--text-white); }
 
+/* ── FORM OPTIONS ── */
 .form-options {
-  margin-top: 2px;
-  margin-bottom: 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .checkbox-wrap {
@@ -277,135 +209,124 @@ input {
   align-items: center;
   gap: 7px;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 13px;
+  cursor: pointer;
 }
 
-.checkbox-wrap input {
-  accent-color: var(--pink);
-}
+.checkbox-wrap input { accent-color: var(--pink); }
 
 .forgot-link {
   color: var(--pink);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
 }
 
+/* ── MESSAGES ── */
 .form-message {
   font-size: 12px;
   margin-bottom: 10px;
   min-height: 14px;
+  display: block;
 }
 
-.signin-btn {
-  height: 36px;
-  border: none;
+.alert {
+  padding: 10px 14px;
   border-radius: 8px;
-  background: linear-gradient(90deg, var(--pink), var(--pink-light));
-  color: var(--text-white);
-  font-size: 12px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.alert-error   { background: rgba(255,64,160,0.1);  color: var(--pink);  border: 1px solid rgba(255,64,160,0.2); }
+.alert-success { background: rgba(96,163,166,0.1);  color: var(--teal);  border: 1px solid rgba(96,163,166,0.2); }
+
+/* ── BUTTON ── */
+.btn-create {
+  display: block;
+  width: 100%;
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  color: #fff;
+  font-size: 15px;
   font-weight: 700;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
   cursor: pointer;
-  box-shadow: 0 14px 28px rgba(255, 64, 160, 0.25);
-  transition: transform 0.2s ease;
+  font-family: var(--font);
+  margin-bottom: 16px;
+  transition: opacity 0.2s, transform 0.15s;
 }
+.btn-create:hover { opacity: 0.9; transform: translateY(-1px); }
 
-.signin-btn:hover {
-  transform: translateY(-1px);
-}
-
-.signup-text {
+/* ── SIGN UP LINK ── */
+.signin-row {
   text-align: center;
+  font-size: 13px;
   color: var(--text-muted);
-  font-size: 12px;
-  margin: 18px 0 24px;
+  margin-bottom: 20px;
 }
 
-.signup-text a {
+.signin-row a {
   color: var(--pink);
   font-weight: 700;
 }
 
+/* ── DIVIDER ── */
 .divider {
-  position: relative;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.divider::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  border-top: 1px solid rgba(255, 255, 255, 0.10);
-  transform: translateY(-50%);
-}
-
-.divider span {
-  position: relative;
-  z-index: 1;
-  background: rgba(26, 32, 58, 0.92);
-  padding: 0 12px;
-  color: #7e88a8;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  color: var(--text-muted);
   font-size: 12px;
 }
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+}
 
-.social-buttons {
+/* ── SOCIAL BUTTONS ── */
+.social-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
-.social-btn {
-  height: 36px;
-  border-radius: 9px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #080d28;
+.btn-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #0d1117;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
   color: var(--text-white);
-  font-size: 12px;
-  font-weight: 700;
+  font-family: var(--font);
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: border-color 0.2s;
+}
+.btn-social:hover { border-color: var(--text-muted); }
+
+
+/* ── AUTOFILL FIX ── */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #0d1117 inset !important;
+  -webkit-text-fill-color: var(--text-white) !important;
+  caret-color: var(--text-white);
+  transition: background-color 5000s ease-in-out 0s;
 }
 
-.social-btn:hover {
-  transform: translateY(-1px);
-}
-
-/* Responsive */
-
-@media (max-width: 1000px) {
-  .navbar {
-    padding: 0 32px;
-  }
-
-  .hero {
-    grid-template-columns: 1fr;
-    justify-items: center;
-  }
-
-  .welcome-card,
-  .signin-card {
-    width: 100%;
-    max-width: 430px;
-  }
-}
-
-@media (max-width: 640px) {
-  .navbar {
-    padding: 0 18px;
-  }
-
-  .nav-links {
-    display: none;
-  }
-
-  .hero {
-    padding: 24px 16px 40px;
-  }
-
-  .signin-card,
-  .welcome-card {
-    padding: 26px 22px;
-  }
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .login-layout { grid-template-columns: 1fr; }
+  .left-panel   { display: none; }
+  .right-panel  { padding: 40px 20px; min-height: 100vh; }
+  .form-card    { padding: 24px 20px; }
 }
