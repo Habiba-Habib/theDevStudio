@@ -208,7 +208,9 @@ exports.postCreateStep1 = async (req, res) => {
     res.redirect('/instructor/create/step2');
   } catch (err) {
     console.error(err);
-    res.status(500).render('error');
+    res.status(500).render('public/page-404', {
+  message: 'Failed to create course'
+});
   }
 };
 

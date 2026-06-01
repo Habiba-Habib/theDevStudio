@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const isInstructor = require('../middleware/isInstructor');
+
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
 const {
   getDashboard,
   getProfile,
@@ -27,7 +31,7 @@ router.get('/edit-profile',  getEditProfile);
 router.post('/edit-profile', updateProfile);
 
 router.get('/create/step1',  getCreateStep1);
-router.post('/create/step1', postCreateStep1);
+router.post('/create/step1', upload.single('thumbnail'), postCreateStep1);
 router.get('/create/step2',  getCreateStep2);
 router.post('/create/step2', postCreateStep2);
 router.get('/create/step3',  getCreateStep3);
