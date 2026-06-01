@@ -25,89 +25,45 @@ body {
   font-family: var(--font);
 }
 
-.admin-nav {
-  height: 88px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 28px;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--text-white);
-  text-decoration: none;
-  font-size: 24px;
-  font-weight: 800;
-}
-
-.brand-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 16px;
-  background: var(--pink);
-  display: grid;
-  place-items: center;
-  box-shadow: 0 10px 30px rgba(255, 79, 179, 0.35);
-}
-
-.nav-links {
-  display: flex;
-  gap: 38px;
-}
-
-.nav-links a,
-.nav-actions a {
-  color: var(--text-body);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-.signup-btn {
-  background: var(--pink);
-  color: var(--text-white) !important;
-  padding: 13px 18px;
-  border-radius: 12px;
-  box-shadow: 0 10px 28px rgba(255, 79, 179, 0.35);
-}
-
 .admin-page {
-  min-height: calc(100vh - 88px);
+ 
+  min-height: calc(100vh - 80px);
   display: grid;
   grid-template-columns: 1fr 1fr;
-    gap: 40px;
-  padding: 48px 28px;
+  background: var(--bg);
 }
 
 .admin-info {
-  width: 100%;
-  padding: 36px 24px;
+  width: min(520px, calc(100% - 40px));
+  align-self: center;
+  justify-self: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 52px 44px;
 }
-
+.admin-info-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
 .portal-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 20px;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
   background: var(--teal);
   display: grid;
   place-items: center;
-  font-size: 26px;
-  margin-bottom: 26px;
+  font-size: 20px;
+  margin-bottom: 0;
+  flex-shrink: 0;
 }
 
 .admin-info h1 {
-  font-size: 38px;
+  font-size: 28px;
   line-height: 1.2;
-  margin-bottom: 30px;
+  margin-bottom: 0;
 }
 
 .admin-info h1 span {
@@ -115,19 +71,19 @@ body {
 }
 
 .lead {
-  font-size: 23px;
+  font-size: 16px;
   color: var(--text-white);
-  margin-bottom: 42px;
+  margin-bottom: 32px;
 }
 
 .restricted-card {
   display: flex;
-  gap: 22px;
+  gap: 16px;
   background: var(--surface-dark);
   border: 1px solid rgba(96, 163, 166, 0.35);
-  border-radius: 18px;
-  padding: 34px 30px;
-  margin-bottom: 40px;
+  border-radius: 14px;
+  padding: 26px 24px;
+  margin-bottom: 30px;
 }
 
 .restricted-card i {
@@ -137,46 +93,47 @@ body {
 }
 
 .restricted-card h2 {
-  font-size: 22px;
-  margin-bottom: 14px;
+  font-size: 16px;
+  margin-bottom: 12px;
 }
 
 .restricted-card p {
   color: var(--text-body);
-  line-height: 1.55;
+  line-height: 1.6;
+  font-size: 13px;
 }
 
 .admin-list {
   list-style: none;
   display: grid;
-  gap: 20px;
+  gap: 16px;
 }
 
 .admin-list li {
   display: flex;
   align-items: center;
-  gap: 16px;
-  font-size: 20px;
+  gap: 14px;
+  font-size: 15px;
 }
 
 .admin-list span {
-  width: 40px;
-  height: 40px;
-  border-radius: 14px;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
   background: var(--teal);
   display: grid;
   place-items: center;
   font-weight: 800;
 }
-
 .admin-card {
-  width: min(660px, calc(100% - 56px));
+  width: 100%;
+  max-width: 526px;
   align-self: center;
   justify-self: center;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 28px;
-  padding: 64px 60px;
+  border-radius: 22px;
+  padding: 40px;
 }
 
 .card-title-row {
@@ -192,13 +149,13 @@ body {
 }
 
 .card-title-row h2 {
-  font-size: 38px;
+  font-size: 34px;
 }
 
 .card-subtitle {
   color: var(--text-body);
-  font-size: 20px;
-  margin-bottom: 42px;
+  font-size: 17px;
+  margin-bottom: 32px;
 }
 
 .admin-form {
@@ -222,6 +179,17 @@ body {
   align-items: center;
   padding: 0 14px;
   gap: 12px;
+}
+.input-box.error {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(96, 163, 166, 0.18);
+}
+
+.form-message {
+  min-height: 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--teal);
 }
 
 .input-box i {
@@ -281,34 +249,31 @@ body {
 
 .back-link {
   display: block;
-  margin-top: 56px;
+  margin-top: 34px;
   text-align: center;
   color: var(--text-body);
   text-decoration: none;
   font-weight: 700;
 }
-
 @media (max-width: 900px) {
+  .admin-nav {
+    padding: 0 20px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
   .admin-page {
     grid-template-columns: 1fr;
   }
 
   .admin-info {
-  width: min(660px, calc(100% - 56px));
-  align-self: center;
-  justify-self: center;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 28px;
-  padding: 64px 60px;
-}
-
-  .admin-card {
-    margin: 34px 0;
-    padding: 36px 24px;
+    display: none;
   }
 
-  .nav-links {
-    display: none;
+  .admin-card {
+    margin: 40px 20px;
+    padding: 32px 24px;
   }
 }

@@ -4,6 +4,15 @@ const adminPassword = document.getElementById("adminPassword");
 const adminLoginMessage = document.getElementById("adminLoginMessage");
 const toggleAdminPassword = document.getElementById("toggleAdminPassword");
 
+
+
+[adminEmail, adminPassword].forEach((input) => {
+  input.addEventListener("input", () => {
+    input.closest(".input-box").classList.remove("error");
+    adminLoginMessage.textContent = "";
+  });
+});
+
 if (toggleAdminPassword && adminPassword) {
   toggleAdminPassword.addEventListener("click", () => {
     const isHidden = adminPassword.type === "password";
@@ -24,11 +33,18 @@ if (adminLoginForm) {
 
     adminLoginMessage.textContent = "";
 
-    if (!email || !password) {
-      adminLoginMessage.textContent = "Please fill in all fields.";
-      adminLoginMessage.style.color = "#ff4f9a";
-      return;
-    }
+   adminEmail.closest(".input-box").classList.remove("error");
+adminPassword.closest(".input-box").classList.remove("error");
+
+if (!email || !password) {
+  adminLoginMessage.textContent = "Please fill in all fields.";
+  adminLoginMessage.style.color = "#60A3A6";
+
+  if (!email) adminEmail.closest(".input-box").classList.add("error");
+  if (!password) adminPassword.closest(".input-box").classList.add("error");
+
+  return;
+}
 
     try {
       adminLoginMessage.textContent = "Checking administrator access...";
