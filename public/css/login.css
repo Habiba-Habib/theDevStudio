@@ -322,6 +322,22 @@ input:-webkit-autofill:active {
   caret-color: var(--text-white);
   transition: background-color 5000s ease-in-out 0s;
 }
+.admin-access-row {
+  text-align: center;
+  margin-top: 26px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.admin-access-row a {
+  color: var(--teal);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.admin-access-row a:hover {
+  color: var(--text-white);
+}
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {

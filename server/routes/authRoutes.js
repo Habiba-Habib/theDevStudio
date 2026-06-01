@@ -35,6 +35,11 @@ router.get("/terms-of-services", (req, res) => {
 router.get("/privacy-policy", (req, res) => {
   res.render("auth/privacy-policy");
 });
+router.get("/admin-login", (req, res) => {
+  res.render("auth/admin-login");
+});
+
+router.post("/admin-login", authController.adminLogin);
 module.exports = router;
 
 router.get(

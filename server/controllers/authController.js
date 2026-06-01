@@ -103,6 +103,46 @@ exports.login = async (req, res) => {
     return res.status(500).json({ message: "Server database error" });
   }
 };
+exports.adminLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: "Missing fields" });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user || user.role !== "admin") {
+      return res.status(401).json({ message: "Invalid admin credentials" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid admin credentials" });
+    }
+
+    req.session.user = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    };
+
+    req.session.userId = user._id;
+    req.session.role = user.role;
+
+    return res.status(200).json({
+      message: "Admin login successful",
+      user: req.session.user,
+      redirectUrl: "/admin/dashboard"
+    });
+  } catch (error) {
+    console.error("Admin login error:", error);
+    return res.status(500).json({ message: "Server database error" });
+  }
+};
 
 exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
