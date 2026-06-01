@@ -15,16 +15,27 @@
 <div class="page-wrapper">
 
   <h1 class="course-title">Create New Course</h1>
-  <p class="course-description">Build your course curriculum</p>
+<p class="course-description">Build your course curriculum</p>
 
   <!-- STEP 2 -->
-  <div class="stepper">
-    <div class="step active"><div class="step-circle">1</div></div>
-    <div class="step-line done"></div>
-<div class="step active"><div class="step-circle">2</div></div>
-<div class="step-line pending"></div>
-    <div class="step inactive"><div class="step-circle">3</div></div>
+<div class="stepper">
+  <div class="step active">
+    <div class="step-circle">1</div>
+    <div class="step-label">Basic Info</div>
   </div>
+  <div class="step-line done"></div>
+  <div class="step active">
+    <div class="step-circle">2</div>
+    <div class="step-label">Curriculum</div>
+  </div>
+  <div class="step-line pending"></div>
+  <div class="step inactive">
+    <div class="step-circle">3</div>
+    <div class="step-label">Pricing</div>
+  </div>
+</div>
+
+
 
   <!-- SINGLE FORM (IMPORTANT) -->
   <form id="courseForm" action="/instructor/create/step2" method="POST">
@@ -34,12 +45,9 @@
       <h3>What will students learn?</h3>
 
       <div id="outcomes-list">
-        <div class="outcome-item">
-          <input type="text" class="form-input" name="outcomes[]" placeholder="e.g., Build responsive websites"/>
-          <button type="button" class="btn-remove">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
+       <div class="outcome-item">
+  <input type="text" class="form-input" name="sections[0][lessons][]" placeholder="Lesson title"/>
+</div>
       </div>
 
       <button type="button" id="add-outcome" class="btn-add">
@@ -60,11 +68,13 @@
 
           <div class="lesson-container">
             <div class="form-group lesson-item">
+              <div class="outcome-item">
               <input type="text" class="form-input" name="sections[0][lessons][]" placeholder="Lesson title"/>
               <button type="button" class="btn-remove">
                 <i class="fa-solid fa-xmark"></i>
               </button>
             </div>
+          </div>
           </div>
 
           <button type="button" class="btn-add">

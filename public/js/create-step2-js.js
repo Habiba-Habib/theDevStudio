@@ -23,6 +23,14 @@ document.querySelector('.outcome-item .btn-remove').addEventListener('click', fu
   }
 });
 
+// remove button for first lesson in first section
+document.querySelector('.lesson-container .btn-remove').addEventListener('click', function () {
+  const allLessons = this.closest('.section-card').querySelectorAll('.lesson-item');
+  if (allLessons.length > 1) {
+    this.closest('.lesson-item').remove();
+  }
+});
+
 // ── ADD LESSON inside a section ──
 function addLessonToSection(section) {
   const addLessonBtn = section.querySelector('.btn-add');
@@ -73,7 +81,7 @@ document.getElementById('add-section').addEventListener('click', () => {
     addLessonToSection(card);
   });
   card.querySelector('.btn-remove').addEventListener('click', function () {
-    this.closest('.outcome-item').remove();
+    this.closest('.lesson-item').remove();
   });
   list.appendChild(card);
   card.querySelector('.form-input').focus();
@@ -83,7 +91,6 @@ document.getElementById('add-section').addEventListener('click', () => {
 document.getElementById('courseForm').addEventListener('submit', (e) => {
   let valid = true;
 
-  // check at least one outcome is filled
   document.querySelectorAll('.outcome-item .form-input').forEach(input => {
     if (!input.value.trim()) {
       input.style.borderColor = 'var(--pink)';
@@ -92,7 +99,6 @@ document.getElementById('courseForm').addEventListener('submit', (e) => {
     }
   });
 
-  // check all section titles are filled
   document.querySelectorAll('.section-card > .form-group:first-child .form-input').forEach(input => {
     if (!input.value.trim()) {
       input.style.borderColor = 'var(--pink)';
@@ -102,7 +108,7 @@ document.getElementById('courseForm').addEventListener('submit', (e) => {
   });
 
   if (!valid) {
-    e.preventDefault(); // stop form submit
+    e.preventDefault();
     const btn = document.querySelector('.btn-enroll');
     btn.style.transform = 'translateX(-6px)';
     setTimeout(() => btn.style.transform = 'translateX(6px)', 100);
