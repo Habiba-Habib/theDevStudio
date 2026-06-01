@@ -88,8 +88,30 @@ function initSaveButton() {
     });
 }
 
+function initCancelButton() {
+    const cancelBtn = document.getElementById('cancel-bttn');
+    const form = document.querySelector('form[action$="/edit-profile"]');
+
+    if (!cancelBtn || !form) return;
+
+    cancelBtn.addEventListener('click', () => {
+        const action = form.getAttribute('action');
+
+        if (action.startsWith('/instructor')) {
+            window.location.href = '/instructor/profile';
+        } else if (action.startsWith('/student')) {
+            window.location.href = '/student/profile';
+        } else if (action.startsWith('/admin')) {
+            window.location.href = '/admin/profile';
+        } else {
+            window.location.href = '/dashboard';
+        }
+    });
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     initAvatarSelection();
     initSaveButton();
+    initCancelButton();
 });

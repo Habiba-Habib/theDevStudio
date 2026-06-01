@@ -1,6 +1,7 @@
 const Course = require('../models/Course');
 const User = require('../models/User');
 const Payment = require('../models/payment');
+const bcrypt = require("bcryptjs");
 //const upload = require('../config/cloudinary');
 
 // ─── DASHBOARD ────────────────────────────────────────────────
@@ -119,20 +120,107 @@ exports.getEditProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    const { name, username, email, bio, location, avatar } = req.body;
+    const {
+      name,
+      username,
+      email,
+      bio,
+      location,
+      avatar,
+      currentPassword,
+      newPassword,
+      confirmPassword
+    } = req.body;
 
-    const updateData = { name, username, email, bio, location, avatar };
+    const userId = req.session.user._id;
 
-    // If a new avatar was uploaded, update it
-    if (req.file) {
-      updateData.avatar = req.file.path;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.redirect("/auth/login");
     }
 
-    await User.findByIdAndUpdate(req.session.user._id, updateData);
-    res.redirect('/instructor/profile');
+    const updateData = {
+      name: name?.trim(),
+      email: email?.trim(),
+      bio: bio?.trim(),
+      location: location?.trim(),
+      avatar
+    };
+
+    if (username && username.trim()) {
+      const usernameExists = await User.findOne({
+        username: username.trim(),
+        _id: { $ne: userId }
+      });
+
+      if (usernameExists) {
+        return res.render("shared/edit-profile", {
+          user,
+          errors: ["Username is already taken."]
+        });
+      }
+
+      updateData.username = username.trim();
+    } else {
+      updateData.$unset = { username: "" };
+    }
+
+    if (email && email.trim()) {
+      const emailExists = await User.findOne({
+        email: email.trim(),
+        _id: { $ne: userId }
+      });
+
+      if (emailExists) {
+        return res.render("shared/edit-profile", {
+          user,
+          errors: ["Email is already used by another account."]
+        });
+      }
+    }
+
+    if (currentPassword || newPassword || confirmPassword) {
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        return res.render("shared/edit-profile", {
+          user,
+          errors: ["Please fill all password fields."]
+        });
+      }
+
+      if (newPassword !== confirmPassword) {
+        return res.render("shared/edit-profile", {
+          user,
+          errors: ["New passwords do not match."]
+        });
+      }
+
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.render("shared/edit-profile", {
+          user,
+          errors: ["Current password is incorrect."]
+        });
+      }
+
+      updateData.password = await bcrypt.hash(newPassword, 10);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+      runValidators: true
+    });
+
+    req.session.user = {
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role
+    };
+
+    res.redirect("/instructor/profile");
   } catch (err) {
-    console.error(err);
-    res.status(500).render('error');
+    console.error("Instructor update profile error:", err);
+    res.status(500).send("Failed to update profile.");
   }
 };
 
