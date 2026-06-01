@@ -49,12 +49,24 @@
     <section class="course-grid">
 
       <!-- Card -->
-       <% courses.forEach(function(course) { %>
-      <article class="course-card" data-category="<%= course.category %>" data-level="<%= course.level %>">
-        <div class="card-image-wrapper">
-          <img src="<%= course.thumbnail %>" alt="<%= course.title %>" class="card-image" />
-          <span class="badge badge-<%= course.level.toLowerCase() %>"><%= course.level %></span>
-        </div>
+     <% courses.forEach(function(course) {
+  const isOwn = typeof currentUserId !== 'undefined' && currentUserId && course.instructor && course.instructor._id && course.instructor._id.toString() === currentUserId.toString();
+%>
+<article class="course-card <%= isOwn ? 'course-card--own' : '' %>" data-category="<%= course.category %>" data-level="<%= course.level %>">
+
+  <% if (isOwn) { %>
+    <div class="card-own-ribbon">
+      <i class="fa-solid fa-graduation-cap"></i> Your Course
+    </div>
+  <% } %>
+
+  <div class="card-image-wrapper">
+    <img src="<%= course.thumbnail %>" alt="<%= course.title %>" class="card-image" />
+    <span class="badge badge-<%= course.level.toLowerCase() %>"><%= course.level %></span>
+  </div>
+
+
+
         <div class="card-body">
           <div class="card-meta">
             <span class="card-category"><%= course.category %></span>

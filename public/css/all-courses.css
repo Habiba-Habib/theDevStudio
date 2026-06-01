@@ -313,6 +313,32 @@ body {
   font-size: 1rem;
 }
 
+/* Own course card */
+.course-card--own {
+  border-color: rgba(255, 64, 160, 0.45);
+  box-shadow: 0 0 0 1px rgba(255, 64, 160, 0.2);
+}
+
+.course-card--own:hover {
+  border-color: rgba(255, 64, 160, 0.75);
+}
+
+/* "Your Course" banner strip at top of card */
+.card-own-ribbon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: linear-gradient(90deg, var(--pink), var(--pink-light));
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 6px 0;
+  width: 100%;
+}
+
 @media (max-width: 1024px) {
   .course-grid { grid-template-columns: repeat(2, 1fr); }
 }

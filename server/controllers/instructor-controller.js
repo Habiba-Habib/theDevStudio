@@ -177,8 +177,8 @@ exports.postCreateStep1 = async (req, res) => {
       instructor: req.session.user._id,
       isPublished: false
     });
-
-    const thumbnailUrl = req.file ? req.file.path : (course ? course.thumbnail : '');
+    
+const thumbnailUrl = req.file ? `/uploads/${req.file.filename}` : (course?.thumbnail || '');
 
     if (course) {
       // Update existing draft

@@ -28,7 +28,8 @@ const courseSchema = new mongoose.Schema({
     enum: ["Beginner", "Intermediate", "Advanced"],
     required: true
   },
-  thumbnail: { type: String, default: "/images/default-course.png" },
+
+  thumbnail: { type: String, default: "/images/course1.jpg" },
 
   learningOutcomes: [String],
   sections:         [sectionSchema],

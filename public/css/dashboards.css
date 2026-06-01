@@ -1032,6 +1032,43 @@ body {
   width: auto;
   padding: 10px 20px;
 }
+/* Empty courses state */
+.id-empty-courses {
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  padding: 48px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.id-empty-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 64, 160, 0.1);
+  color: var(--pink);
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.id-empty-courses h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin: 0;
+}
+
+.id-empty-courses p {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+}
 
 /* ========================================
    Responsive
