@@ -1,6 +1,7 @@
 const Course = require('../models/Course');
 const User = require('../models/User');
 const Payment = require('../models/payment');
+const bcrypt = require("bcryptjs");
 //const upload = require('../config/cloudinary');
 
 // ─── DASHBOARD ────────────────────────────────────────────────
@@ -119,20 +120,107 @@ exports.getEditProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    const { name, username, email, bio, location, avatar } = req.body;
+    const {
+      name,
+      username,
+      email,
+      bio,
+      location,
+      avatar,
+      currentPassword,
+      newPassword,
+      confirmPassword
+    } = req.body;
 
-    const updateData = { name, username, email, bio, location, avatar };
+    const userId = req.session.user._id;
 
-    // If a new avatar was uploaded, update it
-    if (req.file) {
-      updateData.avatar = req.file.path;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.redirect("/auth/login");
     }
 
-    await User.findByIdAndUpdate(req.session.user._id, updateData);
-    res.redirect('/instructor/profile');
+    const updateData = {
+      name: name?.trim(),
+      email: email?.trim(),
+      bio: bio?.trim(),
+      location: location?.trim(),
+      avatar
+    };
+
+    if (username && username.trim()) {
+      const usernameExists = await User.findOne({
+        username: username.trim(),
+        _id: { $ne: userId }
+      });
+
+      if (usernameExists) {
+        return res.render("shared/edit-profile", {
+          user,
+          errors: ["Username is already taken."]
+        });
+      }
+
+      updateData.username = username.trim();
+    } else {
+      updateData.$unset = { username: "" };
+    }
+
+    if (email && email.trim()) {
+      const emailExists = await User.findOne({
+        email: email.trim(),
+        _id: { $ne: userId }
+      });
+
+      if (emailExists) {
+        return res.render("shared/edit-profile", {
+          user,
+          errors: ["Email is already used by another account."]
+        });
+      }
+    }
+
+    if (currentPassword || newPassword || confirmPassword) {
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        return res.render("shared/edit-profile", {
+          user,
+          errors: ["Please fill all password fields."]
+        });
+      }
+
+      if (newPassword !== confirmPassword) {
+        return res.render("shared/edit-profile", {
+          user,
+          errors: ["New passwords do not match."]
+        });
+      }
+
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.render("shared/edit-profile", {
+          user,
+          errors: ["Current password is incorrect."]
+        });
+      }
+
+      updateData.password = await bcrypt.hash(newPassword, 10);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+      runValidators: true
+    });
+
+    req.session.user = {
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role
+    };
+
+    res.redirect("/instructor/profile");
   } catch (err) {
-    console.error(err);
-    res.status(500).render('error');
+    console.error("Instructor update profile error:", err);
+    res.status(500).send("Failed to update profile.");
   }
 };
 
@@ -148,7 +236,20 @@ exports.getCreateStep1 = async (req, res) => {
       isPublished: false
     });
 
-    res.render('instructor/create-step1', { draft, errors: [] });
+   res.render('instructor/create-step1', {
+  draft,
+  errors: [],
+  title: 'Create New Course - EduPlatform',
+  basePath: '/',
+  pageTitle: 'Create New Course',
+  pageDescription: 'Share your knowledge with students worldwide',
+  courseTitle: draft?.title || '',
+  shortDescription: draft?.shortDescription || '',
+  fullDescription: draft?.fullDescription || '',
+  category: draft?.category || 'Web Development',
+  level: draft?.level || 'Beginner',
+  submitButtonText: 'Next: Add Curriculum'
+});
   } catch (err) {
     console.error(err);
     res.status(500).render('error');
@@ -165,7 +266,7 @@ exports.postCreateStep1 = async (req, res) => {
       isPublished: false
     });
 
-    const thumbnailUrl = req.file ? req.file.path : (course ? course.thumbnail : '');
+const thumbnailUrl = req.file ? `/uploads/${req.file.filename}` : (course?.thumbnail || '');
 
     if (course) {
       // Update existing draft
@@ -195,7 +296,9 @@ exports.postCreateStep1 = async (req, res) => {
     res.redirect('/instructor/create/step2');
   } catch (err) {
     console.error(err);
-    res.status(500).render('error');
+    res.status(500).render('public/page-404', {
+  message: 'Failed to create course'
+});
   }
 };
 
@@ -221,23 +324,31 @@ exports.getCreateStep2 = async (req, res) => {
 
 exports.postCreateStep2 = async (req, res) => {
   try {
-    const { learningOutcomes, sections } = req.body;
-
-    // learningOutcomes comes as a string with one per line
-    const outcomesArray = learningOutcomes
-      .split('\n')
-      .map(o => o.trim())
-      .filter(o => o);
-
-    // sections comes as a JSON string from the frontend
-    const sectionsArray = JSON.parse(sections);
-
     const draft = await Course.findOne({
       instructor: req.session.user._id,
-      isPublished : false
+      isPublished: false
     });
 
     if (!draft) return res.redirect('/instructor/create/step1');
+
+    // outcomes[] comes as array from form
+    let outcomesArray = req.body['outcomes[]'] || req.body.outcomes || [];
+    if (!Array.isArray(outcomesArray)) outcomesArray = [outcomesArray];
+    outcomesArray = outcomesArray.map(o => o.trim()).filter(o => o);
+
+    // sections come as sections[0][title], sections[0][lessons][] etc.
+    const rawSections = req.body.sections || {};
+    const sectionsArray = Object.keys(rawSections).map(i => {
+      const sec = rawSections[i];
+      let lessons = sec.lessons || [];
+      if (!Array.isArray(lessons)) lessons = [lessons];
+      return {
+        title: sec.title || '',
+        lessons: lessons
+          .map(l => ({ title: l.trim() }))
+          .filter(l => l.title)
+      };
+    }).filter(s => s.title);
 
     await Course.findByIdAndUpdate(draft._id, {
       learningOutcomes: outcomesArray,
@@ -247,9 +358,10 @@ exports.postCreateStep2 = async (req, res) => {
     res.redirect('/instructor/create/step3');
   } catch (err) {
     console.error(err);
-    res.status(500).render('error');
+    res.status(500).render('public/page-404', { message: 'Failed to save curriculum' });
   }
 };
+
 
 // ─── CREATE COURSE — STEP 3 ───────────────────────────────────
 // Collects: price, duration — shows preview — final publish
@@ -276,24 +388,27 @@ exports.postCreateStep3 = async (req, res) => {
 
     const draft = await Course.findOne({
       instructor: req.session.user._id,
-      isPublished : false
+      isPublished: false
     });
 
     if (!draft) return res.redirect('/instructor/create/step1');
 
-    // Final save — change status from draft to published
     await Course.findByIdAndUpdate(draft._id, {
       price: Number(price),
       duration,
-      isPublished : true
+      isPublished: true
     });
 
-    res.redirect('/instructor/dashboard');
+    // RENDER success page instead of redirect
+    res.render('instructor/page-created', {
+      courseTitle: draft.title
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).render('error');
+    res.status(500).render('public/page-404', { message: 'Failed to publish course' });
   }
 };
+
 
 // ─── EDIT COURSE ──────────────────────────────────────────────
 
@@ -317,31 +432,41 @@ exports.updateCourse = async (req, res) => {
   try {
     const { title, shortDescription, fullDescription, category, level, price, duration } = req.body;
 
-    const updateData = {
-      title,
-      shortDescription,
-      fullDescription,
-      category,
-      level,
-      price,
-      duration
-    };
+    const updateData = { title, shortDescription, fullDescription, category, level, price, duration };
 
     if (req.file) {
-      updateData.thumbnail = req.file.path;
+      updateData.thumbnail = `/uploads/${req.file.filename}`;
     }
+
+    // outcomes
+    let outcomesArray = req.body['outcomes[]'] || req.body.outcomes || [];
+    if (!Array.isArray(outcomesArray)) outcomesArray = [outcomesArray];
+    updateData.learningOutcomes = outcomesArray.map(o => o.trim()).filter(o => o);
+
+    // sections
+    const rawSections = req.body.sections || {};
+    updateData.sections = Object.keys(rawSections).map(i => {
+      const sec = rawSections[i];
+      let lessons = sec.lessons || [];
+      if (!Array.isArray(lessons)) lessons = [lessons];
+      return {
+        title: sec.title || '',
+        lessons: lessons.map(l => ({ title: l.trim() })).filter(l => l.title)
+      };
+    }).filter(s => s.title);
 
     await Course.findOneAndUpdate(
       { _id: req.params.id, instructor: req.session.user._id },
       updateData
     );
 
-    res.redirect('/instructor/dashboard');
+    res.redirect(`/courses/${req.params.id}`);
   } catch (err) {
     console.error(err);
     res.status(500).render('error');
   }
 };
+
 
 // ─── DELETE COURSE ────────────────────────────────────────────
 

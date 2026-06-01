@@ -20,11 +20,16 @@ router.get("/users",                         controller.getUsers);
 router.post("/users/change-role",            controller.changeRole);
 router.post("/users/toggle-suspend/:userId", controller.toggleSuspend);
 router.get("/manage-challenges",             controller.getChallenges);
+router.post("/manage-challenges/:id/delete", controller.deleteChallenge);
+router.post("/manage-challenges/:id/restore", controller.restoreChallenge);
+router.post("/manage-challenges/:id/permanent-delete", controller.permanentlyDeleteChallenge);
 router.get("/instructor-applications", controller.getInstructorApplications);
 router.post("/instructor-applications/:userId/approve", controller.approveInstructor);
 router.post("/instructor-applications/:userId/reject", controller.rejectInstructor);
 router.get("/create-challenge",              controller.getCreateChallenge);
 router.post("/create-challenge", controller.postCreateChallenge);
+router.get("/challenges/:id/edit", controller.getEditChallenge);
+router.post("/challenges/:id/edit", controller.postEditChallenge);
 router.post("/generate-challenge", aiController.generateChallengeDraft);
 
 module.exports = router;

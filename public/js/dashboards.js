@@ -589,7 +589,16 @@ document.addEventListener('DOMContentLoaded', () => {
   } 
 
 }); 
-function activateInstructor() {
+
+function showActivateModal() {
+  document.getElementById('activateModal').style.display = 'flex';
+}
+
+function closeActivateModal() {
+  document.getElementById('activateModal').style.display = 'none';
+}
+
+function confirmActivate() {
   fetch('/student/activate-instructor', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' }
@@ -597,13 +606,18 @@ function activateInstructor() {
   .then(response => response.json())
   .then(data => {
     if (data.success) {
-      window.location.href = data.redirectUrl;
+      window.location.href = '/auth/login';
     } else {
       alert(data.message);
+      closeActivateModal();
     }
   })
-  .catch(err => alert('Something went wrong: ' + err.message)); // ← add this
+  .catch(err => {
+    alert('Something went wrong: ' + err.message);
+    closeActivateModal();
+  });
 }
+
 
 function showRejectionReason(btn) {
   const card = btn.closest('.instructor-status-card');

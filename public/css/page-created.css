@@ -1,0 +1,106 @@
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0A0E27;
+    color: #FFFFFC;
+    min-height: 100vh;
+  }
+
+  .success-wrapper {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 80px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .success-icon {
+    font-size: 56px;
+    margin-bottom: 24px;
+  }
+
+  .success-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: #FFFFFC;
+  }
+
+  .success-subtitle {
+    font-size: 1rem;
+    color: #BDC2C9;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  .countdown-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .countdown-ring {
+    position: relative;
+    width: 72px;
+    height: 72px;
+  }
+
+  .ring-bg {
+    fill: none;
+    stroke: rgba(255,255,255,0.08);
+    stroke-width: 4;
+  }
+
+  .ring-progress {
+    fill: none;
+    stroke: #FF40A0;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 201;
+    stroke-dashoffset: 0;
+    transform: rotate(-90deg);
+    transform-origin: center;
+    transition: stroke-dashoffset 1s linear;
+  }
+
+  .countdown-number {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #FFFFFC;
+  }
+
+  .countdown-text {
+    font-size: 0.875rem;
+    color: #BDC2C9;
+  }
+
+  .btn-dashboard {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #FF40A0, #FFB7E6);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(255, 64, 160, 0.35);
+    transition: opacity 0.2s, transform 0.15s;
+  }
+
+  .btn-dashboard:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+

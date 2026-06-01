@@ -168,7 +168,7 @@
               <div class="status-content">
                 <h3>Application Approved</h3>
               </div>
-              <button onclick="activateInstructor()" class="btn-primary">Activate</button>
+   <button onclick="showActivateModal()" class="btn-signup">Activate</button>
             </div>
           <% } else if (user.instructorStatus === 'pending') { %>
             <div class="instructor-status-card pending">
@@ -211,6 +211,27 @@
         <button onclick="closeReasonModal()" class="btn-close">Close</button>
       </div>
     </div>
+    <!-- Activate Instructor Confirmation Modal -->
+<div id="activateModal" class="reason-modal" style="display: none;">
+  <div class="reason-modal-content activate-modal-content">
+    <div class="activate-modal-icon">
+      <i class="fa-solid fa-chalkboard-user"></i>
+    </div>
+    <h3>Become an Instructor</h3>
+    <p>You're about to switch your account to <strong>Instructor mode</strong>.</p>
+    <ul class="activate-modal-list">
+      <li><i class="fa-solid fa-circle-check"></i> You'll be redirected to log in again</li>
+      <li><i class="fa-solid fa-circle-check"></i> Your student progress is saved</li>
+      <li><i class="fa-solid fa-circle-check"></i> You'll land on your Instructor Dashboard</li>
+    </ul>
+    <p class="activate-modal-note">This action cannot be undone from the student side.</p>
+    <div class="activate-modal-actions">
+      <button onclick="closeActivateModal()" class="btn-close">Cancel</button>
+      <button onclick="confirmActivate()" class="btn-signup">Yes, Activate</button>
+    </div>
+  </div>
+</div>
+
   <script src="/js/dashboards.js"></script>
 </body>
 </html>

@@ -154,6 +154,42 @@ exports.getChallenges = async (req, res) => {
     res.render("admin/manage-challenges", { challenges: [], recentlyDeleted: [] });
   }
 };
+exports.deleteChallenge = async (req, res) => {
+  try {
+    await Challenge.findByIdAndUpdate(req.params.id, {
+      deletedAt: new Date()
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("deleteChallenge error:", err);
+    res.status(500).json({ success: false, message: "Failed to delete challenge." });
+  }
+};
+
+exports.restoreChallenge = async (req, res) => {
+  try {
+    await Challenge.findByIdAndUpdate(req.params.id, {
+      deletedAt: null
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("restoreChallenge error:", err);
+    res.status(500).json({ success: false, message: "Failed to restore challenge." });
+  }
+};
+
+exports.permanentlyDeleteChallenge = async (req, res) => {
+  try {
+    await Challenge.findByIdAndDelete(req.params.id);
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("permanentlyDeleteChallenge error:", err);
+    res.status(500).json({ success: false, message: "Failed to permanently delete challenge." });
+  }
+};
 exports.getInstructorApplications = async (req, res) => {
   try {
     const users = await User.find({ 
@@ -283,7 +319,10 @@ exports.login = (req, res) => {
 
 exports.getCreateChallenge = async (req, res) => {
   try {
-    res.render("admin/create-challenge");
+    res.render("admin/create-challenge", {
+      mode: "create",
+      challenge: null
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");
@@ -339,7 +378,79 @@ exports.postCreateChallenge = async (req, res) => {
     res.status(500).json({ message: "Failed to save challenge." });
   }
 };
+exports.getEditChallenge = async (req, res) => {
+  try {
+    const challenge = await Challenge.findById(req.params.id);
 
+    if (!challenge) {
+      return res.status(404).send("Challenge not found");
+    }
+
+    res.render("admin/create-challenge", {
+      mode: "edit",
+      challenge
+    });
+  } catch (err) {
+    console.error("getEditChallenge error:", err);
+    res.status(500).send("Server error");
+  }
+};
+exports.postEditChallenge = async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      difficulty,
+      category,
+      points,
+      starterCode,
+      testCases,
+      isPublished
+    } = req.body;
+
+    if (!title || !description || !difficulty || !category) {
+      return res.status(400).json({ message: "Missing required fields." });
+    }
+
+    if (!Array.isArray(testCases) || testCases.length === 0) {
+      return res.status(400).json({ message: "At least one test case is required." });
+    }
+
+    const normalizedDifficulty = String(difficulty).toLowerCase();
+
+    if (!["easy", "medium", "hard"].includes(normalizedDifficulty)) {
+      return res.status(400).json({ message: "Invalid difficulty value." });
+    }
+
+    const updatedChallenge = await Challenge.findByIdAndUpdate(
+      req.params.id,
+      {
+        title: title.trim(),
+        description: description.trim(),
+        difficulty: normalizedDifficulty,
+        category: category.trim(),
+        points: Number(points) || 100,
+        starterCode: starterCode || "// Write your solution here\n",
+        testCases,
+        isPublished: Boolean(isPublished)
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedChallenge) {
+      return res.status(404).json({ message: "Challenge not found." });
+    }
+
+    res.json({
+      success: true,
+      message: "Challenge updated successfully.",
+      challengeId: updatedChallenge._id
+    });
+  } catch (err) {
+    console.error("postEditChallenge error:", err);
+    res.status(500).json({ message: "Failed to update challenge." });
+  }
+};
 /* =========================
    LOGOUT
    ========================= */

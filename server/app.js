@@ -29,6 +29,8 @@ app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, "../public")));   //added
 app.use("/images", express.static(path.join(__dirname, "../images")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -53,7 +55,7 @@ app.use("/",           publicRoutes);
 
 app.get("/me", (req, res) => res.json(req.session.user || null));
 app.get("/dashboard", (req, res) => {
-  const role = req.session.user?.role;
+ const role = req.session.role;
   const dashboards = {
     student:    "/student/dashboard",
     instructor: "/instructor/dashboard",

@@ -14,15 +14,12 @@
   <main class="main-content">
 
     <!-- Welcome Section -->
-    <section class="id-welcome-section">
-      <div>
-        <h1 class="welcome-title">Welcome, <%= instructor.name %>!</h1>
-        <p class="welcome-subtitle"><%= instructor.welcomeMessage %></p>
-      </div>
-      <a href="/create-course" class="id-btn-create">
-        <i class="fa-solid fa-plus"></i> Create New Course
-      </a>
-    </section>
+ <section class="id-welcome-section">
+  <div>
+    <h1 class="welcome-title">Welcome, <%= instructor.name %>!</h1>
+    <p class="welcome-subtitle"><%= instructor.welcomeMessage %></p>
+  </div>
+</section>
 
     <!-- Stats Grid -->
     <section class="stats-grid">
@@ -88,24 +85,59 @@
 
     </div>
 
-    <!-- Your Courses -->
-    <section class="section-block">
-      <h2 class="section-title" style="margin-bottom: 20px;">Your Courses</h2>
-      <% courses.forEach(function(course) { %>
-      <div class="id-course-card">
-        <img src="<%= course.thumbnail %>" alt="<%= course.title %>" class="course-thumb" />
-        <div class="id-course-info">
-          <h3 class="course-progress-title"><%= course.title %></h3>
-          <div class="id-course-meta">
-            <span><i class="fa-solid fa-users"></i> <%= course.students.length.toLocaleString() %> students</span>
-            <span><i class="fa-solid fa-star"></i> <%= course.rating %></span>
-            <span>$<%= course.price %></span>
-          </div>
-        </div>
-        <a href="/course-description" class="id-btn-view">View Details</a>
+   <!-- Your Courses -->
+<section class="section-block">
+  <div class="section-header">
+    <h2 class="section-title" style="margin-bottom: 0;">Your Courses</h2>
+    <a href="/instructor/create/step1" class="id-btn-create">
+      <i class="fa-solid fa-plus"></i> Create New Course
+    </a>
+  </div>
+
+<% if (!courses || courses.length === 0) { %>
+    <div class="id-empty-courses">
+      <div class="id-empty-icon">
+        <i class="fa-solid fa-book-open"></i>
       </div>
-      <% }); %>
-    </section>
+      <h3>No courses yet</h3>
+      <p>Create your first course and start sharing your knowledge.</p>
+    </div>
+  <% } else { %>
+    <% courses.forEach(function(course) { %>
+    <div class="id-course-card">
+      <img src="<%= course.thumbnail %>" alt="<%= course.title %>" class="course-thumb" />
+      <div class="id-course-info">
+        <h3 class="course-progress-title"><%= course.title %></h3>
+        <div class="id-course-meta">
+          <span><i class="fa-solid fa-users"></i> <%= course.students.length.toLocaleString() %> students</span>
+          <span><i class="fa-solid fa-star"></i> <%= course.rating %></span>
+          <span>$<%= course.price %></span>
+        </div>
+      </div>
+      <a href="/courses/<%= course._id %>" class="id-btn-view">View Details</a>
+      <form action="/instructor/courses/<%= course._id %>/delete" method="POST"
+        onsubmit="return confirm('Delete this course? This cannot be undone.')">
+        <button type="submit" style="
+          background: rgba(255,64,160,0.12);
+          border: 1px solid rgba(255,64,160,0.3);
+          color: #FF40A0;
+          padding: 10px 18px;
+          border-radius: 8px;
+          font-size: 0.875rem;
+          font-weight: 600;
+          cursor: pointer;
+          font-family: inherit;
+        ">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </form>
+    </div>
+    <% }); %>
+  <% } %>
+</section>
+
+
+
 
   </main>
 

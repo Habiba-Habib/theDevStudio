@@ -109,27 +109,30 @@
     
         <form id="verificationForm" action="/become-instructor/step3" method="POST">
 
-    <div class="card" id="agreementCard">
-      <h2 class="card-title">Agreement</h2>
+<div class="card" id="agreementCard">
+  <h2 class="card-title">Agreement</h2>
 
-      <label class="checkbox-row">
-        <input type="checkbox" id="chkAccurate" class="checkbox-input" />
-        <span class="checkbox-box"></span>
-        <span class="checkbox-text">
-          <strong>I confirm all submitted information is accurate</strong>
-          <span class="checkbox-hint">I understand that providing false information may result in account suspension</span>
-        </span>
-      </label>
+  <label class="checkbox-row">
+    <input type="checkbox" id="chkAccurate" class="checkbox-input" />
+    <span class="checkbox-box"></span>
+    <span class="checkbox-text">
+      <strong>I confirm all submitted information is accurate</strong>
+      <span class="checkbox-hint">I understand that providing false information may result in account suspension</span>
+    </span>
+  </label>
 
-      <label class="checkbox-row">
-        <input type="checkbox" id="chkPolicies" class="checkbox-input" />
-        <span class="checkbox-box"></span>
-        <span class="checkbox-text">
-          <strong>I agree to instructor platform policies</strong>
-          <span class="checkbox-hint">Including content guidelines, student interaction policies, and payment terms</span>
-        </span>
-      </label>
-        </div>
+  <label class="checkbox-row">
+    <input type="checkbox" id="chkPolicies" class="checkbox-input" />
+    <span class="checkbox-box"></span>
+    <span class="checkbox-text">
+      <strong>I agree to the 
+        <button type="button" class="policy-link-btn" id="open-instructor-policy">Instructor Platform Policies</button>
+      </strong>
+      <span class="checkbox-hint">Including content guidelines, student interaction policies, and payment terms</span>
+    </span>
+  </label>
+</div>
+
 
     <input type="hidden" name="agreeAccurate" id="agreeAccurateHidden" value="" />
     <input type="hidden" name="agreePolicies" id="agreePoliciesHidden" value="" />
@@ -142,6 +145,40 @@
     </form>
 
   </main>
+  <!-- Instructor Policy Modal -->
+<div class="instr-policy-modal hidden" id="instructor-policy-modal">
+  <div class="instr-policy-card">
+    <button type="button" class="instr-policy-close" id="instr-policy-close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <h3>Instructor Platform Policies</h3>
+    <div class="instr-policy-body">
+      <p><strong>Content Guidelines</strong></p>
+      <ul>
+        <li>All course content must be original or properly licensed</li>
+        <li>No harmful, offensive, or misleading material is permitted</li>
+        <li>Courses must meet minimum quality standards before publishing</li>
+      </ul>
+      <p><strong>Student Interaction</strong></p>
+      <ul>
+        <li>Respond to student questions within a reasonable timeframe</li>
+        <li>Maintain professional and respectful communication at all times</li>
+        <li>Do not solicit students outside the platform</li>
+      </ul>
+      <p><strong>Payment Terms</strong></p>
+      <ul>
+        <li>Revenue share is calculated monthly based on enrollments</li>
+        <li>Payouts are processed after a 30-day holding period</li>
+        <li>Refund requests from students may affect your earnings</li>
+      </ul>
+      <a href="/auth/terms-of-services" target="_blank" rel="noopener noreferrer" class="instr-policy-full-link">
+        Read full Terms of Service
+      </a>
+    </div>
+    <button type="button" class="instr-policy-close-btn" id="instr-policy-close-btn">Close</button>
+  </div>
+</div>
+
 
   <script src="/js/become-instructor3.js"></script>
 </body>

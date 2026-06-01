@@ -97,7 +97,7 @@
           <% section.lessons.forEach(lesson => { %>
             <div class="learn-lesson">
               <div class="play-button">▷</div>
-              <%= lesson %>
+            <%= lesson.title %>
             </div>
           <% }) %>
         </div>
@@ -105,32 +105,12 @@
       </div>
     <% }) %>
 
-    <!-- REVIEWS (static for now) -->
-    <h3 class="learn-title">Student Reviews</h3>
+<h3 class="learn-title">Student Reviews</h3>
+<div class="learn-box" style="text-align: center; padding: 32px; color: var(--text-muted);">
+  <i class="fa-regular fa-star" style="font-size: 1.5rem; margin-bottom: 8px; display: block;"></i>
+  No reviews yet. Be the first to review this course.
+</div>
 
-    <div class="learn-box">
-      <div class="learn-box-line1">
-
-        <div class="Instructor">
-          <div class="avatar">
-            <img src="/images/default-avatar.png">
-          </div>
-          <div>
-            <div class="Instructor-Name">John Doe</div>
-            <div class="title">2026-02-15</div>
-          </div>
-        </div>
-
-        <div>
-          <i class="fa-solid fa-star" style="color: rgb(255, 212, 59);"></i> 5
-        </div>
-
-      </div>
-
-      <p class="course-description">
-        Amazing course! Very detailed and easy to follow.
-      </p>
-    </div>
 
   </div>
 
@@ -140,7 +120,22 @@
     <div class="pricing-card">
 
       <div class="pricing-top">
-        <% if (!isEnrolled) { %>
+<% if (isOwner) { %>
+  <div class="owner-top">
+    <div class="owner-icon">
+      <i class="fa-solid fa-graduation-cap"></i>
+    </div>
+    <h3 class="owner-title">Your Course</h3>
+    <p class="owner-desc">Edit content, manage students, and track performance.</p>
+  </div>
+  <a href="/instructor/courses/<%= course._id %>/edit" class="btn-enroll">
+    <i class="fa-solid fa-pen-to-square"></i> Edit Course
+  </a>
+
+
+
+
+<% }else if (!isEnrolled) { %>
           <div class="price">$<%= course.price %></div>
           <div class="price-note">One-time payment • Full lifetime access</div>
           <a href="/student/payment/<%= course._id %>" class="btn-enroll">

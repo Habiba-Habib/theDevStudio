@@ -36,7 +36,7 @@
       color: var(--text-white);
     }
 
-    .course-decription {
+    .course-description {
       font-size: 16px;
       color: var(--text-muted);
       margin-bottom: 48px;
@@ -90,59 +90,70 @@
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     .form-input::placeholder { color: var(--text-muted); }
-    .form-input:focus {
-      border-color: var(--pink);
-      box-shadow: 0 0 0 3px rgba(255,64,160,0.1);
-    }
+.form-input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(96,163,166,0.15);
+}
 
-    /* ── STEPPER ── */
     .stepper {
-      display: flex;
-      align-items: center;
-      margin-bottom: 48px;
-    }
-    .step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-    .step-circle {
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      font-weight: 700;
-    }
-    .step.active .step-circle {
-      background: linear-gradient(135deg, var(--pink), var(--pink-light));
-      color: white;
-      box-shadow: 0 0 20px rgba(255,64,160,0.4);
-    }
-    .step.inactive .step-circle {
-      background: var(--surface);
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-    }
-    .step-label {
-      font-size: 13px;
-      color: var(--text-muted);
-      white-space: nowrap;
-    }
-    .step.active .step-label {
-      color: var(--text-white);
-      font-weight: 500;
-    }
-    .step-line {
-      flex: 1;
-      height: 1px;
-      margin: 0 16px;
-      margin-bottom: 24px;
-    }
-    .step-line.done { background: var(--pink); }
-    .step-line.pending { background: var(--border); }
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 48px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.step-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.step.active .step-circle {
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  color: white;
+  box-shadow: 0 0 20px rgba(255,64,160,0.4);
+}
+
+.step.inactive .step-circle {
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.step-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.step.active .step-label {
+  color: var(--text-white);
+  font-weight: 500;
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  margin-top: 22px;
+}
+
+.step-line.done    { background: var(--pink); }
+.step-line.pending { background: var(--border); }
+
 
     /* ── COURSE PREVIEW CARD ── */
     .preview-card {
@@ -198,19 +209,26 @@
     .btn-back:hover { border-color: var(--text-muted); }
 
     .btn-publish {
-      background: linear-gradient(90deg, var(--teal), var(--yellow));
+ background: linear-gradient(135deg, var(--pink), var(--pink-light));
       border: none;
       border-radius: 12px;
       padding: 18px;
       font-size: 16px;
       font-weight: 700;
-      color: var(--bg);
+     color: #fff;
       font-family: var(--font);
       cursor: pointer;
       transition: opacity 0.2s, transform 0.15s;
     }
     .btn-publish:hover { opacity: 0.9; transform: translateY(-1px); }
     .btn-publish:active { transform: translateY(0); }
+    .btn-back {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
     @media (max-width: 640px) {
       .page-wrapper { padding: 40px 20px 60px; }
