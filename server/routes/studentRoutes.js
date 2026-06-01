@@ -1,7 +1,8 @@
 const express = require("express");
-const router = express.Router();
-const User = require("../models/User");
-const Course = require("../models/Course");
+const router  = express.Router();
+const bcrypt  = require("bcryptjs");
+const User    = require("../models/User");
+const Course  = require("../models/Course");
 const studentController = require("../controllers/studentController");
 
 function requireStudentSession(req, res, next) {
@@ -138,28 +139,77 @@ router.get("/profile", async (req, res) => {
 
 router.get("/edit-profile", async (req, res) => {
   if (!req.session.userId) return res.redirect("/auth/login");
-
   const user = await User.findById(req.session.userId);
-  res.render("shared/edit-profile", { user });
+  res.render("shared/edit-profile", { user, errors: [] });
 });
 
 router.post("/edit-profile", async (req, res) => {
   if (!req.session.userId) return res.redirect("/auth/login");
 
-  const { name, fullname, username, email, bio, location, avatar } = req.body;
+  const { name, username, email, bio, location, avatar,
+          currentPassword, newPassword, confirmPassword } = req.body;
 
-  await User.findByIdAndUpdate(req.session.userId, {
-    name: name || fullname,
-    fullname,
-    username,
-    email,
+  const user = await User.findById(req.session.userId);
+  if (!user) return res.redirect("/auth/login");
+
+  const updateData = {
+    name:       name || user.name,
+    username:   username || user.username,
+    email:      email || user.email,
     bio,
     location,
     avatar,
     lastActive: new Date(),
-  });
+  };
 
-  res.redirect("/student/profile");
+  // ── password change ──
+  if (currentPassword || newPassword || confirmPassword) {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.render("shared/edit-profile", {
+        user, errors: ["Please fill all password fields."]
+      });
+    }
+    if (newPassword !== confirmPassword) {
+      return res.render("shared/edit-profile", {
+        user, errors: ["New passwords do not match."]
+      });
+    }
+    if (newPassword.length < 8) {
+      return res.render("shared/edit-profile", {
+        user, errors: ["Password must be at least 8 characters."]
+      });
+    }
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.render("shared/edit-profile", {
+        user, errors: ["Current password is incorrect."]
+      });
+    }
+    updateData.password = await bcrypt.hash(newPassword, 10);
+  }
+
+  try {
+    const updated = await User.findByIdAndUpdate(
+      req.session.userId, updateData, { new: true }
+    );
+
+    // update session so navbar reflects changes immediately
+    req.session.user = {
+      ...req.session.user,
+      name:   updated.name,
+      email:  updated.email,
+      avatar: updated.avatar,
+      role:   updated.role,
+    };
+
+    res.redirect("/student/profile");
+  } catch (err) {
+    console.error(err);
+    const errors = err.code === 11000
+      ? ["Email or username is already taken."]
+      : ["Something went wrong. Please try again."];
+    res.render("shared/edit-profile", { user, errors });
+  }
 });
 
 module.exports = router;

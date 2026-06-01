@@ -345,7 +345,13 @@ exports.postCreateStep2 = async (req, res) => {
       return {
         title: sec.title || '',
         lessons: lessons
-          .map(l => ({ title: l.trim() }))
+          .map(l => ({
+            title:    l.trim(),
+            type:     'video',
+            videoUrl: '',
+            content:  '',
+            duration: ''
+          }))
           .filter(l => l.title)
       };
     }).filter(s => s.title);
@@ -451,7 +457,13 @@ exports.updateCourse = async (req, res) => {
       if (!Array.isArray(lessons)) lessons = [lessons];
       return {
         title: sec.title || '',
-        lessons: lessons.map(l => ({ title: l.trim() })).filter(l => l.title)
+        lessons: lessons.map(l => ({
+          title:    l.trim(),
+          type:     'video',
+          videoUrl: '',
+          content:  '',
+          duration: ''
+        })).filter(l => l.title)
       };
     }).filter(s => s.title);
 

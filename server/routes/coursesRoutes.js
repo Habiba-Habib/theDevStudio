@@ -6,12 +6,28 @@ const mongoose = require('mongoose');
 
 router.get('/all-courses', async (req, res, next) => {
   try {
+    const userId = req.session.userId || req.session.user?._id || null;
+
+    let enrolledCourseIds = new Set();
+    if (userId) {
+      const user = await User.findById(userId).select('enrolledCourses');
+      (user?.enrolledCourses || []).forEach(e => {
+        if (e.course) enrolledCourseIds.add(e.course.toString());
+      });
+    }
+
     const courses = await Course.find({ isPublished: true })
       .populate("instructor", "name");
 
-    const currentUserId = req.session.userId || req.session.user?._id || null;
+    const filteredCourses = courses.filter(c => {
+      // remove if in user.enrolledCourses
+      if (enrolledCourseIds.has(c._id.toString())) return false;
+      // remove if user is in course.students
+      if (userId && c.students.some(s => s.toString() === userId.toString())) return false;
+      return true;
+    });
 
-    res.render('guest/all-courses', { courses, currentUserId });
+    res.render('guest/all-courses', { courses: filteredCourses, currentUserId: userId });
   } catch (err) {
     next(err);
   }
