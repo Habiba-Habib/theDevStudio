@@ -31,9 +31,7 @@
   const isActiveDone = activeLesson && completedLessons.includes(activeLesson._id.toString());
   const sidebarPct   = totalLessons > 0 ? Math.round((completedLessons.length / totalLessons) * 100) : 0;
 %>
-<% console.log('activeLesson resources:', JSON.stringify(activeLesson?.resources)); %> <!-- add this line -->
 
-<% console.log('full activeLesson:', JSON.stringify(activeLesson)); %> //added
 <!-- ── COURSE HEADER (below navbar) ── -->
 <div class="course-header">
   <div class="ch-left">
@@ -47,7 +45,7 @@
     <span class="ch-prog-pct" id="topbarPct"><%= enrollment.progress %>%</span>
   </div>
   <div class="ch-bar">
-    <div class="ch-bar-fill" id="topbarFill" style="width:<%= enrollment.progress %>%"></div>
+    <div class="ch-bar-fill" id="topbarFill" style="<%= 'width:' + (enrollment.progress || 0) + '%' %>"></div>
   </div>
 </div>
 
@@ -190,7 +188,7 @@
           <span class="sidebar-prog-count" id="sidebarCount"><%= completedLessons.length %>/<%= totalLessons %></span>
         </div>
         <div class="sidebar-prog-track">
-          <div class="sidebar-prog-fill" id="sidebarFill" style="width:<%= sidebarPct %>%"></div>
+          <div class="sidebar-prog-fill" id="sidebarFill" style="<%= 'width:' + (sidebarPct || 0) + '%' %>"></div>
         </div>
       </div>
 

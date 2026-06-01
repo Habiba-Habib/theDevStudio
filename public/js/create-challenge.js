@@ -261,7 +261,7 @@ saveBtn.addEventListener('click', async () => {
 cancelBtn.addEventListener('click', () => {
     history.back();
 });
-
+if (generateBtn) {
 generateBtn.addEventListener('click', async () => {
   generateBtn.disabled = true;
   generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating...';
@@ -314,7 +314,7 @@ generateBtn.addEventListener('click', async () => {
     generateBtn.disabled = false;
     generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generate';
   }
-});
+});}
 
 function showToast(message) {
     const existing = document.querySelector('.toast');
