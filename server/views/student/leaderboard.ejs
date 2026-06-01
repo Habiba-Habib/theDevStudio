@@ -5,9 +5,16 @@
     <title>Leaderboard</title>
     <link rel="stylesheet" href="/css/leaderboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  
+
     </head>
     <body>
+<%
+  function avatarUrl(avatar) {
+    if (!avatar) return '/images/avatars/avatar1g.png';
+    if (avatar.startsWith('/') || avatar.startsWith('http')) return avatar;
+    return '/images/avatars/' + avatar;
+  }
+%>
 <%- include('../partials/navbar') %>
 <div class="leaderboard-page">
 
@@ -25,21 +32,21 @@
     <div class="top-players">
 
     <div class="player-card second">
-        <img src="/images/avatars/<%= topPlayers[1].avatar %>" class="player-avatar">
+        <img src="<%= avatarUrl(topPlayers[1].avatar) %>" class="player-avatar">
         <div class="rank" style="color:#6ee7ff;">2</div>
         <h3><%= topPlayers[1].name %></h3>
         <p class="points"><%= topPlayers[1].points %> pts</p>
     </div>
 
     <div class="player-card first">
-        <img src="/images/avatars/<%= topPlayers[0].avatar %>" class="player-avatar">
+        <img src="<%= avatarUrl(topPlayers[0].avatar) %>" class="player-avatar">
         <div class="rank" style="color:#ff4da6;">1</div>
         <h3><%= topPlayers[0].name %></h3>
         <p class="points"><%= topPlayers[0].points %> pts</p>
     </div>
 
     <div class="player-card third">
-        <img src="/images/avatars/<%= topPlayers[2].avatar %>" class="player-avatar">
+        <img src="<%= avatarUrl(topPlayers[2].avatar) %>" class="player-avatar">
         <div class="rank" style="color:#effb6d;">3</div>
         <h3><%= topPlayers[2].name %></h3>
         <p class="points"><%= topPlayers[2].points %> pts</p>
@@ -66,7 +73,7 @@
 
       <div class="rank-number <%= index < 3 ? 'top' : '' %>"><%= index + 1 %></div>
 
-      <img src="/images/avatars/<%= player.avatar %>" class="rank-avatar">
+      <img src="<%= avatarUrl(player.avatar) %>" class="rank-avatar">
 
       <div class="rank-info">
         <div class="rank-name">

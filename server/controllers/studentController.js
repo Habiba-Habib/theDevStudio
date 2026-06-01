@@ -180,12 +180,15 @@ exports.getDashboard = async (req, res) => {
       .limit(5)
       .select("name avatar points");
 
-    const leaderboard = topUsers.map((user, index) => ({
-      name: user.name,
-      avatar: user.avatar || "/images/avatars/avatar1g.png",
-      points: user.points || 0,
-      rank: index + 1
-    }));
+    const leaderboard = topUsers.map((user, index) => {
+      const av = (user.avatar || 'avatar1g.png').replace(/^.*\//, '');
+      return {
+        name:   user.name,
+        avatar: '/images/avatars/' + av,
+        points: user.points || 0,
+        rank:   index + 1
+      };
+    });
 
     const rawChallenges = await Challenge.find({ isPublished: true })
       .sort({ createdAt: -1 })

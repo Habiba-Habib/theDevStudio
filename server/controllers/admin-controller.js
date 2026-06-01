@@ -10,7 +10,7 @@ exports.getDashboard = async (req, res) => {
     const recentUsers = await User.find().sort({ createdAt: -1 }).limit(5);
 
     const recentActivity = recentUsers.map(u => ({
-      avatar:         u.avatar || "/images/avatars/avatar1g.png",
+      avatar:         u.avatar || "avatar1g.png",
       userName:       u.name,
       action:         "joined the platform",
       highlight:      u.role.charAt(0).toUpperCase() + u.role.slice(1),
@@ -63,9 +63,20 @@ exports.getProfile = async (req, res) => {
   }
 };
 
+exports.getEditProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user._id) || req.session.user;
+    res.render("shared/edit-profile", { user, errors: [] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+};
+
 exports.updateProfile = async (req, res) => {
   try {
-    const { fullname, username, email, location, bio, avatar } = req.body;
+    const { fullname, username, email, location, bio } = req.body;
+    const avatar = (req.body.avatar || '').replace(/^.*\//, ''); // keep filename only
 
     await User.findByIdAndUpdate(req.session.user._id, {
       fullname, username, email, location, bio, avatar
@@ -76,13 +87,15 @@ exports.updateProfile = async (req, res) => {
       _id:   updated._id,
       name:  updated.name,
       email: updated.email,
-      role:  updated.role
+      role:  updated.role,
+      avatar: updated.avatar,
     };
 
-    res.json({ success: true, message: "Profile updated successfully." });
+    res.redirect('/admin/profile');
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: "Server error." });
+    const user = await User.findById(req.session.user._id);
+    res.render('shared/edit-profile', { user, errors: ['Something went wrong. Please try again.'] });
   }
 };
 
@@ -96,7 +109,7 @@ exports.getUsers = async (req, res) => {
       email:    u.email,
       role:     u.role.charAt(0).toUpperCase() + u.role.slice(1),
       status:   (u.status || "active").charAt(0).toUpperCase() + (u.status || "active").slice(1),
-      avatar:   u.avatar || "/images/avatars/avatar1g.png",
+      avatar:   u.avatar || "avatar1g.png",
       joinDate: u.createdAt
         ? u.createdAt.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
         : "N/A",
@@ -296,7 +309,7 @@ exports.getInstructorApplications = async (req, res) => {
       _id: u._id,
       name: u.name,
       email: u.email,
-      avatar: u.avatar || "/images/avatars/avatar1g.png",
+      avatar: u.avatar || "avatar1g.png",
       experience: u.instructorVerification?.experience || "N/A",
       expertise: u.instructorVerification?.expertise?.split(",").map(e => e.trim()) || [],
       applicationDate: u.instructorVerification?.submittedAt || u.createdAt,

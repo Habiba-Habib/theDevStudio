@@ -144,7 +144,7 @@ exports.updateProfile = async (req, res) => {
       email: email?.trim(),
       bio: bio?.trim(),
       location: location?.trim(),
-      avatar
+      avatar: (avatar || '').replace(/^.*\//, ''), // keep filename only
     };
 
     if (username && username.trim()) {

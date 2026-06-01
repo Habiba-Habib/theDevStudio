@@ -16,6 +16,8 @@ router.use((req, res, next) => {
 router.get("/dashboard",                     controller.getDashboard);
 router.get("/profile",                       controller.getProfile);
 router.post("/profile/update",               controller.updateProfile);
+router.get("/edit-profile",                  controller.getEditProfile);
+router.post("/edit-profile",                 controller.updateProfile);
 router.get("/users",                         controller.getUsers);
 router.post("/users/change-role",            controller.changeRole);
 router.get("/users/:userId/profile",         controller.getUserProfile);

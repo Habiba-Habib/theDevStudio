@@ -158,7 +158,7 @@ router.post("/edit-profile", async (req, res) => {
     email:      email || user.email,
     bio,
     location,
-    avatar,
+    avatar:     (avatar || '').replace(/^.*\//, ''), // keep filename only
     lastActive: new Date(),
   };
 
