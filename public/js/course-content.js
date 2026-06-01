@@ -8,6 +8,10 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.getElementById('tab-' + tab).classList.add('active');
   });
 });
+document.querySelectorAll('[data-progress]').forEach(el => {
+  const progress = Number(el.dataset.progress) || 0;
+  el.style.width = `${progress}%`;
+});
 
 // ── MARK AS COMPLETE ──
 const btnComplete = document.getElementById('btnComplete');

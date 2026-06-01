@@ -45,7 +45,7 @@
     <span class="ch-prog-pct" id="topbarPct"><%= enrollment.progress %>%</span>
   </div>
   <div class="ch-bar">
-    <div class="ch-bar-fill" id="topbarFill" style="<%= 'width:' + (enrollment.progress || 0) + '%' %>"></div>
+    <div class="ch-bar-fill" id="topbarFill" data-progress="<%= enrollment.progress || 0 %>"></div>
   </div>
 </div>
 
@@ -188,7 +188,7 @@
           <span class="sidebar-prog-count" id="sidebarCount"><%= completedLessons.length %>/<%= totalLessons %></span>
         </div>
         <div class="sidebar-prog-track">
-          <div class="sidebar-prog-fill" id="sidebarFill" style="<%= 'width:' + (sidebarPct || 0) + '%' %>"></div>
+          <div class="sidebar-prog-fill" id="sidebarFill" data-progress="<%= sidebarPct || 0 %>"></div>
         </div>
       </div>
 
