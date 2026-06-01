@@ -35,10 +35,10 @@ avatar: { type: String, default: "" },
    },
 
     status: {
-      type: String,
-      enum: ["active", "inactive", "banned"],
-      default: "active",
-    },
+  type: String,
+  enum: ["active", "inactive", "banned", "blocked"],
+  default: "active",
+},
     lastActive: { type: Date, default: Date.now },
     welcomeMessage: { type: String, default: "" },
 

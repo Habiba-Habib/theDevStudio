@@ -1,5 +1,6 @@
 const User      = require("../models/User");
 const Challenge = require("../models/challenges");
+const Course = require("../models/Course");
 
 exports.getDashboard = async (req, res) => {
   try {
@@ -104,9 +105,43 @@ exports.getUsers = async (req, res) => {
       students: u.students || 0
     }));
 
-    res.render("admin/admin-users", { users: formatted });
+  const blockedInstructors = formatted.filter(
+  user => user.role === "Instructor" && user.status === "Blocked"
+);
+
+const usersToShow = formatted.filter(
+  user => !(user.role === "Instructor" && user.status === "Blocked")
+);
+
+res.render("admin/admin-users", {
+  users: usersToShow,
+  blockedInstructors
+});
   } catch (err) {
     console.error(err);
+    res.status(500).send("Server error");
+  }
+};
+exports.getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId)
+      .populate("completedCourses.course")
+      .populate("certificates.course");
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    res.render("shared/profile", {
+      user,
+      completedCourses: user.completedCourses || [],
+      certificates: user.certificates || [],
+      instructorCourses: [],
+      adminStats: null,
+      rank: null
+    });
+  } catch (err) {
+    console.error("getUserProfile error:", err);
     res.status(500).send("Server error");
   }
 };
@@ -142,7 +177,68 @@ exports.toggleSuspend = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error." });
   }
 };
+exports.blockInstructor = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
 
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
+
+    if (user.role !== "instructor") {
+      return res.status(400).json({ success: false, message: "Only instructors can be blocked." });
+    }
+
+    user.status = "blocked";
+    await user.save();
+
+    await Course.updateMany(
+      { instructor: user._id },
+      { $set: { isPublished: false } }
+    );
+
+    res.json({ success: true, message: "Instructor blocked." });
+  } catch (err) {
+    console.error("blockInstructor error:", err);
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+};
+
+exports.unblockInstructor = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
+
+    if (user.role !== "instructor") {
+      return res.status(400).json({ success: false, message: "Only instructors can be unblocked." });
+    }
+
+    user.status = "active";
+    await user.save();
+
+    res.json({ success: true, message: "Instructor unblocked." });
+  } catch (err) {
+    console.error("unblockInstructor error:", err);
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+};
+exports.deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.userId);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
+
+    res.json({ success: true, message: "User removed." });
+  } catch (err) {
+    console.error("deleteUser error:", err);
+    res.status(500).json({ success: false, message: "Server error." });
+  }
+};
 exports.getChallenges = async (req, res) => {
   try {
     const challenges      = await Challenge.find({ deletedAt: null }).sort({ createdAt: -1 });
@@ -460,4 +556,61 @@ exports.logout = (req, res) => {
   });
 };
 
+exports.getUserCourses = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId).populate({
+      path: "enrolledCourses.course",
+      populate: {
+        path: "instructor",
+        select: "name"
+      }
+    });
 
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    let courses = [];
+
+    if (user.role === "student") {
+      courses = (user.enrolledCourses || [])
+        .filter(item => item.course)
+        .map(item => ({
+          title: item.course.title,
+          image: item.course.thumbnail,
+          instructorName: item.course.instructor?.name || "Instructor",
+          description: item.course.shortDescription,
+          duration: item.course.duration,
+          progress: item.progress || 0,
+          status: item.progress >= 100 ? "completed" : "ongoing"
+        }));
+    }
+
+    if (user.role === "instructor") {
+      const instructorCourses = await Course.find({ instructor: user._id }).sort({ createdAt: -1 });
+
+      courses = instructorCourses.map(course => ({
+        title: course.title,
+        image: course.thumbnail,
+        instructorName: user.name,
+        description: course.shortDescription,
+        duration: course.duration,
+        progress: course.isPublished ? 100 : 0,
+        status: course.isPublished ? "published" : "draft"
+      }));
+    }
+
+    res.render("student/my-courses", {
+      courses,
+      totalCourses: courses.length,
+      inProgressCourses: courses.filter(course => course.status !== "completed").length,
+      completedCourses: courses.filter(course => course.status === "completed").length,
+      avgProgress: courses.length
+        ? `${Math.round(courses.reduce((sum, course) => sum + course.progress, 0) / courses.length)}%`
+        : "0%"
+    });
+  } catch (err) {
+    console.error("getUserCourses error:", err);
+    res.status(500).send("Server error");
+  }
+};

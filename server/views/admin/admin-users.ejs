@@ -54,7 +54,7 @@
 
       <div class="table-body" id="umTableBody">
         <% users.forEach(function(user) { %>
-        <div class="row" data-role="<%= user.role %>" data-name="<%= user.name %>" data-email="<%= user.email %>">
+       <div class="row" data-user-id="<%= user._id %>" data-role="<%= user.role %>" data-name="<%= user.name %>" data-email="<%= user.email %>">
           <div class="col-user user-cell">
             <img src="<%= user.avatar %>" class="avatar" alt="avatar" />
             <div>
@@ -77,19 +77,21 @@
 
                 <div class="col-actions actions">
           <% if (user.role === 'Admin') { %>
-            <button class="action-btn btn-view" title="View"><i class="fa-regular fa-eye"></i></button>
+           <a class="action-btn btn-view" title="View Profile" href="/admin/users/<%= user._id %>/profile"><i class="fa-regular fa-eye"></i></a>
             <span class="limited">Limited Access</span>
           <% } else if (user.role === 'Instructor') { %>
-            <button class="action-btn btn-view"    title="View"><i class="fa-regular fa-eye"></i></button>
-            <button class="action-btn btn-courses" title="Courses"><i class="fa-regular fa-bookmark"></i></button>
-            <button class="action-btn btn-suspend" title="Suspend"><i class="fa-solid fa-lock"></i></button>
-            <button class="action-btn btn-verify"  title="Verify"><i class="fa-solid fa-shield-halved"></i></button>
-            <button class="action-btn btn-role"    title="Change Role"><i class="fa-solid fa-user-pen"></i></button>
+            <a class="action-btn btn-view" title="View Profile" href="/admin/users/<%= user._id %>/profile"><i class="fa-regular fa-eye"></i></a>
+           <a class="action-btn btn-courses" title="View UploadedCourses" href="/admin/users/<%= user._id %>/courses">
+              <i class="fa-solid fa-book-open"></i>
+            </a>
+           <button class="action-btn btn-block-instructor" title="Block Instructor"><i class="fa-solid fa-shield-halved"></i></button>
+<button class="action-btn btn-remove-user" title="Remove Instructor"><i class="fa-solid fa-user-xmark"></i></button>
           <% } else { %>
-            <button class="action-btn btn-view"     title="View"><i class="fa-regular fa-eye"></i></button>
-            <button class="action-btn btn-courses"  title="Courses"><i class="fa-regular fa-bookmark"></i></button>
-            <button class="action-btn btn-progress" title="Progress"><i class="fa-solid fa-arrow-trend-up"></i></button>
-            <button class="action-btn btn-role"     title="Change Role"><i class="fa-solid fa-user-pen"></i></button>
+          <a class="action-btn btn-view" title="View Profile" href="/admin/users/<%= user._id %>/profile"><i class="fa-regular fa-eye"></i></a>
+                      <a class="action-btn btn-courses" title="View Courses" href="/admin/users/<%= user._id %>/courses">
+              <i class="fa-solid fa-book-open"></i>
+            </a>
+          <button class="action-btn btn-remove-user" title="Remove Student"><i class="fa-solid fa-user-xmark"></i></button>
           <% } %>
          </div>  
       </div>     
@@ -98,7 +100,88 @@
     </section>
 
     <p class="no-results hidden" id="umNoResults">No users found matching your criteria.</p>
+    <section class="blocked-section">
+  <div class="blocked-heading">
+    <i class="fa-solid fa-user-lock"></i>
+    <div>
+      <h2>Blocked Instructors</h2>
+      <p>Review or unblock blocked instructors</p>
+    </div>
+  </div>
 
+  <div class="blocked-table">
+    <div class="table-head">
+      <span class="col-user">Instructor</span>
+      <span class="col-role">Role</span>
+      <span class="col-status">Status</span>
+      <span class="col-date">Join Date</span>
+      <span class="col-details">Details</span>
+      <span class="col-actions">Actions</span>
+    </div>
+
+    <div class="table-body">
+      <% if (blockedInstructors && blockedInstructors.length > 0) { %>
+        <% blockedInstructors.forEach(function(user) { %>
+          <div class="row blocked-row" data-user-id="<%= user._id %>" data-name="<%= user.name %>">
+            <div class="col-user user-cell">
+              <img src="<%= user.avatar %>" class="avatar" alt="avatar" />
+              <div>
+                <div class="name"><%= user.name %></div>
+                <div class="email"><%= user.email %></div>
+              </div>
+            </div>
+            <div class="col-role"><span class="badge badge-instructor">Instructor</span></div>
+            <div class="col-status"><span class="badge badge-blocked">Blocked</span></div>
+            <div class="col-date"><%= user.joinDate %></div>
+            <div class="col-details"><%= user.courses %> courses • <%= user.students %> students</div>
+            <div class="col-actions actions">
+              <button class="action-btn btn-unblock-instructor" title="Unblock Instructor">
+                <i class="fa-solid fa-rotate-left"></i>
+              </button>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="empty-blocked">No blocked instructors.</div>
+      <% } %>
+    </div>
+  </div>
+</section>
+<div class="remove-modal hidden" id="blockInstructorModal">
+  <div class="remove-modal-card">
+    <h2>Block Instructor</h2>
+    <p id="blockInstructorText">Are you sure you want to block this instructor? Their courses will be archived and students will be notified.</p>
+
+    <div class="remove-modal-actions">
+      <button type="button" class="modal-cancel-btn" id="cancelBlockInstructor">Cancel</button>
+      <button type="button" class="modal-remove-btn" id="confirmBlockInstructor">Block</button>
+    </div>
+  </div>
+</div>
+
+<div class="remove-modal hidden" id="unblockInstructorModal">
+  <div class="remove-modal-card">
+    <h2>Unblock Instructor</h2>
+    <p id="unblockInstructorText">Are you sure you want to unblock this instructor?</p>
+
+    <div class="remove-modal-actions">
+      <button type="button" class="modal-cancel-btn" id="cancelUnblockInstructor">Cancel</button>
+      <button type="button" class="modal-remove-btn" id="confirmUnblockInstructor">Unblock</button>
+    </div>
+  </div>
+</div>
+
+<div class="remove-modal hidden" id="removeUserModal">
+  <div class="remove-modal-card">
+    <h2>Remove User</h2>
+    <p id="removeUserText">Are you sure you want to remove this user? This action cannot be undone.</p>
+
+    <div class="remove-modal-actions">
+      <button type="button" class="modal-cancel-btn" id="cancelRemoveUser">Cancel</button>
+      <button type="button" class="modal-remove-btn" id="confirmRemoveUser">Remove</button>
+    </div>
+  </div>
+</div>
   </main>
   <script src="/js/admin-users.js"></script>
 </body>
