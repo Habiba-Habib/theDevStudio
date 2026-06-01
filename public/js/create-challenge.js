@@ -11,8 +11,10 @@ const generateBtn       = document.getElementById('generateBtn');
 
 const starterPlaceholder = `function solve() {\n  // Your code here\n}`;
 let generatedPoints = null;
-starterCodeArea.value = starterPlaceholder;
-starterCodeArea.classList.add('placeholder-active');
+if (!starterCodeArea.value.trim()) {
+  starterCodeArea.value = starterPlaceholder;
+  starterCodeArea.classList.add('placeholder-active');
+}
 
 starterCodeArea.addEventListener('focus', () => {
     if (starterCodeArea.value === starterPlaceholder) {
@@ -30,8 +32,10 @@ starterCodeArea.addEventListener('blur', () => {
 
 const testPlaceholder = `Input: [1, 2, 3]\nExpected: 6`;
 
-testCasesArea.value = testPlaceholder;
-testCasesArea.classList.add('placeholder-active');
+if (!testCasesArea.value.trim()) {
+  testCasesArea.value = testPlaceholder;
+  testCasesArea.classList.add('placeholder-active');
+}
 
 testCasesArea.addEventListener('focus', () => {
     if (testCasesArea.value === testPlaceholder) {
@@ -221,7 +225,12 @@ saveBtn.addEventListener('click', async () => {
   saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
   try {
-    const res = await fetch('/admin/create-challenge', {
+      const isEditMode = window.challengeMode === 'edit';
+      const saveUrl = isEditMode
+        ? `/admin/challenges/${window.challengeId}/edit`
+        : '/admin/create-challenge';
+
+      const res = await fetch(saveUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -233,7 +242,7 @@ saveBtn.addEventListener('click', async () => {
       throw new Error(data.message || 'Save failed');
     }
 
-    showToast('Challenge saved successfully!');
+    showToast(isEditMode ? 'Challenge updated successfully!' : 'Challenge saved successfully!');
 
     setTimeout(() => {
       window.location.href = '/admin/manage-challenges';
@@ -243,7 +252,9 @@ saveBtn.addEventListener('click', async () => {
     alert(err.message);
   } finally {
     saveBtn.disabled = false;
-    saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Challenge';
+    saveBtn.innerHTML = isEditMode
+  ? '<i class="fa-solid fa-floppy-disk"></i> Update Challenge'
+  : '<i class="fa-solid fa-floppy-disk"></i> Save Challenge';
   }
 });
 
@@ -347,3 +358,4 @@ function getCategoryLabel(value) {
     };
     return map[value] || value;
 }
+updatePreview();

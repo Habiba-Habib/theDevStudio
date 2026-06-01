@@ -28,6 +28,8 @@ router.post("/instructor-applications/:userId/approve", controller.approveInstru
 router.post("/instructor-applications/:userId/reject", controller.rejectInstructor);
 router.get("/create-challenge",              controller.getCreateChallenge);
 router.post("/create-challenge", controller.postCreateChallenge);
+router.get("/challenges/:id/edit", controller.getEditChallenge);
+router.post("/challenges/:id/edit", controller.postEditChallenge);
 router.post("/generate-challenge", aiController.generateChallengeDraft);
 
 module.exports = router;

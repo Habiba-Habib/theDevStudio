@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Challenge</title>
+    <title><%= mode === "edit" ? "Edit Challenge" : "Create Challenge" %></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="/css/create-challenge.css">
    
@@ -15,10 +15,12 @@
     <div class="page-wrapper">
 
         <div class="page-header">
-            <h1 class="page-title">Create Challenge</h1>
-            <p class="page-subtitle">Create a new coding challenge manually or generate using AI</p>
+            <h1 class="page-title"><%= mode === "edit" ? "Edit Challenge" : "Create Challenge" %></h1>
+            <p class="page-subtitle">
+                <%= mode === "edit" ? "Update this coding challenge" : "Create a new coding challenge manually or generate using AI" %>
+            </p>
         </div>
-
+        <% if (mode !== "edit") { %>
         <div class="ai-banner">
             <div class="ai-banner-left">
                 <i class="fa-solid fa-wand-magic-sparkles ai-icon"></i>
@@ -32,6 +34,7 @@
                 Generate
             </button>
         </div>
+        <% } %>
 
         <div class="main-layout">
 
@@ -40,7 +43,8 @@
                 <div class="form-group">
                     <label class="form-label">Challenge Title <span class="required">*</span></label>
                     <input type="text" id="challengeTitle" class="form-input"
-                        placeholder="e.g., Two Sum Problem" autocomplete="off" />
+                    placeholder="e.g., Two Sum Problem" autocomplete="off"
+                    value="<%= challenge ? challenge.title : '' %>" />
                 </div>
 
                 <div class="form-row">
@@ -48,10 +52,10 @@
                         <label class="form-label">Difficulty <span class="required">*</span></label>
                         <div class="select-wrapper">
                             <select id="difficulty" class="form-select">
-                                <option value="" disabled selected>Select difficulty</option>
-                                <option value="Easy">Easy</option>
-                                <option value="Medium">Medium</option>
-                                <option value="Hard">Hard</option>
+                                <option value="" disabled <%= !challenge ? "selected" : "" %>>Select difficulty</option>
+                                <option value="Easy" <%= challenge?.difficulty === "easy" ? "selected" : "" %>>Easy</option>
+                                <option value="Medium" <%= challenge?.difficulty === "medium" ? "selected" : "" %>>Medium</option>
+                                <option value="Hard" <%= challenge?.difficulty === "hard" ? "selected" : "" %>>Hard</option>
                             </select>
                             <i class="fa-solid fa-chevron-down select-arrow"></i>
                         </div>
@@ -60,13 +64,13 @@
                         <label class="form-label">Category <span class="required">*</span></label>
                         <div class="select-wrapper">
                             <select id="category" class="form-select">
-                                <option value="" disabled selected>Select category</option>
-                                <option value="Arrays">Arrays</option>
-                                <option value="Strings">Strings</option>
-                                <option value="Trees">Trees</option>
-                                <option value="Graphs">Graphs</option>
-                                <option value="Dynamic Programming">Dynamic Programming</option>
-                                <option value="Sorting">Sorting</option>
+                                <option value="" disabled <%= !challenge ? "selected" : "" %>>Select category</option>
+                                <option value="Arrays" <%= challenge?.category === "Arrays" ? "selected" : "" %>>Arrays</option>
+                                <option value="Strings" <%= challenge?.category === "Strings" ? "selected" : "" %>>Strings</option>
+                                <option value="Trees" <%= challenge?.category === "Trees" ? "selected" : "" %>>Trees</option>
+                                <option value="Graphs" <%= challenge?.category === "Graphs" ? "selected" : "" %>>Graphs</option>
+                                <option value="Dynamic Programming" <%= challenge?.category === "Dynamic Programming" ? "selected" : "" %>>Dynamic Programming</option>
+                                <option value="Sorting" <%= challenge?.category === "Sorting" ? "selected" : "" %>>Sorting</option>
                             </select>
                             <i class="fa-solid fa-chevron-down select-arrow"></i>
                         </div>
@@ -76,23 +80,23 @@
                 <div class="form-group">
                     <label class="form-label">Description <span class="required">*</span></label>
                     <textarea id="description" class="form-textarea"
-                        placeholder="Describe the challenge..."></textarea>
+                    placeholder="Describe the challenge..."><%= challenge ? challenge.description : '' %></textarea>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Starter Code</label>
-                    <textarea id="starterCode" class="form-textarea code-textarea"></textarea>
+                    <textarea id="starterCode" class="form-textarea code-textarea"><%= challenge ? challenge.starterCode : '' %></textarea>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Test Cases <span class="required">*</span></label>
-                    <textarea id="testCases" class="form-textarea code-textarea"></textarea>
+                    <textarea id="testCases" class="form-textarea code-textarea"><%= challenge && challenge.testCases ? challenge.testCases.map(tc => `Input: ${tc.input}\nExpected: ${tc.expectedOutput}`).join('\n\n') : '' %></textarea>
                 </div>
 
                 <div class="form-actions">
                     <button class="btn-save" id="saveBtn">
-                        <i class="fa-solid fa-floppy-disk"></i>
-                        Save Challenge
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <%= mode === "edit" ? "Update Challenge" : "Save Challenge" %>
                     </button>
                     <button class="btn-cancel" id="cancelBtn">Cancel</button>
                 </div>
@@ -115,6 +119,10 @@
         </div>
     </div>
 
-    <script src="/js/create-challenge.js"></script>
+    <script>
+  window.challengeMode = "<%= mode %>";
+  window.challengeId = "<%= challenge ? challenge._id : '' %>";
+</script>
+<script src="/js/create-challenge.js"></script>
 </body>
 </html>
