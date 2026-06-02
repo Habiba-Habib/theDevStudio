@@ -56,6 +56,11 @@ if (btnComplete && !btnComplete.classList.contains('is-done')) {
         if (sFill)  sFill.style.width  = data.progress + '%';
         if (sCount) sCount.textContent = `${data.completedCount}/${data.totalLessons}`;
 
+        // show completion modal when all lessons are done
+        if (data.progress === 100) {
+          showCompletionModal(courseId);
+        }
+
       } else {
         btnComplete.disabled = false;
         btnComplete.innerHTML = '<i class="fa-solid fa-check"></i> Mark Complete';
@@ -68,3 +73,106 @@ if (btnComplete && !btnComplete.classList.contains('is-done')) {
     }
   });
 }
+
+// ── COMPLETION MODAL ──
+function showCompletionModal(courseId) {
+  const overlay = document.getElementById('completionOverlay');
+  if (!overlay) return;
+  overlay.classList.add('is-visible');
+
+  const stars     = overlay.querySelectorAll('.cm-star');
+  const label     = document.getElementById('cmStarLabel');
+  const submitBtn = document.getElementById('cmSubmit');
+  const comment   = document.getElementById('cmComment');
+  const skipBtn   = document.getElementById('cmSkip');
+
+  const starLabels = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+  let selectedRating = 0;
+
+  // star hover + click
+  stars.forEach(star => {
+    const val = parseInt(star.dataset.value, 10);
+
+    star.addEventListener('mouseenter', () => {
+      stars.forEach(s => {
+        const sv = parseInt(s.dataset.value, 10);
+        s.classList.toggle('hovered', sv <= val);
+        s.querySelector('i').className = sv <= val ? 'fa-solid fa-star' : 'fa-regular fa-star';
+      });
+      label.textContent = starLabels[val];
+    });
+
+    star.addEventListener('mouseleave', () => {
+      stars.forEach(s => {
+        const sv = parseInt(s.dataset.value, 10);
+        s.classList.remove('hovered');
+        s.querySelector('i').className = sv <= selectedRating ? 'fa-solid fa-star' : 'fa-regular fa-star';
+        s.classList.toggle('selected', sv <= selectedRating);
+      });
+      label.textContent = selectedRating ? starLabels[selectedRating] : 'Tap a star to rate';
+    });
+
+    star.addEventListener('click', () => {
+      selectedRating = val;
+      stars.forEach(s => {
+        const sv = parseInt(s.dataset.value, 10);
+        s.querySelector('i').className = sv <= selectedRating ? 'fa-solid fa-star' : 'fa-regular fa-star';
+        s.classList.toggle('selected', sv <= selectedRating);
+      });
+      label.textContent = starLabels[selectedRating];
+      submitBtn.disabled = false;
+    });
+  });
+
+  // submit review
+  submitBtn.addEventListener('click', async () => {
+    if (!selectedRating) return;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting…';
+
+    try {
+      const res  = await fetch(`/student/course/${courseId}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rating: selectedRating, comment: comment.value.trim() })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        submitBtn.classList.add('is-done');
+        submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Review Submitted!';
+        submitBtn.disabled = true;
+      } else {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Review';
+      }
+    } catch (err) {
+      console.error(err);
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Review';
+    }
+  });
+
+  // skip
+  skipBtn.addEventListener('click', () => {
+    overlay.classList.remove('is-visible');
+  });
+
+  // close on backdrop click
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('is-visible');
+  });
+}
+
+// Show modal on page load if course is already 100% complete
+(function checkAlreadyComplete() {
+  const nav = document.querySelector('.bottom-nav');
+  if (!nav) return;
+  const total     = parseInt(nav.dataset.total, 10) || 0;
+  const completed = parseInt(nav.dataset.completed, 10) || 0;
+  if (total > 0 && completed >= total) {
+    const courseId = document.getElementById('btnComplete')?.dataset.courseId
+                  || nav.dataset.courseId;
+    if (courseId) showCompletionModal(courseId);
+  }
+})();

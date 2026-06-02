@@ -197,6 +197,21 @@ function createLessonHtml(sectionIndex, lessonIndex) {
 
       <div class="lesson-content">
         <div class="lesson-subsection">
+          <h4><i class="fa-solid fa-file-lines"></i> Documents</h4>
+          <input
+            type="file"
+            class="form-input"
+            name="sections_${sectionIndex}_lessons_${lessonIndex}_resourceFile"
+            accept=".pdf,.doc,.docx,.ppt,.pptx"
+          />
+          <input
+            type="hidden"
+            name="sections[${sectionIndex}][lessons][${lessonIndex}][existingResourceFile]"
+            value=""
+          />
+        </div>
+
+        <div class="lesson-subsection">
           <h4>Video</h4>
 
           <div class="video-item">
