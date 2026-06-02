@@ -119,13 +119,52 @@ document.getElementById('terms').addEventListener('change', validateTerms);
     }
   });
 });
+function detectCardType(cardNumber) {
+  const number = cardNumber.replace(/\s/g, "");
 
+  if (/^4\d{0,15}$/.test(number)) {
+    return "visa";
+  }
+
+  const firstTwo = Number(number.slice(0, 2));
+  const firstFour = Number(number.slice(0, 4));
+
+  if (
+    (firstTwo >= 51 && firstTwo <= 55) ||
+    (firstFour >= 2221 && firstFour <= 2720)
+  ) {
+    return "mastercard";
+  }
+
+  return "unknown";
+}
+
+function updateCardBrandUI(cardType) {
+  const visa = document.getElementById("brandVisa");
+  const mastercard = document.getElementById("brandMastercard");
+  const hiddenInput = document.getElementById("cardType");
+
+  if (hiddenInput) {
+    hiddenInput.value = cardType;
+  }
+
+  if (visa) {
+    visa.classList.toggle("active", cardType === "visa");
+  }
+
+  if (mastercard) {
+    mastercard.classList.toggle("active", cardType === "mastercard");
+  }
+}
 // ─────────────────────────────────────────────
 //  Input formatting
 // ─────────────────────────────────────────────
 document.getElementById('cardNumber').addEventListener('input', function () {
   let val = this.value.replace(/\D/g, '').substring(0, 16);
   this.value = val.replace(/(.{4})/g, '$1 ').trim();
+
+  const cardType = detectCardType(this.value);
+  updateCardBrandUI(cardType);
 });
 
 document.getElementById('expiry').addEventListener('input', function () {

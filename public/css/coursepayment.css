@@ -193,6 +193,12 @@ body {
   border-color: rgba(255, 64, 160, 0.5);
   box-shadow: 0 0 0 3px rgba(255, 64, 160, 0.08);
 }
+.brand {
+  opacity: 0.35;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+
 
 /* card number row with brand badges */
 .input-row {
@@ -218,8 +224,18 @@ body {
   letter-spacing: 0.5px;
 }
 
-.brand.visa { background: var(--pink);  color: #fff; }
-.brand.mc   { background: #3a3f5c;      color: var(--text-white); }
+.brand.visa,
+.brand.mc {
+  background: #3a3f5c;
+  color: var(--text-white);
+}
+
+.brand.active {
+  background: var(--pink);
+  color: #fff;
+  opacity: 1;
+  transform: scale(1.05);
+}
 
 .two-col {
   display: grid;

@@ -78,6 +78,7 @@ if (course.instructor.toString() === req.session.userId.toString()) {
 
     const paymentMethod = req.body.paymentMethod;
     const cardNumber = req.body.cardNumber;
+    const cardType = req.body.cardType || "unknown";
 
     let paymentStatus = "failed";
 
@@ -97,6 +98,7 @@ if (cleanCardNumber.length === 16) {
       course: course._id,
       amount: amountPaid,
       paymentMethod: paymentMethod,
+      cardType: cardType,
       status: paymentStatus,
     });
 

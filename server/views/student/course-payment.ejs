@@ -78,6 +78,7 @@
 
        <form id="paymentForm" action="/student/payment/<%= course._id %>" method="POST">
         <input type="hidden" name="paymentMethod" value="card">
+        <input type="hidden" id="cardType" name="cardType" value="unknown">
 
           <div class="field-group">
             <label for="cardName">Cardholder Name</label>
@@ -96,8 +97,8 @@
                 maxlength="19"
               />
               <div class="card-brands">
-                <span class="brand visa">VISA</span>
-                <span class="brand mc">MC</span>
+                <span class="brand visa" id="brandVisa">VISA</span>
+                <span class="brand mc" id="brandMastercard">MC</span>
               </div>
             </div>
             <span class="field-error" id="err-cardNumber"></span>

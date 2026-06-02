@@ -24,6 +24,11 @@ const paymentSchema = new mongoose.Schema(
       enum: ["card", "wallet", "cash"],
       default: "card",
     },
+    cardType: {
+      type: String,
+      enum: ["visa", "mastercard", "unknown"],
+      default: "unknown",
+    },
 
     status: {
       type: String,
