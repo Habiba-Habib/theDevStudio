@@ -13,6 +13,7 @@ const lessonSchema = new mongoose.Schema({
   videoUrl: { type: String, default: '' },
 videoFiles: [{ type: String }],
 resourceFiles: [{ type: String }],
+  resourceFile: { type: String, default: '' },
   content: { type: String, default: '' },
   duration: { type: String, default: '' },
   resources: [resourceSchema]
@@ -55,6 +56,13 @@ const courseSchema = new mongoose.Schema({
   },
   students: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   rating:   { type: Number, default: 0 },
+
+  reviews: [{
+    user:    { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    rating:  { type: Number, min: 1, max: 5 },
+    comment: { type: String, default: '' },
+    date:    { type: Date, default: Date.now }
+  }],
 
   isPublished: { type: Boolean, default: false },
   deletedAt:   { type: Date, default: null }

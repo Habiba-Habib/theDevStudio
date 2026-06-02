@@ -1,6 +1,7 @@
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('./cloudinary');
+const path = require('path');
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
@@ -20,10 +21,14 @@ const storage = new CloudinaryStorage({
       resource_type = 'raw'; // Keeps PDFs/Word docs in raw original formats
     }
 
+    const ext = path.extname(file.originalname);
+    const base = path.basename(file.originalname, ext);
+    const publicId = `${base}_${Date.now()}`;
+
     return {
       folder: folder,
       resource_type: resource_type,
-      public_id: file.originalname.split('.')[0] + '_' + Date.now(),
+      public_id: resource_type === 'raw' ? `${publicId}${ext}` : publicId,
     };
   },
 });

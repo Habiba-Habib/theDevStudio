@@ -107,36 +107,39 @@
         </ul>
       <% } %>
 
-    <h4 class="info-heading">Downloadable Resources</h4> <%# added %>
-<div class="resources" id="resourcesList"> <%# added %>
-  <% if (activeLesson && activeLesson.resources && activeLesson.resources.length > 0) { %> <%# added %>
-    <% activeLesson.resources.forEach(resource => { %> <%# added %>
-      <a class="resource-item" href="<%= resource.format === 'pdf' ? resource.url.replace('/upload/', '/upload/fl_attachment/') : resource.url %>" target="_blank"> 
-        <span class="res-file-icon"> <%# added %>
-         <i class="fa-solid <%= resource.format === 'pdf' ? 'fa-file-pdf' : ['mp4','mkv','avi','mov'].includes(resource.format) ? 'fa-file-video' : ['doc','docx'].includes(resource.format) ? 'fa-file-word' : ['ppt','pptx'].includes(resource.format) ? 'fa-file-powerpoint' : 'fa-file' %>"></i> <%# added %>
-        </span> <%# added %>
-        <div class="res-info"> <%# added %>
-          <div class="res-name"><%= resource.name %></div> <%# added %>
-          <div class="res-size"><%= resource.format.toUpperCase() %></div> <%# added %>
-        </div> <%# added %>
-        <span class="res-dl"><i class="fa-solid fa-download"></i></span> <%# added %>
-      </a> <%# added %>
-    <% }) %> <%# added %>
-  <% } else { %> <%# added %>
-    <p class="res-empty" id="resEmpty">No resources attached to this lesson.</p> <%# added %>
-  <% } %> <%# added %>
-</div> <%# added %>
-
-<% if (activeLesson && (user.role === 'instructor' || user.role === 'admin')) { %> <%# added %>
-  <div class="upload-resource-wrap"> <%# added %>
-    <input type="file" id="resourceFile" <%# added %>
-      accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.mkv,.avi,.mov" hidden/> <%# added %>
-    <button class="btn-upload-res" onclick="document.getElementById('resourceFile').click()"> <%# added %>
-      <i class="fa-solid fa-upload"></i> Upload Resource <%# added %>
-    </button> <%# added %>
-    <span id="uploadStatus"></span> <%# added %>
-  </div> <%# added %>
-<% } %> <%# added %>
+      <h4 class="info-heading">Downloadable Resources</h4>
+      <div class="resources">
+        <% if (activeLesson && activeLesson.resourceFile) { %>
+          <%
+            const resFileName = decodeURIComponent(activeLesson.resourceFile.split('/').pop().split('?')[0]);
+            const hasDot      = resFileName.includes('.');
+            const resExt      = hasDot ? resFileName.split('.').pop().toLowerCase() : '';
+            const isFallbackPdf = !hasDot;
+            const finalExt    = isFallbackPdf ? 'pdf' : resExt;
+            const resIconMap  = {
+              pdf:  'fa-file-pdf',
+              doc:  'fa-file-word',  docx: 'fa-file-word',
+              ppt:  'fa-file-powerpoint', pptx: 'fa-file-powerpoint',
+              xls:  'fa-file-excel', xlsx: 'fa-file-excel',
+              zip:  'fa-file-zipper', rar: 'fa-file-zipper',
+              mp4:  'fa-file-video', mkv: 'fa-file-video', avi: 'fa-file-video', mov: 'fa-file-video',
+            };
+            const resIcon  = resIconMap[finalExt] || 'fa-file';
+            const resLabel = finalExt ? finalExt.toUpperCase() + ' File' : 'File';
+            const customName = isFallbackPdf ? (resFileName + '.pdf') : resFileName;
+          %>
+          <a class="resource-item" href="/student/course/<%= course._id %>/lesson/<%= activeLesson._id %>/download-resource" download="<%= customName %>">
+            <span class="res-file-icon"><i class="fa-solid <%= resIcon %>"></i></span>
+            <div class="res-info">
+              <div class="res-name"><%= resFileName %></div>
+              <div class="res-size"><%= resLabel %></div>
+            </div>
+            <span class="res-dl"><i class="fa-solid fa-download"></i></span>
+          </a>
+        <% } else { %>
+          <p class="res-empty">No resources attached to this lesson.</p>
+        <% } %>
+      </div>
     </div>
 
     <!-- TABS CARD (always visible) -->
@@ -231,7 +234,7 @@
 </div><!-- /page-body -->
 
 <!-- ── FIXED BOTTOM NAV ── -->
-<div class="bottom-nav">
+<div class="bottom-nav" data-course-id="<%= course._id %>" data-total="<%= totalLessons %>" data-completed="<%= completedLessons.length %>">
 
   <% if (prevLessonId) { %>
     <a class="btn-prev" href="/student/course/<%= course._id %>/learn?lesson=<%= prevLessonId %>">
@@ -267,6 +270,38 @@
     </span>
   <% } %>
 
+</div>
+
+<!-- ── COURSE COMPLETION MODAL ── -->
+<div class="completion-overlay" id="completionOverlay">
+  <div class="completion-modal">
+    <div class="cm-confetti">
+      <i class="fa-solid fa-trophy"></i>
+    </div>
+    <h2 class="cm-title">Course Complete!</h2>
+    <p class="cm-sub">You've finished <strong><%= course.title %></strong>. We'd love to hear what you think.</p>
+
+    <div class="cm-stars" id="cmStars">
+      <% for (let i = 1; i <= 5; i++) { %>
+        <button class="cm-star" data-value="<%= i %>" aria-label="<%= i %> star">
+          <i class="fa-regular fa-star"></i>
+        </button>
+      <% } %>
+    </div>
+    <p class="cm-star-label" id="cmStarLabel">Tap a star to rate</p>
+
+    <textarea class="cm-textarea" id="cmComment" placeholder="Share your thoughts (optional)…" rows="3"></textarea>
+
+    <div class="cm-actions">
+      <button class="cm-btn-submit" id="cmSubmit" disabled>
+        <i class="fa-solid fa-paper-plane"></i> Submit Review
+      </button>
+      <a class="cm-btn-courses" href="/student/my-courses">
+        <i class="fa-solid fa-graduation-cap"></i> Back to My Courses
+      </a>
+    </div>
+    <button class="cm-skip" id="cmSkip">Skip for now</button>
+  </div>
 </div>
 
 <script src="/js/course-content.js"></script>

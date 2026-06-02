@@ -4,6 +4,11 @@ const Payment = require('../models/payment');
 const bcrypt = require("bcryptjs");
 //const upload = require('../config/cloudinary');
 
+function pickUploadedUrl(file) {
+  if (!file) return '';
+  return file.path || file.secure_url || file.url || '';
+}
+
 // ─── DASHBOARD ────────────────────────────────────────────────
 
 exports.getDashboard = async (req, res) => {
@@ -267,7 +272,7 @@ exports.postCreateStep1 = async (req, res) => {
     });
 
     const thumbnailUrl = req.file
-      ? req.file.path // Streams remote Cloudinary URL!
+      ? pickUploadedUrl(req.file) // Streams remote Cloudinary URL!
       : (course?.thumbnail || '');
     ;
 
@@ -457,7 +462,7 @@ exports.updateCourse = async (req, res) => {
     if (req.files && req.files.length > 0) {
       const thumbnailFile = req.files.find(f => f.fieldname === 'thumbnail');
       if (thumbnailFile) {
-        updateData.thumbnail = thumbnailFile.path; // Remote Cloudinary path
+        updateData.thumbnail = pickUploadedUrl(thumbnailFile); // Remote Cloudinary path
       }
     }
 
@@ -475,17 +480,17 @@ const uploadedResources = {};    // ← moved here, OUTSIDE the loop
 
 (req.files || []).forEach(file => {
   if (file.fieldname === 'thumbnail') {
-    updateData.thumbnail = file.path;
+    updateData.thumbnail = pickUploadedUrl(file);
   }
 
   const match = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_videoFile$/);
   if (match) {
-    uploadedVideos[`${match[1]}_${match[2]}`] = file.path;
+    uploadedVideos[`${match[1]}_${match[2]}`] = pickUploadedUrl(file);
   }
 
   const rMatch = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_resourceFile$/);
   if (rMatch) {
-    uploadedResources[`${rMatch[1]}_${rMatch[2]}`] = file.path;
+    uploadedResources[`${rMatch[1]}_${rMatch[2]}`] = pickUploadedUrl(file);
   }
 });
 
@@ -495,44 +500,22 @@ const uploadedResources = {};    // ← moved here, OUTSIDE the loop
 
     updateData.sections = Object.keys(rawSections).map(i => {
       const sec = rawSections[i];
-      let lessons = sec.lessons || [];
-      let lessonsList = [];
-
-      if (Array.isArray(lessons)) {
-        lessonsList = lessons.map((l, j) => {
-          const fileKey = `${i}_${j}`;
-          const videoFile = uploadedVideos[fileKey] || l.existingVideoFile || '';
-          return {
-            title: (l.title || '').trim(),
-            type: 'video',
-            videoSource: l.videoSource || 'url',
-            videoUrl: (l.videoUrl || '').trim(),
-            videoFile: videoFile,
-            resourceFile: uploadedResources[fileKey] || l.existingResourceFile || '',
-
-            duration: (l.duration || '').trim(),
-            content: ''
-            
-          };
-        });
-      } else {
-        // It's an object with keys (e.g. '0', '1', '2' due to sparse indices after deletions)
-        lessonsList = Object.keys(lessons).map(j => {
-          const l = lessons[j];
-          const fileKey = `${i}_${j}`;
-          const videoFile = uploadedVideos[fileKey] || l.existingVideoFile || '';
-          return {
-            title: (l.title || '').trim(),
-            type: 'video',
-            videoSource: l.videoSource || 'url',
-            videoUrl: (l.videoUrl || '').trim(),
-            videoFile: videoFile,
-            resourceFile: uploadedResources[fileKey] || l.existingResourceFile || '',
-            duration: (l.duration || '').trim(),
-            content: ''
-          };
-        });
-      }
+      const lessons = sec.lessons || {};
+      const lessonsList = Object.keys(lessons).map(j => {
+        const l = lessons[j] || {};
+        const fileKey = `${i}_${j}`;
+        const videoFile = uploadedVideos[fileKey] || l.existingVideoFile || '';
+        return {
+          title: (l.title || '').trim(),
+          type: 'video',
+          videoSource: l.videoSource || 'url',
+          videoUrl: (l.videoUrl || '').trim(),
+          videoFile: videoFile,
+          resourceFile: uploadedResources[fileKey] || l.existingResourceFile || '',
+          duration: (l.duration || '').trim(),
+          content: ''
+        };
+      });
 
       return {
         title: (sec.title || '').trim(),
