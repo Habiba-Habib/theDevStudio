@@ -2,16 +2,10 @@ const express    = require("express");
 const router     = express.Router();
 const controller = require("../controllers/admin-controller");
 const aiController = require("../controllers/ai-controller");
+const isAdmin = require("../middleware/isAdmin");
 
-// TEMP: fake admin session — remove before submission
-router.use((req, res, next) => {
-  req.session.user = {
-    _id:  "000000000000000000000001",
-    name: "Admin",
-    role: "admin"
-  };
-  next();
-});
+router.use(isAdmin);
+
 
 router.get("/dashboard",                     controller.getDashboard);
 router.get("/profile",                       controller.getProfile);
