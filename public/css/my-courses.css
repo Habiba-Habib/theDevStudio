@@ -30,40 +30,38 @@ body {
   letter-spacing: -0.8px;
 }
 
-.back-btn,
-.back-btn:visited {
+.breadcrumb {
   width: fit-content;
   display: inline-flex;
   align-items: center;
   gap: 9px;
   margin-bottom: 22px;
   padding: 10px 15px;
-  background: rgba(255, 64, 160, 0.12);
-  border: 1px solid rgba(255, 64, 160, 0.28);
+  background: rgba(255, 64, 160, 0.10);
+  border: 1px solid rgba(255, 64, 160, 0.24);
   border-radius: 10px;
-  color: var(--text-white);
-  text-decoration: none;
+  color: #9fb4df;
   font-size: 14px;
   font-weight: 700;
-  line-height: 1;
-  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
-.back-btn i {
+.breadcrumb a,
+.breadcrumb a:visited {
+  color: var(--text-white);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
   color: var(--pink-light);
-  font-size: 13px;
 }
 
-.back-btn:hover {
-  background: rgba(255, 64, 160, 0.18);
-  border-color: var(--pink);
-  color: var(--text-white);
-  transform: translateX(-2px);
+.breadcrumb i {
+  color: var(--pink-light);
+  font-size: 11px;
 }
 
-.back-btn:active {
-  transform: translateX(-1px) scale(0.98);
-  color: var(--text-white);
+.breadcrumb span {
+  color: #9fb4df;
 }
 
 .header p {

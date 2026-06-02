@@ -23,14 +23,16 @@
   <%- include('../partials/navbar') %>
   <main class="page">
 
-   <section class="header">
-  <a href="/student/dashboard" class="back-btn">
-    <i class="fa-solid fa-arrow-left"></i>
-    <span>Back to Dashboard</span>
-  </a>
+ <section class="header">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="/student/dashboard">Dashboard</a>
+    <i class="fa-solid fa-chevron-right"></i>
+    <span>My Courses</span>
+  </nav>
 
   <h1>My Courses</h1>
   <p>Track your learning progress</p>
+  
 </section>
     <section class="stats">
       <button class="stat-card" type="button" >
