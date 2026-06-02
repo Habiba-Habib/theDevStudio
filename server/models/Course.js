@@ -1,27 +1,20 @@
 const mongoose = require("mongoose");
 
+const resourceSchema = new mongoose.Schema({
+  name: { type: String },
+  url: { type: String },
+  format: { type: String }
+}, { _id: false });
+
 const lessonSchema = new mongoose.Schema({
-  title:    { type: String, required: true },
-  type:     { type: String, enum: ['video', 'text'], default: 'video' },
- videoUrl: { type: String, default: '' },
-videoFile: { type: String, default: '' },
-videoSource: {
-  type: String,
-  enum: ['url', 'upload'],
-  default: 'url'
-},
-  content:  { type: String, default: '' },
+  title: { type: String, required: true },
+  type: { type: String, enum: ['video', 'text'], default: 'video' },
+  videoSource: { type: String, enum: ['url', 'upload'], default: 'url' },
+  videoUrl: { type: String, default: '' },
+  videoFile: { type: String, default: '' },
+  content: { type: String, default: '' },
   duration: { type: String, default: '' },
-
-resources: [ //added
-  new mongoose.Schema({ //added
-    name:   { type: String }, //added
-    url:    { type: String }, //added
-    format: { type: String }  //added
-  }, { _id: false }) //added
-] //added
-
-
+  resources: [resourceSchema]
 });
 
 const sectionSchema = new mongoose.Schema({

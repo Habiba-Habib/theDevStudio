@@ -266,7 +266,11 @@ exports.postCreateStep1 = async (req, res) => {
       isPublished: false
     });
 
-const thumbnailUrl = req.file ? `/uploads/${req.file.filename}` : (course?.thumbnail || '');
+    const thumbnailUrl = req.file
+      ? req.file.path // Streams remote Cloudinary URL!
+      : (course?.thumbnail || '');
+    ;
+
 
     if (course) {
       // Update existing draft
@@ -436,46 +440,107 @@ exports.getEditCourse = async (req, res) => {
 
 exports.updateCourse = async (req, res) => {
   try {
-    const { title, shortDescription, fullDescription, category, level, price, duration } = req.body;
+    const { title, shortDescription, fullDescription, category, level, price, duration, isPublished } = req.body;
 
-    const updateData = { title, shortDescription, fullDescription, category, level, price, duration };
+    const updateData = { 
+      title, 
+      shortDescription, 
+      fullDescription, 
+      category, 
+      level, 
+      price, 
+      duration,
+      isPublished: isPublished === 'true' // Save published state!
+    };
 
-    if (req.file) {
-      updateData.thumbnail = `/uploads/${req.file.filename}`;
+    // Handle thumbnail upload
+    if (req.files && req.files.length > 0) {
+      const thumbnailFile = req.files.find(f => f.fieldname === 'thumbnail');
+      if (thumbnailFile) {
+        updateData.thumbnail = thumbnailFile.path; // Remote Cloudinary path
+      }
     }
 
-    // outcomes
+
+    // Handle learning outcomes
     let outcomesArray = req.body['outcomes[]'] || req.body.outcomes || [];
     if (!Array.isArray(outcomesArray)) outcomesArray = [outcomesArray];
     updateData.learningOutcomes = outcomesArray.map(o => o.trim()).filter(o => o);
 
-    // sections
+
+    // 1. Process all uploaded files first to build a map of lesson videos
+    const uploadedVideos = {};
+    (req.files || []).forEach(file => {
+      if (file.fieldname === 'thumbnail') {
+        updateData.thumbnail = file.path; // Remote Cloudinary path
+      }
+
+      const match = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_videoFile$/);
+      if (match) {
+        uploadedVideos[`${match[1]}_${match[2]}`] = file.path; // Remote Cloudinary path
+      }
+    });
+
+    // 2. Handle sections, mapping lessons robustly whether they are arrays or sparse objects
     const rawSections = req.body.sections || {};
+
     updateData.sections = Object.keys(rawSections).map(i => {
       const sec = rawSections[i];
       let lessons = sec.lessons || [];
-      if (!Array.isArray(lessons)) lessons = [lessons];
+      let lessonsList = [];
+
+      if (Array.isArray(lessons)) {
+        lessonsList = lessons.map((l, j) => {
+          const fileKey = `${i}_${j}`;
+          const videoFile = uploadedVideos[fileKey] || l.existingVideoFile || '';
+          return {
+            title: (l.title || '').trim(),
+            type: 'video',
+            videoSource: l.videoSource || 'url',
+            videoUrl: (l.videoUrl || '').trim(),
+            videoFile: videoFile,
+            duration: (l.duration || '').trim(),
+            content: ''
+          };
+        });
+      } else {
+        // It's an object with keys (e.g. '0', '1', '2' due to sparse indices after deletions)
+        lessonsList = Object.keys(lessons).map(j => {
+          const l = lessons[j];
+          const fileKey = `${i}_${j}`;
+          const videoFile = uploadedVideos[fileKey] || l.existingVideoFile || '';
+          return {
+            title: (l.title || '').trim(),
+            type: 'video',
+            videoSource: l.videoSource || 'url',
+            videoUrl: (l.videoUrl || '').trim(),
+            videoFile: videoFile,
+            duration: (l.duration || '').trim(),
+            content: ''
+          };
+        });
+      }
+
       return {
-        title: sec.title || '',
-        lessons: lessons.map(l => ({
-          title:    l.trim(),
-          type:     'video',
-          videoUrl: '',
-          content:  '',
-          duration: ''
-        })).filter(l => l.title)
+        title: (sec.title || '').trim(),
+        lessons: lessonsList.filter(l => l.title)
       };
     }).filter(s => s.title);
 
+    // 3. Save updates to database
     await Course.findOneAndUpdate(
       { _id: req.params.id, instructor: req.session.user._id },
-      updateData
+      updateData,
+      { new: true }
     );
 
-    res.redirect(`/courses/${req.params.id}`);
+       // Redirect with query parameter so EJS shows the popup
+    res.redirect(`/instructor/courses/${req.params.id}/edit?saved=true`);
+
+
   } catch (err) {
-    console.error(err);
-    res.status(500).render('error');
+    console.error('Update course error:', err);
+    res.status(500).send('Failed to update course. Please try again.');
   }
 };
 
@@ -540,3 +605,5 @@ exports.getEnrolledStudents = async (req, res) => {
     res.status(500).render('error');
   }
 };
+
+

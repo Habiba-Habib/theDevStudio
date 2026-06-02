@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const isInstructor = require('../middleware/isInstructor');
 
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const upload = require('../config/multer'); // Connects your Cloudinary Multer Storage pipeline!
+
 
 const {
   getDashboard,
@@ -38,7 +38,7 @@ router.get('/create/step3',  getCreateStep3);
 router.post('/create/step3', postCreateStep3);
 
 router.get('/courses/:id/edit',     getEditCourse);
-router.post('/courses/:id/edit', upload.single('thumbnail'), updateCourse);
+router.post('/courses/:id/edit', upload.any(), updateCourse);
 router.post('/courses/:id/delete',  deleteCourse);
 router.get('/courses/:id/students', getEnrolledStudents);
 

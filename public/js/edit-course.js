@@ -1,89 +1,324 @@
-// ── UPLOAD AREA ──
+// Thumbnail upload preview
 const uploadArea = document.getElementById('upload-area');
-const fileInput  = document.getElementById('file-input');
-if (uploadArea && fileInput) {
-  uploadArea.addEventListener('click', () => fileInput.click());
-  fileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
+const thumbnailInput = document.getElementById('file-input');
+
+if (uploadArea && thumbnailInput) {
+  uploadArea.addEventListener('click', () => thumbnailInput.click());
+
+  thumbnailInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
     if (!file) return;
-    uploadArea.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
-    uploadArea.style.backgroundSize = 'cover';
-    uploadArea.style.backgroundPosition = 'center';
-    uploadArea.querySelector('.upload-icon').style.display = 'none';
-    uploadArea.querySelector('.upload-text').textContent = file.name;
-    uploadArea.querySelector('.upload-hint').textContent = 'Click to change image';
+
+    const url = URL.createObjectURL(file);
+    let previewImg = document.querySelector('.thumbnail-preview img');
+
+    if (!previewImg) {
+      const preview = document.createElement('div');
+      preview.className = 'thumbnail-preview';
+      preview.innerHTML = `<img src="${url}" alt="Course thumbnail preview" />`;
+      uploadArea.parentNode.insertBefore(preview, uploadArea);
+      return;
+    }
+
+    previewImg.src = url;
   });
 }
 
-// ── EVENT DELEGATION — remove buttons ──
-document.addEventListener('click', (e) => {
-  // remove outcome
-  if (e.target.closest('#outcomes-list .btn-remove')) {
-    const item = e.target.closest('.outcome-item');
-    const all  = document.querySelectorAll('#outcomes-list .outcome-item');
-    if (all.length > 1) item.remove();
+// Outcomes
+const outcomesList = document.getElementById('outcomes-list');
+const addOutcomeBtn = document.getElementById('add-outcome');
+
+if (addOutcomeBtn && outcomesList) {
+  addOutcomeBtn.addEventListener('click', () => {
+    const item = document.createElement('div');
+    item.className = 'outcome-item';
+    item.innerHTML = `
+      <input type="text" class="form-input" name="outcomes[]" placeholder="e.g. Build responsive websites" />
+      <button type="button" class="btn-icon btn-remove" onclick="removeOutcome(this)">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    `;
+    outcomesList.appendChild(item);
+    item.querySelector('input').focus();
+  });
+}
+
+window.removeOutcome = function (button) {
+  const item = button.closest('.outcome-item');
+  if (!item || !outcomesList) return;
+
+  if (outcomesList.querySelectorAll('.outcome-item').length > 1) {
+    item.remove();
   }
-  // remove lesson
-  if (e.target.closest('.lesson-container .btn-remove')) {
-    const item    = e.target.closest('.lesson-item');
-    const section = e.target.closest('.section-card');
-    const all     = section.querySelectorAll('.lesson-item');
-    if (all.length > 1) item.remove();
+};
+
+// Toggle section open/closed
+window.toggleSection = function (button) {
+  const sectionCard = button.closest('.section-card');
+  if (!sectionCard) return;
+
+  const content = sectionCard.querySelector('.section-content');
+  const icon = button.querySelector('i');
+
+  button.classList.toggle('collapsed');
+  content?.classList.toggle('collapsed');
+
+  if (icon) {
+    icon.classList.toggle('fa-chevron-right');
+    icon.classList.toggle('fa-chevron-down');
   }
-  // add lesson
-  if (e.target.closest('.section-card .btn-add')) {
-    const section = e.target.closest('.section-card');
-    const si      = [...document.querySelectorAll('.section-card')].indexOf(section);
-    const btn     = section.querySelector('.btn-add');
-    const div     = document.createElement('div');
-    div.className = 'form-group lesson-item';
-    div.innerHTML = `
-      <div class="outcome-item">
-        <input type="text" class="form-input" name="sections[${si}][lessons][]" placeholder="Lesson title"/>
-        <button type="button" class="btn-remove"><i class="fa-solid fa-xmark"></i></button>
-      </div>`;
-    section.insertBefore(div, btn);
-    div.querySelector('.form-input').focus();
+};
+
+// Toggle lesson open/closed
+window.toggleLesson = function (button) {
+  const lessonItem = button.closest('.lesson-item');
+  if (!lessonItem) return;
+
+  const content = lessonItem.querySelector('.lesson-content');
+  const icon = button.querySelector('i');
+
+  button.classList.toggle('collapsed');
+  content?.classList.toggle('collapsed');
+
+  if (icon) {
+    icon.classList.toggle('fa-chevron-right');
+    icon.classList.toggle('fa-chevron-down');
+  }
+};
+
+// Video source URL/upload switch
+window.toggleVideoSource = function (select) {
+  const videoItem = select.closest('.video-item');
+  if (!videoItem) return;
+
+  const urlInput = videoItem.querySelector('.video-url-input');
+  const fileInput = videoItem.querySelector('.video-file-input');
+
+  if (select.value === 'upload') {
+    urlInput?.classList.add('hidden');
+    fileInput?.classList.remove('hidden');
+  } else {
+    urlInput?.classList.remove('hidden');
+    fileInput?.classList.add('hidden');
+  }
+};
+
+// Sections
+const sectionsContainer = document.getElementById('sections-container');
+const addSectionBtn = document.getElementById('add-section');
+
+function getNextSectionIndex() {
+  const indexes = [...document.querySelectorAll('.section-card')]
+    .map(section => Number(section.dataset.sectionIndex))
+    .filter(Number.isFinite);
+
+  return indexes.length ? Math.max(...indexes) + 1 : 0;
+}
+
+function getNextLessonIndex(sectionCard) {
+  const indexes = [...sectionCard.querySelectorAll('.lesson-item')]
+    .map(lesson => Number(lesson.dataset.lessonIndex))
+    .filter(Number.isFinite);
+
+  return indexes.length ? Math.max(...indexes) + 1 : 0;
+}
+
+if (addSectionBtn && sectionsContainer) {
+  addSectionBtn.addEventListener('click', () => {
+    const sectionIndex = getNextSectionIndex();
+
+    const sectionCard = document.createElement('div');
+    sectionCard.className = 'section-card';
+    sectionCard.dataset.sectionIndex = sectionIndex;
+
+    sectionCard.innerHTML = `
+      <div class="section-header-row">
+        <button type="button" class="btn-toggle-section" onclick="toggleSection(this)">
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+
+        <input
+          type="text"
+          class="form-input section-title-input"
+          name="sections[${sectionIndex}][title]"
+          placeholder="Section title"
+        />
+
+        <button type="button" class="btn-icon btn-remove-section" onclick="removeSection(this)">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+
+      <div class="section-content">
+        <div class="lessons-container">
+          ${createLessonHtml(sectionIndex, 0)}
+        </div>
+
+        <button type="button" class="btn-add-lesson" onclick="addLesson(this)">
+          <i class="fa-solid fa-plus"></i>
+          Add Lesson
+        </button>
+      </div>
+    `;
+
+    sectionsContainer.appendChild(sectionCard);
+    sectionCard.querySelector('.section-title-input').focus();
+  });
+}
+
+window.removeSection = function (button) {
+  const sectionCard = button.closest('.section-card');
+  if (!sectionCard || !sectionsContainer) return;
+
+  if (sectionsContainer.querySelectorAll('.section-card').length > 1) {
+    sectionCard.remove();
+  }
+};
+
+function createLessonHtml(sectionIndex, lessonIndex) {
+  return `
+    <div class="lesson-item" data-lesson-index="${lessonIndex}">
+      <div class="lesson-header">
+        <button type="button" class="btn-toggle-lesson" onclick="toggleLesson(this)">
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+
+        <input
+          type="text"
+          class="form-input lesson-title-input"
+          name="sections[${sectionIndex}][lessons][${lessonIndex}][title]"
+          placeholder="Lesson title"
+        />
+
+        <button type="button" class="btn-icon btn-remove-lesson" onclick="removeLesson(this)">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="lesson-content">
+        <div class="lesson-subsection">
+          <h4>Video</h4>
+
+          <div class="video-item">
+            <select
+              class="form-input video-source"
+              name="sections[${sectionIndex}][lessons][${lessonIndex}][videoSource]"
+              onchange="toggleVideoSource(this)"
+            >
+              <option value="url">Video URL</option>
+              <option value="upload">Upload File</option>
+            </select>
+
+            <div class="video-url-input">
+              <input
+                type="url"
+                class="form-input"
+                name="sections[${sectionIndex}][lessons][${lessonIndex}][videoUrl]"
+                placeholder="YouTube, Vimeo, or direct video URL"
+              />
+            </div>
+
+            <div class="video-file-input hidden">
+              <input
+                type="file"
+                class="form-input"
+                name="sections_${sectionIndex}_lessons_${lessonIndex}_videoFile"
+                accept="video/*"
+              />
+            </div>
+
+            <input
+              type="hidden"
+              name="sections[${sectionIndex}][lessons][${lessonIndex}][existingVideoFile]"
+              value=""
+            />
+
+            <input
+              type="text"
+              class="form-input"
+              name="sections[${sectionIndex}][lessons][${lessonIndex}][duration]"
+              placeholder="Duration, e.g. 10:30"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+window.addLesson = function (button) {
+  const sectionCard = button.closest('.section-card');
+  if (!sectionCard) return;
+
+  const lessonsContainer = sectionCard.querySelector('.lessons-container');
+  const sectionIndex = sectionCard.dataset.sectionIndex;
+  const lessonIndex = getNextLessonIndex(sectionCard);
+
+  lessonsContainer.insertAdjacentHTML('beforeend', createLessonHtml(sectionIndex, lessonIndex));
+
+  const newLesson = lessonsContainer.lastElementChild;
+  newLesson.querySelector('.lesson-title-input')?.focus();
+};
+
+window.removeLesson = function (button) {
+  const lessonItem = button.closest('.lesson-item');
+  const lessonsContainer = lessonItem?.closest('.lessons-container');
+
+  if (!lessonItem || !lessonsContainer) return;
+
+  if (lessonsContainer.querySelectorAll('.lesson-item').length > 1) {
+    lessonItem.remove();
+  }
+};
+// Check for saved query parameter and show popup
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('saved')) {
+    const modal = document.getElementById('successModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.classList.remove('hidden');
+    }
   }
 });
 
-// ── ADD OUTCOME ──
-document.getElementById('add-outcome')?.addEventListener('click', () => {
-  const list = document.getElementById('outcomes-list');
-  const div  = document.createElement('div');
-  div.className = 'outcome-item';
-  div.innerHTML = `
-    <input type="text" class="form-input" name="outcomes[]" placeholder="e.g., Build responsive websites"/>
-    <button type="button" class="btn-remove"><i class="fa-solid fa-xmark"></i></button>`;
-  list.appendChild(div);
-  div.querySelector('.form-input').focus();
+
+// ── SHOW PREMIUM SAVING STATE ON BUTTON SUBMIT ──
+// This uses the browser's native submit (100% reliable) while giving beautiful visual feedback!
+document.addEventListener('DOMContentLoaded', () => {
+  const editForm = document.getElementById('editCourseForm');
+  if (editForm) {
+    editForm.addEventListener('submit', () => {
+      const saveBtn = editForm.querySelector('.btn-primary');
+      if (saveBtn) {
+        saveBtn.disabled = true; // Prevents double submissions
+        saveBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Saving...';
+      }
+    });
+  }
+
+  // ── TRIGGER THE SUCCESS MODAL IF URL HAS ?saved=true ──
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('saved')) {
+    const modal = document.getElementById('successModal');
+    if (modal) {
+      modal.classList.add('show');
+      modal.classList.remove('hidden');
+    }
+  }
 });
 
-// ── ADD SECTION ──
-document.getElementById('add-section')?.addEventListener('click', () => {
-  const list = document.getElementById('sections-list');
-  const si   = document.querySelectorAll('.section-card').length;
-  const card = document.createElement('div');
-  card.className = 'section-card';
-  card.innerHTML = `
-    <div class="form-group">
-      <input type="text" class="form-input" name="sections[${si}][title]" placeholder="Section title"/>
-    </div>
-   <div class="lesson-container">
-  <div class="lesson-item">
-    <div class="lesson-row">
-      <input type="text" class="form-input" name="sections[${si}][lessons][0][title]" placeholder="Lesson title"/>
-      <button type="button" class="btn-icon btn-remove"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="lesson-meta-grid">
-      <input type="url" class="form-input" name="sections[${si}][lessons][0][videoUrl]" placeholder="Video URL"/>
-      <input type="text" class="form-input" name="sections[${si}][lessons][0][duration]" placeholder="Duration"/>
-    </div>
-  </div>
-</div>
-    <button type="button" class="btn-add">
-      <i class="fa-solid fa-plus"></i> Add Lesson
-    </button>`;
-  list.appendChild(card);
-  card.querySelector('.form-input').focus();
-});
+// ── CLOSE SUCCESS MODAL & STRIP QUERY PARAMETER CLEANLY ──
+window.closeSuccessModal = function() {
+  const modal = document.getElementById('successModal');
+  if (modal) {
+    modal.classList.remove('show');
+    
+    // Wipe ?saved=true from address bar without reloading
+    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+    window.history.pushState({ path: newUrl }, '', newUrl);
+    
+    setTimeout(() => modal.classList.add('hidden'), 300);
+  }
+};
+

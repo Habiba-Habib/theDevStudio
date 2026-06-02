@@ -13,6 +13,7 @@ const { configurePassport } = require("./config/passport");
 connectDB();
 
 app.use(express.urlencoded({ extended: true }));
+
 app.use(express.json());
 
 app.use(session({

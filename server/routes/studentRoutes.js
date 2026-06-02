@@ -30,7 +30,7 @@ router.post("/challenge/:id/run",    studentController.runCode);
 router.post("/challenge/:id/submit", studentController.submitChallenge);
 router.get("/challenge/:id/review",  studentController.getChallengeReview);
 
-// ── COURSE PLAYER ──
+// ── COURSE PLAYER (INSTRUCTOR PREVIEW BYPASS) ──
 router.get("/course/:courseId/learn", async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -39,13 +39,26 @@ router.get("/course/:courseId/learn", async (req, res) => {
     if (!course) return res.status(404).render("public/page-404");
 
     const user = await User.findById(userId);
-    const enrollment = user.enrolledCourses.find(
+    let enrollment = user.enrolledCourses.find(
       (e) => e.course.toString() === course._id.toString()
     );
 
-    if (!enrollment) return res.redirect(`/courses/${course._id}`);
+    const isInstructorOwner = course.instructor?._id?.toString() === userId.toString();
 
-    const completedLessons = enrollment.completedLessons.map((id) => id.toString());
+    // Block access only if they are not enrolled AND not the instructor who owns the course
+    if (!enrollment && !isInstructorOwner) {
+      return res.redirect(`/courses/${course._id}`);
+    }
+
+    // Mock enrollment for the course instructor owner so they can preview the portal
+    if (!enrollment && isInstructorOwner) {
+      enrollment = {
+        progress: 100,
+        completedLessons: []
+      };
+    }
+
+    const completedLessons = (enrollment.completedLessons || []).map((id) => id.toString());
 
     // flatten all lessons to find which to open
     const allLessons = course.sections.flatMap((s) => s.lessons);

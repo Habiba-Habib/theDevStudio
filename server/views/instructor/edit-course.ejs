@@ -8,7 +8,8 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="/css/edit-course.css" />
+<link rel="stylesheet" href="/css/edit-course.css?v=3" />
+
 </head>
 
 <body>
@@ -17,276 +18,405 @@
 <%
   const sections = course.sections && course.sections.length
     ? course.sections
-    : [{ title: '', lessons: [{ title: '', videoUrl: '', duration: '' }] }];
+    : [{ title: '', lessons: [{ title: '', videoSource: 'url', videoUrl: '', videoFile: '', duration: '' }] }];
 %>
 
-<div class="edit-course-shell">
+<main class="main-content">
+  <div class="edit-course-container">
 
-  <header class="edit-course-header">
-    <div>
-      <a class="back-link" href="/instructor/dashboard">
+    <div class="page-header">
+      <a href="/instructor/dashboard" class="btn-back">
         <i class="fa-solid fa-arrow-left"></i>
-        Dashboard
+        Back to Dashboard
       </a>
 
-      <h1>Edit Course</h1>
-      <p>Update course details, curriculum, videos, pricing, and thumbnail.</p>
+      <h1 class="page-title">Edit Course</h1>
+      <p class="page-subtitle">Update course details, sections, lessons, videos, and pricing.</p>
     </div>
 
-    <div class="header-actions">
-      <a href="/courses/<%= course._id %>" class="btn-secondary">View Course</a>
-      <button type="submit" form="editCourseForm" class="btn-primary">Save Changes</button>
-    </div>
-  </header>
+    <form
+      id="editCourseForm"
+      action="/instructor/courses/<%= course._id %>/edit"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <div class="edit-course-grid">
 
-  <form
-    id="editCourseForm"
-    action="/instructor/courses/<%= course._id %>/edit"
-    method="POST"
-    enctype="multipart/form-data"
-  >
-    <div class="edit-course-grid">
+        <div class="edit-course-main">
 
-      <main class="edit-main">
-
-        <section class="edit-card">
-          <h2 class="card-title">Basic Information</h2>
-
-          <div class="form-group">
-            <label class="form-label">Course Title</label>
-            <input
-              type="text"
-              class="form-input"
-              name="title"
-              value="<%= course.title || '' %>"
-              required
-            />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Short Description</label>
-            <input
-              type="text"
-              class="form-input"
-              name="shortDescription"
-              value="<%= course.shortDescription || '' %>"
-            />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Full Description</label>
-            <textarea class="form-input" name="fullDescription"><%= course.fullDescription || '' %></textarea>
-          </div>
-
-          <div class="two-col">
-            <div class="form-group">
-              <label class="form-label">Category</label>
-              <select class="form-input" name="category" required>
-                <option value="Web Development" <%= course.category === 'Web Development' ? 'selected' : '' %>>Web Development</option>
-                <option value="Data Science" <%= course.category === 'Data Science' ? 'selected' : '' %>>Data Science</option>
-                <option value="Design" <%= course.category === 'Design' ? 'selected' : '' %>>Design</option>
-                <option value="Business" <%= course.category === 'Business' ? 'selected' : '' %>>Business</option>
-                <option value="Mobile Development" <%= course.category === 'Mobile Development' ? 'selected' : '' %>>Mobile Development</option>
-                <option value="Machine Learning" <%= course.category === 'Machine Learning' ? 'selected' : '' %>>Machine Learning</option>
-              </select>
+          <section class="edit-card">
+            <div class="card-header">
+              <h2 class="card-title">Course Overview</h2>
             </div>
 
             <div class="form-group">
-              <label class="form-label">Level</label>
-              <select class="form-input" name="level" required>
-                <option value="Beginner" <%= course.level === 'Beginner' ? 'selected' : '' %>>Beginner</option>
-                <option value="Intermediate" <%= course.level === 'Intermediate' ? 'selected' : '' %>>Intermediate</option>
-                <option value="Advanced" <%= course.level === 'Advanced' ? 'selected' : '' %>>Advanced</option>
-              </select>
+              <label class="form-label">Course Title <span class="required">*</span></label>
+              <input
+                type="text"
+                class="form-input"
+                name="title"
+                value="<%= course.title || '' %>"
+                required
+                placeholder="Enter course title"
+              />
             </div>
-          </div>
-        </section>
 
-        <section class="edit-card">
-          <h2 class="card-title">Learning Outcomes</h2>
+            <div class="form-group">
+              <label class="form-label">Short Description</label>
+              <input
+                type="text"
+                class="form-input"
+                name="shortDescription"
+                value="<%= course.shortDescription || '' %>"
+                placeholder="A brief summary for course cards"
+              />
+            </div>
 
-          <div id="outcomes-list">
-            <% if (course.learningOutcomes && course.learningOutcomes.length) { %>
-              <% course.learningOutcomes.forEach((outcome) => { %>
+            <div class="form-group">
+              <label class="form-label">Full Description</label>
+              <textarea
+                class="form-input"
+                name="fullDescription"
+                rows="5"
+                placeholder="Describe what students will learn"
+              ><%= course.fullDescription || '' %></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Category <span class="required">*</span></label>
+                <select class="form-input" name="category" required>
+                  <option value="">Select category</option>
+                  <option value="Web Development" <%= course.category === 'Web Development' ? 'selected' : '' %>>Web Development</option>
+                  <option value="Data Science" <%= course.category === 'Data Science' ? 'selected' : '' %>>Data Science</option>
+                  <option value="Design" <%= course.category === 'Design' ? 'selected' : '' %>>Design</option>
+                  <option value="Business" <%= course.category === 'Business' ? 'selected' : '' %>>Business</option>
+                  <option value="Mobile Development" <%= course.category === 'Mobile Development' ? 'selected' : '' %>>Mobile Development</option>
+                  <option value="Machine Learning" <%= course.category === 'Machine Learning' ? 'selected' : '' %>>Machine Learning</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Level <span class="required">*</span></label>
+                <select class="form-input" name="level" required>
+                  <option value="">Select level</option>
+                  <option value="Beginner" <%= course.level === 'Beginner' ? 'selected' : '' %>>Beginner</option>
+                  <option value="Intermediate" <%= course.level === 'Intermediate' ? 'selected' : '' %>>Intermediate</option>
+                  <option value="Advanced" <%= course.level === 'Advanced' ? 'selected' : '' %>>Advanced</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <section class="edit-card">
+            <div class="card-header">
+              <h2 class="card-title">Learning Outcomes</h2>
+            </div>
+
+            <div id="outcomes-list">
+              <% if (course.learningOutcomes && course.learningOutcomes.length) { %>
+                <% course.learningOutcomes.forEach((outcome) => { %>
+                  <div class="outcome-item">
+                    <input
+                      type="text"
+                      class="form-input"
+                      name="outcomes[]"
+                      value="<%= outcome %>"
+                      placeholder="e.g. Build responsive websites"
+                    />
+                    <button type="button" class="btn-icon btn-remove" onclick="removeOutcome(this)">
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
+                  </div>
+                <% }) %>
+              <% } else { %>
                 <div class="outcome-item">
                   <input
                     type="text"
                     class="form-input"
                     name="outcomes[]"
-                    value="<%= outcome %>"
                     placeholder="e.g. Build responsive websites"
                   />
-                  <button type="button" class="btn-icon btn-remove">
+                  <button type="button" class="btn-icon btn-remove" onclick="removeOutcome(this)">
                     <i class="fa-solid fa-xmark"></i>
                   </button>
                 </div>
-              <% }) %>
-            <% } else { %>
-              <div class="outcome-item">
-                <input
-                  type="text"
-                  class="form-input"
-                  name="outcomes[]"
-                  placeholder="e.g. Build responsive websites"
-                />
-                <button type="button" class="btn-icon btn-remove">
-                  <i class="fa-solid fa-xmark"></i>
-                </button>
-              </div>
-            <% } %>
-          </div>
-
-          <button type="button" id="add-outcome" class="btn-add">
-            <i class="fa-solid fa-plus"></i>
-            Add Outcome
-          </button>
-        </section>
-
-        <section class="edit-card">
-          <h2 class="card-title">Course Curriculum</h2>
-
-          <div id="sections-list">
-            <% sections.forEach((section, si) => { %>
-              <div class="section-card">
-
-                <div class="form-group">
-                  <label class="form-label">Section Title</label>
-                  <input
-                    type="text"
-                    class="form-input"
-                    name="sections[<%= si %>][title]"
-                    value="<%= section.title || '' %>"
-                    placeholder="Section title"
-                  />
-                </div>
-
-                <div class="lesson-container">
-                  <%
-                    const lessons = section.lessons && section.lessons.length
-                      ? section.lessons
-                      : [{ title: '', videoUrl: '', duration: '' }];
-                  %>
-
-                  <% lessons.forEach((lesson, li) => { %>
-                    <div class="lesson-item">
-
-                      <div class="lesson-row">
-                        <input
-                          type="text"
-                          class="form-input"
-                          name="sections[<%= si %>][lessons][<%= li %>][title]"
-                          value="<%= lesson.title || '' %>"
-                          placeholder="Lesson title"
-                        />
-
-                        <button type="button" class="btn-icon btn-remove">
-                          <i class="fa-solid fa-xmark"></i>
-                        </button>
-                      </div>
-
-                      <div class="lesson-meta-grid">
-                        <input
-                          type="url"
-                          class="form-input"
-                          name="sections[<%= si %>][lessons][<%= li %>][videoUrl]"
-                          value="<%= lesson.videoUrl || '' %>"
-                          placeholder="Video URL"
-                        />
-
-                        <input
-                          type="text"
-                          class="form-input"
-                          name="sections[<%= si %>][lessons][<%= li %>][duration]"
-                          value="<%= lesson.duration || '' %>"
-                          placeholder="Duration"
-                        />
-                      </div>
-
-                    </div>
-                  <% }) %>
-                </div>
-
-                <button type="button" class="btn-add">
-                  <i class="fa-solid fa-plus"></i>
-                  Add Lesson
-                </button>
-
-              </div>
-            <% }) %>
-          </div>
-
-          <button type="button" id="add-section" class="btn-add-section">
-            <i class="fa-solid fa-plus"></i>
-            Add Section
-          </button>
-        </section>
-
-      </main>
-
-      <aside class="edit-sidebar">
-
-        <section class="edit-card">
-          <h2 class="card-title">Thumbnail</h2>
-
-          <% if (course.thumbnail) { %>
-            <img class="thumbnail-preview" src="<%= course.thumbnail %>" alt="Course thumbnail" />
-          <% } %>
-
-          <div class="upload-area" id="upload-area">
-            <input
-              type="file"
-              id="file-input"
-              name="thumbnail"
-              accept="image/*"
-              style="display:none"
-            />
-
-            <div class="upload-icon">
-              <i class="fa-solid fa-arrow-up-from-bracket"></i>
+              <% } %>
             </div>
 
-            <div class="upload-text">Click to upload thumbnail</div>
-            <div class="upload-hint">PNG or JPG. Leave empty to keep current.</div>
-          </div>
-        </section>
+            <button type="button" id="add-outcome" class="btn-add">
+              <i class="fa-solid fa-plus"></i>
+              Add Outcome
+            </button>
+          </section>
 
-        <section class="edit-card">
-          <h2 class="card-title">Pricing</h2>
+          <section class="edit-card">
+            <div class="card-header">
+              <h2 class="card-title">Course Content</h2>
+            </div>
 
-          <div class="form-group">
-            <label class="form-label">Price ($)</label>
-            <input
-              type="number"
-              class="form-input"
-              name="price"
-              value="<%= course.price || 0 %>"
-              required
-            />
-          </div>
+            <p class="section-help">
+              Click a section to expand it, then edit lessons and video settings inside.
+            </p>
 
-          <div class="form-group">
-            <label class="form-label">Course Duration</label>
-            <input
-              type="text"
-              class="form-input"
-              name="duration"
-              value="<%= course.duration || '' %>"
-              placeholder="e.g. 40 hours"
-            />
-          </div>
-        </section>
+            <div id="sections-container">
+              <% sections.forEach((section, sectionIndex) => { %>
+                <div class="section-card" data-section-index="<%= sectionIndex %>">
 
-        <section class="edit-card">
-          <button type="submit" class="btn-primary full-width">Save Changes</button>
-          <a href="/courses/<%= course._id %>" class="btn-secondary full-width center">Cancel</a>
-        </section>
+                  <div class="section-header-row">
+                    <button type="button" class="btn-toggle-section collapsed" onclick="toggleSection(this)">
+                      <i class="fa-solid fa-chevron-right"></i>
+                    </button>
 
-      </aside>
+                    <input
+                      type="text"
+                      class="form-input section-title-input"
+                      name="sections[<%= sectionIndex %>][title]"
+                      value="<%= section.title || '' %>"
+                      placeholder="Section title"
+                    />
 
+                    <button type="button" class="btn-icon btn-remove-section" onclick="removeSection(this)">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </div>
+
+                  <div class="section-content collapsed">
+                    <div class="lessons-container">
+                      <%
+                        const lessons = section.lessons && section.lessons.length
+                          ? section.lessons
+                          : [{ title: '', videoSource: 'url', videoUrl: '', videoFile: '', duration: '' }];
+                      %>
+
+                      <% lessons.forEach((lesson, lessonIndex) => { %>
+                        <div class="lesson-item" data-lesson-index="<%= lessonIndex %>">
+
+                          <div class="lesson-header">
+                            <button type="button" class="btn-toggle-lesson collapsed" onclick="toggleLesson(this)">
+                              <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+
+                            <input
+                              type="text"
+                              class="form-input lesson-title-input"
+                              name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][title]"
+                              value="<%= lesson.title || '' %>"
+                              placeholder="Lesson title"
+                            />
+
+                            <button type="button" class="btn-icon btn-remove-lesson" onclick="removeLesson(this)">
+                              <i class="fa-solid fa-xmark"></i>
+                            </button>
+                          </div>
+
+                          <div class="lesson-content collapsed">
+
+                            <div class="lesson-subsection">
+                              <h4>Video</h4>
+
+                              <div class="video-item">
+                                <select
+                                  class="form-input video-source"
+                                  name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][videoSource]"
+                                  onchange="toggleVideoSource(this)"
+                                >
+                                  <option value="url" <%= lesson.videoSource !== 'upload' ? 'selected' : '' %>>Video URL</option>
+                                  <option value="upload" <%= lesson.videoSource === 'upload' ? 'selected' : '' %>>Upload File</option>
+                                </select>
+
+                                <div class="video-url-input <%= lesson.videoSource === 'upload' ? 'hidden' : '' %>">
+                                  <input
+                                    type="url"
+                                    class="form-input"
+                                    name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][videoUrl]"
+                                    value="<%= lesson.videoUrl || '' %>"
+                                    placeholder="YouTube, Vimeo, or direct video URL"
+                                  />
+                                </div>
+
+                                <div class="video-file-input <%= lesson.videoSource === 'upload' ? '' : 'hidden' %>">
+                                  <input
+                                    type="file"
+                                    class="form-input"
+                                    name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_videoFile"
+                                    accept="video/*"
+                                  />
+
+                                  <% if (lesson.videoFile) { %>
+                                    <p class="saved-file">
+                                      <i class="fa-solid fa-file-video"></i>
+                                      Existing uploaded video will be kept unless replaced.
+                                    </p>
+                                  <% } %>
+                                </div>
+
+                                <input
+                                  type="hidden"
+                                  name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][existingVideoFile]"
+                                  value="<%= lesson.videoFile || '' %>"
+                                />
+
+                                <input
+                                  type="text"
+                                  class="form-input"
+                                  name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][duration]"
+                                  value="<%= lesson.duration || '' %>"
+                                  placeholder="Duration, e.g. 10:30"
+                                />
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      <% }) %>
+                    </div>
+
+                    <button type="button" class="btn-add-lesson" onclick="addLesson(this)">
+                      <i class="fa-solid fa-plus"></i>
+                      Add Lesson
+                    </button>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+
+            <button type="button" id="add-section" class="btn-add-section">
+              <i class="fa-solid fa-plus"></i>
+              Add Section
+            </button>
+          </section>
+        </div>
+
+        <div class="edit-course-sidebar">
+
+          <section class="edit-card sidebar-card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fa-solid fa-tag"></i> Pricing</h2>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Price ($) <span class="required">*</span></label>
+              <input
+                type="number"
+                class="form-input"
+                name="price"
+                value="<%= course.price || 0 %>"
+                min="0"
+                required
+                placeholder="0"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Duration</label>
+              <input
+                type="text"
+                class="form-input"
+                name="duration"
+                value="<%= course.duration || '' %>"
+                placeholder="e.g. 40 hours"
+              />
+            </div>
+          </section>
+          <!-- Publish Status Card -->
+          <section class="edit-card sidebar-card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fa-solid fa-square-share-nodes"></i> Publish Status</h2>
+            </div>
+            <div class="form-group" style="margin-top: 12px; margin-bottom: 0;">
+              <select class="form-input" name="isPublished">
+                <option value="true" <%= course.isPublished ? 'selected' : '' %>>Published (Visible to Students)</option>
+                <option value="false" <%= !course.isPublished ? 'selected' : '' %>>Draft (Hidden / Invisible)</option>
+              </select>
+            </div>
+          </section>
+
+          <section class="edit-card sidebar-card">
+            <div class="card-header">
+              <h2 class="card-title"><i class="fa-solid fa-image"></i> Thumbnail</h2>
+            </div>
+
+            <div class="thumbnail-section">
+              <% if (course.thumbnail) { %>
+                <div class="thumbnail-preview">
+                  <img src="<%= course.thumbnail %>" alt="Current thumbnail" />
+                </div>
+              <% } %>
+
+              <div class="upload-area" id="upload-area">
+                <input
+                  type="file"
+                  id="file-input"
+                  name="thumbnail"
+                  accept="image/*"
+                  style="display:none"
+                />
+
+                <div class="upload-icon">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+
+                <div class="upload-text">Upload Thumbnail</div>
+                <div class="upload-hint">PNG or JPG recommended</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="edit-card sidebar-card">
+            <div class="form-actions">
+              <a href="/courses/<%= course._id %>" class="btn-secondary" target="_blank">
+                <i class="fa-solid fa-eye"></i>
+                Preview Course
+              </a>
+
+              <button type="submit" class="btn-primary">
+                <i class="fa-solid fa-save"></i>
+                Save Changes
+              </button>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
+<!-- Uploading Progress Overlay -->
+<div id="uploadProgressOverlay" class="modal-overlay hidden">
+  <div class="modal-card">
+    <div class="upload-progress-spinner">
+      <i class="fa-solid fa-cloud-arrow-up fa-bounce" style="font-size: 3.5rem; color: var(--pink);"></i>
     </div>
-  </form>
-
+    <h3 class="modal-title" style="margin-top: 15px;">Uploading Course Content...</h3>
+    <p class="modal-text">Please do not close this tab. Uploading media files directly to Cloudinary.</p>
+    
+    <div class="progress-bar-container" style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; height: 10px; width: 100%; overflow: hidden; margin-bottom: 15px; margin-top: 20px;">
+      <div id="uploadProgressBar" style="background: linear-gradient(90deg, var(--pink), var(--teal)); width: 0%; height: 100%; transition: width 0.1s ease;"></div>
+    </div>
+    <span id="uploadProgressPercent" style="font-weight: 700; color: var(--text-white); font-size: 1.2rem;">0%</span>
+  </div>
 </div>
+
+<!-- Success Popup Modal -->
+<div id="successModal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <div class="modal-icon">
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
+    <h3 class="modal-title">Changes Saved Successfully!</h3>
+    <p class="modal-text">Your course has been updated with the latest changes.</p>
+    <div class="modal-actions">
+      <a href="/instructor/dashboard" class="modal-btn modal-btn-primary">
+        <i class="fa-solid fa-chart-line"></i> Back to Dashboard
+      </a>
+      <button type="button" class="modal-btn modal-btn-secondary" onclick="closeSuccessModal()">
+        Continue Editing
+      </button>
+    </div>
+  </div>
+</div>
+
 
 <script src="/js/edit-course.js"></script>
 </body>
