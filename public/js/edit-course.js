@@ -69,14 +69,18 @@ document.getElementById('add-section')?.addEventListener('click', () => {
     <div class="form-group">
       <input type="text" class="form-input" name="sections[${si}][title]" placeholder="Section title"/>
     </div>
-    <div class="lesson-container">
-      <div class="form-group lesson-item">
-        <div class="outcome-item">
-          <input type="text" class="form-input" name="sections[${si}][lessons][]" placeholder="Lesson title"/>
-          <button type="button" class="btn-remove"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-      </div>
+   <div class="lesson-container">
+  <div class="lesson-item">
+    <div class="lesson-row">
+      <input type="text" class="form-input" name="sections[${si}][lessons][0][title]" placeholder="Lesson title"/>
+      <button type="button" class="btn-icon btn-remove"><i class="fa-solid fa-xmark"></i></button>
     </div>
+    <div class="lesson-meta-grid">
+      <input type="url" class="form-input" name="sections[${si}][lessons][0][videoUrl]" placeholder="Video URL"/>
+      <input type="text" class="form-input" name="sections[${si}][lessons][0][duration]" placeholder="Duration"/>
+    </div>
+  </div>
+</div>
     <button type="button" class="btn-add">
       <i class="fa-solid fa-plus"></i> Add Lesson
     </button>`;

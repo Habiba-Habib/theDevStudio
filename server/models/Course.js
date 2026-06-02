@@ -3,7 +3,13 @@ const mongoose = require("mongoose");
 const lessonSchema = new mongoose.Schema({
   title:    { type: String, required: true },
   type:     { type: String, enum: ['video', 'text'], default: 'video' },
-  videoUrl: { type: String, default: '' },
+ videoUrl: { type: String, default: '' },
+videoFile: { type: String, default: '' },
+videoSource: {
+  type: String,
+  enum: ['url', 'upload'],
+  default: 'url'
+},
   content:  { type: String, default: '' },
   duration: { type: String, default: '' },
 
@@ -21,6 +27,7 @@ resources: [ //added
 const sectionSchema = new mongoose.Schema({
   title:   { type: String, required: true },
   lessons: [lessonSchema]
+  
 });
 
 const courseSchema = new mongoose.Schema({

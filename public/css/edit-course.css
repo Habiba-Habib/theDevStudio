@@ -1,0 +1,384 @@
+:root {
+  --pink: #ff40a0;
+  --pink-soft: #ffb7e6;
+  --yellow: #f0fe72;
+  --teal: #60a3a6;
+
+  --bg: #0a0e27;
+  --surface: #171d35;
+  --surface-soft: #12182f;
+  --field: #0f1530;
+
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+
+  --text: #fffffc;
+  --muted: #bdc2c9;
+  --body: #c8d0e7;
+  --danger: #ff5c7a;
+
+  --font: "Inter", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+}
+
+.edit-course-shell {
+  width: min(920px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 38px 0 80px;
+}
+
+.edit-course-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 22px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.back-link:hover {
+  color: var(--yellow);
+}
+
+.edit-course-header h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+.edit-course-header p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 560px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.edit-course-grid {
+  display: block;
+}
+
+.edit-main,
+.edit-sidebar {
+  display: contents;
+}
+
+.edit-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 18px;
+}
+
+.card-title {
+  margin: 0 0 20px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  display: block;
+  color: var(--body);
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: var(--field);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font: inherit;
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.form-input::placeholder {
+  color: rgba(189, 194, 201, 0.72);
+}
+
+.form-input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(96, 163, 166, 0.15);
+}
+
+textarea.form-input {
+  min-height: 130px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.outcome-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38px;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.section-card {
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.lesson-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lesson-item {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 14px;
+}
+
+.lesson-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38px;
+  gap: 10px;
+  align-items: center;
+}
+
+.lesson-meta-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 140px;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-add,
+.btn-add-section,
+.btn-icon {
+  font: inherit;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease, opacity 0.16s ease;
+}
+
+.btn-primary {
+  border: 0;
+  background: linear-gradient(90deg, var(--pink), var(--pink-soft));
+  color: white;
+  border-radius: 8px;
+  padding: 12px 17px;
+  font-weight: 800;
+}
+
+.btn-primary:hover {
+  opacity: 0.92;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 11px 15px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-add,
+.btn-add-section {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--teal);
+  border: 1px solid rgba(96, 163, 166, 0.38);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-weight: 800;
+}
+
+.btn-add:hover,
+.btn-add-section:hover {
+  background: rgba(96, 163, 166, 0.08);
+}
+
+.btn-add-section {
+  width: 100%;
+}
+
+.btn-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+.btn-icon:hover {
+  color: var(--danger);
+  border-color: rgba(255, 92, 122, 0.55);
+  background: rgba(255, 92, 122, 0.08);
+}
+
+.upload-area {
+  border: 1.5px dashed var(--border-strong);
+  border-radius: 10px;
+  background: var(--field);
+  padding: 28px 18px;
+  text-align: center;
+  cursor: pointer;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.upload-area:hover {
+  border-color: var(--teal);
+  background-color: rgba(96, 163, 166, 0.05);
+}
+
+.upload-icon {
+  color: var(--teal);
+  font-size: 22px;
+}
+
+.upload-text {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.upload-hint {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.thumbnail-preview {
+  width: 100%;
+  aspect-ratio: 16 / 8;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+  background: var(--field);
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.center {
+  text-align: center;
+}
+
+/* Soft tab look without requiring new JS yet */
+.edit-card:nth-of-type(1),
+.edit-card:nth-of-type(2),
+.edit-card:nth-of-type(3),
+.edit-sidebar .edit-card {
+  scroll-margin-top: 24px;
+}
+
+/* Bottom action card */
+.edit-sidebar .edit-card:last-child {
+  background: transparent;
+  border: 0;
+  padding: 6px 0 0;
+  margin-bottom: 0;
+}
+
+.edit-sidebar .edit-card:last-child .btn-primary,
+.edit-sidebar .edit-card:last-child .btn-secondary {
+  min-height: 46px;
+}
+
+@media (max-width: 720px) {
+  .edit-course-shell {
+    width: min(100% - 28px, 920px);
+    padding-top: 28px;
+  }
+
+  .edit-course-header {
+    flex-direction: column;
+  }
+
+  .header-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .header-actions .btn-secondary,
+  .header-actions .btn-primary {
+    width: 100%;
+  }
+
+  .edit-course-header h1 {
+    font-size: 28px;
+  }
+
+  .edit-card {
+    padding: 18px;
+  }
+
+  .two-col,
+  .lesson-meta-grid {
+    grid-template-columns: 1fr;
+  }
+}
