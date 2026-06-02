@@ -176,3 +176,144 @@ function showCompletionModal(courseId) {
     if (courseId) showCompletionModal(courseId);
   }
 })();
+
+// ── NOTES ──
+(function initNotes() {
+  const textarea  = document.getElementById('notesTextarea');
+  const saveBtn   = document.getElementById('notesSaveBtn');
+  const savedLabel = document.getElementById('notesSavedLabel');
+  if (!textarea || !saveBtn) return;
+
+  const courseId = textarea.dataset.courseId;
+  const lessonId = textarea.dataset.lessonId;
+  let autoSaveTimer = null;
+
+  async function saveNote() {
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving…';
+
+    try {
+      const res  = await fetch(`/student/course/${courseId}/lesson/${lessonId}/note`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ content: textarea.value })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        savedLabel.textContent = '✓ Saved';
+        savedLabel.classList.add('is-visible');
+        setTimeout(() => savedLabel.classList.remove('is-visible'), 2500);
+      }
+    } catch (err) {
+      console.error('Note save error:', err);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Note';
+    }
+  }
+
+  // Manual save button
+  saveBtn.addEventListener('click', saveNote);
+
+  // Auto-save 2 seconds after the user stops typing
+  textarea.addEventListener('input', () => {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(saveNote, 2000);
+  });
+})();
+
+// ── ASSIGNMENT SUBMISSION ──
+(function initSubmission() {
+  const fileInput   = document.getElementById('submissionFileInput');
+  const submitBtn   = document.getElementById('btnSubmitAssignment');
+  const dropZone    = document.getElementById('uploadDropZone');
+  const dropHint    = document.getElementById('dropHint');
+  const resubmitBtn = document.getElementById('btnResubmit');
+  const submitForm  = document.getElementById('submitForm');
+  const existing    = document.getElementById('submissionExisting');
+
+  if (!fileInput || !submitBtn) return;
+
+  const courseId = fileInput.dataset.courseId;
+  const lessonId = fileInput.dataset.lessonId;
+
+  // Resubmit — swap panels
+  if (resubmitBtn) {
+    resubmitBtn.addEventListener('click', () => {
+      existing.style.display = 'none';
+      submitForm.classList.remove('hidden');
+    });
+  }
+
+  // File chosen via click
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files[0]) {
+      dropHint.textContent = fileInput.files[0].name;
+      submitBtn.disabled   = false;
+    }
+  });
+
+  // Drag & drop
+  if (dropZone) {
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file) {
+        const dt     = new DataTransfer();
+        dt.items.add(file);
+        fileInput.files    = dt.files;
+        dropHint.textContent = file.name;
+        submitBtn.disabled   = false;
+      }
+    });
+  }
+
+  // Submit
+  submitBtn.addEventListener('click', async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Uploading…';
+
+    const formData = new FormData();
+    formData.append('submissionFile', file);
+
+    try {
+      const res  = await fetch(`/student/course/${courseId}/lesson/${lessonId}/submit-assignment`, {
+        method: 'POST',
+        body:   formData
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        // Update the existing submission banner
+        if (existing) {
+          const nameEl = existing.querySelector('.submission-existing-name');
+          const dateEl = existing.querySelector('.submission-existing-date');
+          if (nameEl) nameEl.textContent = data.fileName;
+          if (dateEl) dateEl.textContent = 'Submitted ' + new Date(data.submittedAt).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' });
+          existing.style.display = 'flex';
+          submitForm.classList.add('hidden');
+        } else {
+          // First time — reload to show the banner properly
+          window.location.reload();
+        }
+        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Assignment';
+      } else {
+        alert(data.error || 'Submission failed. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Assignment';
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Submission failed. Please try again.');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Assignment';
+    }
+  });
+})();

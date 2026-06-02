@@ -212,6 +212,21 @@ function createLessonHtml(sectionIndex, lessonIndex) {
         </div>
 
         <div class="lesson-subsection">
+          <h4><i class="fa-solid fa-clipboard-list"></i> Assignment / Quiz</h4>
+          <input
+            type="file"
+            class="form-input"
+            name="sections_${sectionIndex}_lessons_${lessonIndex}_assignmentFile"
+            accept=".pdf,.doc,.docx,.ppt,.pptx"
+          />
+          <input
+            type="hidden"
+            name="sections[${sectionIndex}][lessons][${lessonIndex}][existingAssignmentFile]"
+            value=""
+          />
+        </div>
+
+        <div class="lesson-subsection">
           <h4>Video</h4>
 
           <div class="video-item">
