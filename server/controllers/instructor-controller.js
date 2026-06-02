@@ -469,17 +469,26 @@ exports.updateCourse = async (req, res) => {
 
 
     // 1. Process all uploaded files first to build a map of lesson videos
-    const uploadedVideos = {};
-    (req.files || []).forEach(file => {
-      if (file.fieldname === 'thumbnail') {
-        updateData.thumbnail = file.path; // Remote Cloudinary path
-      }
+    // 1. Process all uploaded files first to build a map of lesson videos
+const uploadedVideos = {};
+const uploadedResources = {};    // ← moved here, OUTSIDE the loop
 
-      const match = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_videoFile$/);
-      if (match) {
-        uploadedVideos[`${match[1]}_${match[2]}`] = file.path; // Remote Cloudinary path
-      }
-    });
+(req.files || []).forEach(file => {
+  if (file.fieldname === 'thumbnail') {
+    updateData.thumbnail = file.path;
+  }
+
+  const match = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_videoFile$/);
+  if (match) {
+    uploadedVideos[`${match[1]}_${match[2]}`] = file.path;
+  }
+
+  const rMatch = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_resourceFile$/);
+  if (rMatch) {
+    uploadedResources[`${rMatch[1]}_${rMatch[2]}`] = file.path;
+  }
+});
+
 
     // 2. Handle sections, mapping lessons robustly whether they are arrays or sparse objects
     const rawSections = req.body.sections || {};
@@ -499,8 +508,11 @@ exports.updateCourse = async (req, res) => {
             videoSource: l.videoSource || 'url',
             videoUrl: (l.videoUrl || '').trim(),
             videoFile: videoFile,
+            resourceFile: uploadedResources[fileKey] || l.existingResourceFile || '',
+
             duration: (l.duration || '').trim(),
             content: ''
+            
           };
         });
       } else {
@@ -515,6 +527,7 @@ exports.updateCourse = async (req, res) => {
             videoSource: l.videoSource || 'url',
             videoUrl: (l.videoUrl || '').trim(),
             videoFile: videoFile,
+            resourceFile: uploadedResources[fileKey] || l.existingResourceFile || '',
             duration: (l.duration || '').trim(),
             content: ''
           };

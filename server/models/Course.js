@@ -11,10 +11,12 @@ const lessonSchema = new mongoose.Schema({
   type: { type: String, enum: ['video', 'text'], default: 'video' },
   videoSource: { type: String, enum: ['url', 'upload'], default: 'url' },
   videoUrl: { type: String, default: '' },
-  videoFile: { type: String, default: '' },
+videoFiles: [{ type: String }],
+resourceFiles: [{ type: String }],
   content: { type: String, default: '' },
   duration: { type: String, default: '' },
   resources: [resourceSchema]
+
 });
 
 const sectionSchema = new mongoose.Schema({

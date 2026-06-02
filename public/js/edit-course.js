@@ -322,3 +322,36 @@ window.closeSuccessModal = function() {
   }
 };
 
+window.extractVideoDuration = function(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const lessonContent = input.closest('.lesson-content');
+  const hiddenDuration = lessonContent.querySelector('.lesson-duration-hidden');
+
+  const tempVideo = document.createElement('video');
+  tempVideo.preload = 'metadata';
+  const objectUrl = URL.createObjectURL(file);
+  tempVideo.src = objectUrl;
+
+  tempVideo.onloadedmetadata = function() {
+    URL.revokeObjectURL(objectUrl);
+    const totalSeconds = Math.floor(tempVideo.duration);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    const formatted = minutes + ':' + seconds.toString().padStart(2, '0');
+
+    if (hiddenDuration) hiddenDuration.value = formatted;
+
+    // Show a confirmation label
+    let display = lessonContent.querySelector('.duration-display');
+    if (!display) {
+      display = document.createElement('p');
+      display.className = 'duration-display saved-file';
+      input.parentNode.appendChild(display);
+    }
+    display.innerHTML = '<i class="fa-solid fa-clock"></i> Duration: <strong>' + formatted + '</strong>';
+  };
+};
+
+

@@ -213,59 +213,70 @@
                           <div class="lesson-content collapsed">
 
                             <div class="lesson-subsection">
-                              <h4>Video</h4>
+  <h4><i class="fa-solid fa-file-lines"></i> Documents</h4>
+  <input
+    type="file"
+    class="form-input"
+    name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_resourceFile"
+    accept=".pdf,.doc,.docx,.ppt,.pptx"
+  />
+  <% if (lesson.resourceFile) { %>
+    <p class="saved-file">
+      <i class="fa-solid fa-file"></i>
+      Existing document will be kept unless replaced.
+    </p>
+  <% } %>
+  <input type="hidden"
+    name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][existingResourceFile]"
+    value="<%= lesson.resourceFile || '' %>"
+  />
+</div>
+<div class="lesson-subsection">
+  <h4><i class="fa-solid fa-film"></i> Video</h4>
+  <div class="video-item">
+    <select
+      class="form-input video-source"
+      name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][videoSource]"
+      onchange="toggleVideoSource(this)"
+    >
+      <option value="url" <%= lesson.videoSource !== 'upload' ? 'selected' : '' %>>Type URL</option>
+      <option value="upload" <%= lesson.videoSource === 'upload' ? 'selected' : '' %>>Upload File</option>
+    </select>
 
-                              <div class="video-item">
-                                <select
-                                  class="form-input video-source"
-                                  name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][videoSource]"
-                                  onchange="toggleVideoSource(this)"
-                                >
-                                  <option value="url" <%= lesson.videoSource !== 'upload' ? 'selected' : '' %>>Video URL</option>
-                                  <option value="upload" <%= lesson.videoSource === 'upload' ? 'selected' : '' %>>Upload File</option>
-                                </select>
+    <div class="video-url-input <%= lesson.videoSource === 'upload' ? 'hidden' : '' %>">
+      <input type="url" class="form-input"
+        name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][videoUrl]"
+        value="<%= lesson.videoUrl || '' %>"
+        placeholder="YouTube, Vimeo, or direct video URL"
+      />
+    </div>
 
-                                <div class="video-url-input <%= lesson.videoSource === 'upload' ? 'hidden' : '' %>">
-                                  <input
-                                    type="url"
-                                    class="form-input"
-                                    name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][videoUrl]"
-                                    value="<%= lesson.videoUrl || '' %>"
-                                    placeholder="YouTube, Vimeo, or direct video URL"
-                                  />
-                                </div>
+    <div class="video-file-input <%= lesson.videoSource === 'upload' ? '' : 'hidden' %>">
+      <input type="file" class="form-input"
+        name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_videoFile"
+        accept="video/*"
+        onchange="extractVideoDuration(this)"
+      />
+      <% if (lesson.videoFile) { %>
+        <p class="saved-file">
+          <i class="fa-solid fa-file-video"></i>
+          Existing uploaded video will be kept unless replaced.
+        </p>
+      <% } %>
+    </div>
 
-                                <div class="video-file-input <%= lesson.videoSource === 'upload' ? '' : 'hidden' %>">
-                                  <input
-                                    type="file"
-                                    class="form-input"
-                                    name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_videoFile"
-                                    accept="video/*"
-                                  />
+    <input type="hidden"
+      name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][existingVideoFile]"
+      value="<%= lesson.videoFile || '' %>"
+    />
+    <input type="hidden"
+      class="lesson-duration-hidden"
+      name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][duration]"
+      value="<%= lesson.duration || '' %>"
+    />
+  </div>
+</div>
 
-                                  <% if (lesson.videoFile) { %>
-                                    <p class="saved-file">
-                                      <i class="fa-solid fa-file-video"></i>
-                                      Existing uploaded video will be kept unless replaced.
-                                    </p>
-                                  <% } %>
-                                </div>
-
-                                <input
-                                  type="hidden"
-                                  name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][existingVideoFile]"
-                                  value="<%= lesson.videoFile || '' %>"
-                                />
-
-                                <input
-                                  type="text"
-                                  class="form-input"
-                                  name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][duration]"
-                                  value="<%= lesson.duration || '' %>"
-                                  placeholder="Duration, e.g. 10:30"
-                                />
-                              </div>
-                            </div>
 
                           </div>
                         </div>
