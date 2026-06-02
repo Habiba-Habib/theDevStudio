@@ -153,22 +153,25 @@ exports.getDashboard = async (req, res) => {
     }
 
         const allCourses = user.enrolledCourses
-      .filter(enrollment => enrollment.course)
-      .map(enrollment => ({
-        _id: enrollment.course._id,
-        title: enrollment.course.title,
-        thumbnail: enrollment.course.thumbnail,
-        instructor: enrollment.course.instructor?.name || "Unknown Instructor",
-        progress: enrollment.progress || 0
-      }));
+  .filter(enrollment => enrollment.course)
+  .map(enrollment => ({
+    _id: enrollment.course._id,
+    title: enrollment.course.title,
+    thumbnail: enrollment.course.thumbnail,
+    instructor: enrollment.course.instructor?.name || "Unknown Instructor",
+    progress: enrollment.progress || 0
+  }));
 
-    const courses = allCourses.slice(0, 3);
+const currentCourses = allCourses.filter(course => course.progress < 100);
+const completedCourses = allCourses.filter(course => course.progress >= 100);
 
-    const averageProgress = courses.length
-      ? Math.round(
-          courses.reduce((sum, course) => sum + course.progress, 0) / courses.length
-        )
-      : 0;
+const courses = currentCourses.slice(0, 3);
+
+    const averageProgress = allCourses.length
+  ? Math.round(
+      allCourses.reduce((sum, course) => sum + course.progress, 0) / allCourses.length
+    )
+  : 0;
 
     const allUsersByPoints = await User.find({ role: "student" })
       .sort({ points: -1 })
