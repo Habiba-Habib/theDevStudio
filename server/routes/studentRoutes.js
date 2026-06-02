@@ -20,7 +20,7 @@ function requireStudentSession(req, res, next) {
 router.use(requireStudentSession);
 
 // ── RESOURCE DOWNLOAD PROXY ──
-// Generates a short-lived Cloudinary signed URL and redirects to it
+// Streams file from Cloudinary through server using authenticated API endpoint
 router.get("/course/:courseId/lesson/:lessonId/download-resource", async (req, res) => {
   try {
     const userId   = req.session.userId;
@@ -38,29 +38,74 @@ router.get("/course/:courseId/lesson/:lessonId/download-resource", async (req, r
     const lesson = course.sections.flatMap(s => s.lessons).find(l => l._id.toString() === lessonId);
     if (!lesson || !lesson.resourceFile) return res.status(404).send("Resource not found");
 
-    const fileUrl = lesson.resourceFile;
+    const fileUrl  = lesson.resourceFile;
 
-    // Extract the public_id from the stored Cloudinary URL
-    // URL pattern: https://res.cloudinary.com/<cloud>/raw/upload/v<ver>/<folder>/<public_id>
+    // Extract and decode the public_id from the stored Cloudinary URL
     const urlMatch = fileUrl.match(/\/raw\/upload\/(?:v\d+\/)?(.+)$/);
     if (!urlMatch) return res.status(500).send("Invalid resource URL");
 
-    // Decode percent-encoded characters so Cloudinary API can find the asset
-    const publicId = decodeURIComponent(urlMatch[1]);
+    const publicId   = decodeURIComponent(urlMatch[1]);
     const cloudinary = require('../config/cloudinary');
-    const fileName   = publicId.split('/').pop();
+    const unzipper   = require('unzipper');
+    const https      = require('https');
 
-    // Generate a signed URL valid for 60 seconds (no transformation flags — they break the signature)
-    const signedUrl = cloudinary.url(publicId, {
-      resource_type: 'raw',
-      sign_url: true,
-      secure: true,
-      expires_at: Math.floor(Date.now() / 1000) + 60
+    // The only authenticated endpoint that works with restricted delivery accounts
+    const downloadUrl = cloudinary.utils.download_zip_url({
+      public_ids: [publicId],
+      resource_type: 'raw'
     });
 
-    // Tell the browser to treat it as a download with the original filename
-    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
-    res.redirect(signedUrl);
+    const originalName = publicId.split('/').pop();
+
+    // Fetch the zip into memory
+    https.get(downloadUrl, (fileRes) => {
+      if (fileRes.statusCode !== 200) {
+        console.error('Cloudinary archive fetch failed:', fileRes.statusCode);
+        return res.status(502).send("Failed to fetch resource from storage");
+      }
+
+      const chunks = [];
+      fileRes.on('data', chunk => chunks.push(chunk));
+      fileRes.on('error', err => {
+        console.error('Fetch stream error:', err);
+        if (!res.headersSent) res.status(500).send("Download failed");
+      });
+      fileRes.on('end', async () => {
+        try {
+          const buf = Buffer.concat(chunks);
+          const dir = await unzipper.Open.buffer(buf);
+
+          if (!dir.files.length) return res.status(500).send("Empty archive");
+
+          const fileContent = await dir.files[0].buffer();
+
+          const ext         = originalName.split('.').pop().toLowerCase();
+          const mimeMap     = {
+            pdf:  'application/pdf',
+            doc:  'application/msword',
+            docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            ppt:  'application/vnd.ms-powerpoint',
+            pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            xls:  'application/vnd.ms-excel',
+            xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          };
+          const contentType = mimeMap[ext] || 'application/octet-stream';
+
+          res.setHeader('Content-Type', contentType);
+          res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(originalName)}"`);
+          res.setHeader('Content-Length', fileContent.length);
+          res.send(fileContent);
+
+        } catch (err) {
+          console.error('Unzip error:', err);
+          if (!res.headersSent) res.status(500).send("Failed to extract file");
+        }
+      });
+
+    }).on('error', (err) => {
+      console.error('HTTPS request error:', err);
+      if (!res.headersSent) res.status(500).send("Download failed");
+    });
 
   } catch (err) {
     console.error(err);

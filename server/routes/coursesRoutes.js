@@ -46,7 +46,8 @@ router.get('/:id', async (req, res, next) => {
     }
 
     const course = await Course.findById(req.params.id)
-      .populate("instructor", "name avatar");
+      .populate("instructor", "name avatar")
+      .populate("reviews.user", "name avatar");
 
     if (!course) {
       return res.status(404).render('public/page-404');

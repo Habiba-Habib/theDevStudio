@@ -106,10 +106,38 @@
     <% }) %>
 
 <h3 class="learn-title">Student Reviews</h3>
-<div class="learn-box" style="text-align: center; padding: 32px; color: var(--text-muted);">
-  <i class="fa-regular fa-star" style="font-size: 1.5rem; margin-bottom: 8px; display: block;"></i>
-  No reviews yet. Be the first to review this course.
-</div>
+<% if (course.reviews && course.reviews.length > 0) { %>
+  <% course.reviews.forEach(function(review) { %>
+    <div class="learn-box" style="display:flex; gap:14px; align-items:flex-start; padding: 20px 24px;">
+      <img
+        src="<%= review.user?.avatar ? '/images/avatars/' + review.user.avatar : '/images/avatars/avatar1g.png' %>"
+        alt="<%= review.user?.name || 'Student' %>"
+        style="width:44px; height:44px; border-radius:50%; object-fit:cover; flex-shrink:0; border: 2px solid rgba(255,255,255,0.08);"
+      />
+      <div style="flex:1; min-width:0;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:6px;">
+          <span style="font-size:14px; font-weight:700; color:var(--text-white);"><%= review.user?.name || 'Student' %></span>
+          <div style="display:flex; gap:3px;">
+            <% for (let i = 1; i <= 5; i++) { %>
+              <i class="fa-<%= i <= review.rating ? 'solid' : 'regular' %> fa-star" style="font-size:13px; color:#facc15;"></i>
+            <% } %>
+          </div>
+        </div>
+        <% if (review.comment && review.comment.trim()) { %>
+          <p style="font-size:14px; color:var(--text-body); line-height:1.6; margin:0;"><%= review.comment %></p>
+        <% } %>
+        <span style="font-size:11px; color:var(--text-muted); margin-top:6px; display:block;">
+          <%= new Date(review.date).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }) %>
+        </span>
+      </div>
+    </div>
+  <% }) %>
+<% } else { %>
+  <div class="learn-box" style="text-align: center; padding: 32px; color: var(--text-muted);">
+    <i class="fa-regular fa-star" style="font-size: 1.5rem; margin-bottom: 8px; display: block;"></i>
+    No reviews yet. Be the first to review this course.
+  </div>
+<% } %>
 
 
   </div>
