@@ -476,7 +476,8 @@ exports.updateCourse = async (req, res) => {
     // 1. Process all uploaded files first to build a map of lesson videos
     // 1. Process all uploaded files first to build a map of lesson videos
 const uploadedVideos = {};
-const uploadedResources = {};    // ← moved here, OUTSIDE the loop
+const uploadedResources = {};
+const uploadedAssignments = {};    // ← assignment files
 
 (req.files || []).forEach(file => {
   if (file.fieldname === 'thumbnail') {
@@ -491,6 +492,11 @@ const uploadedResources = {};    // ← moved here, OUTSIDE the loop
   const rMatch = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_resourceFile$/);
   if (rMatch) {
     uploadedResources[`${rMatch[1]}_${rMatch[2]}`] = pickUploadedUrl(file);
+  }
+
+  const aMatch = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_assignmentFile$/);
+  if (aMatch) {
+    uploadedAssignments[`${aMatch[1]}_${aMatch[2]}`] = pickUploadedUrl(file);
   }
 });
 
@@ -512,6 +518,7 @@ const uploadedResources = {};    // ← moved here, OUTSIDE the loop
           videoUrl: (l.videoUrl || '').trim(),
           videoFile: videoFile,
           resourceFile: uploadedResources[fileKey] || l.existingResourceFile || '',
+          assignmentFile: uploadedAssignments[fileKey] || l.existingAssignmentFile || '',
           duration: (l.duration || '').trim(),
           content: ''
         };
@@ -568,10 +575,40 @@ exports.getEnrolledStudents = async (req, res) => {
 
     if (!course) return res.status(404).render('public/error-404');
 
-    const students = await User.find({
-      enrolledCourses: course._id,
-      role: 'student'
-    }).select('name email avatar memberSince progress lastActive enrolledAt');
+    const enrolledUsers = await User.find({
+      'enrolledCourses.course': course._id,
+      role: { $in: ['student', 'instructor'] }
+    }).select('name email avatar lastActive enrolledCourses');
+
+    const students = enrolledUsers.map(u => {
+      const enrollment = u.enrolledCourses.find(e => e.course.toString() === course._id.toString());
+      return {
+        _id:        u._id,
+        name:       u.name,
+        email:      u.email,
+        avatar:     u.avatar,
+        lastActive: u.lastActive,
+        progress:   enrollment?.progress || 0,
+        enrolledAt: enrollment?.enrolledAt || u.createdAt
+      };
+    });
+
+    // Collect all submissions across all lessons for this course
+    const submissions = [];
+    course.sections.forEach(section => {
+      section.lessons.forEach(lesson => {
+        (lesson.assignmentSubmissions || []).forEach(sub => {
+          submissions.push({
+            lessonId:    lesson._id,
+            lessonTitle: lesson.title,
+            studentId:   sub.student.toString(),
+            fileName:    sub.fileName,
+            fileUrl:     sub.fileUrl,
+            submittedAt: sub.submittedAt
+          });
+        });
+      });
+    });
 
     // Calculate stats
     const avgProgress = students.length
@@ -580,18 +617,13 @@ exports.getEnrolledStudents = async (req, res) => {
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
-    const activeToday = students.filter(s =>
-      s.lastActive && new Date(s.lastActive) >= today
-    ).length;
-
-    const nearCompletion = students.filter(s =>
-      (s.progress || 0) >= 80
-    ).length;
+    const activeToday    = students.filter(s => s.lastActive && new Date(s.lastActive) >= today).length;
+    const nearCompletion = students.filter(s => (s.progress || 0) >= 80).length;
 
     res.render('instructor/enrolled-students', {
       course,
       students,
+      submissions,
       avgProgress,
       activeToday,
       nearCompletion

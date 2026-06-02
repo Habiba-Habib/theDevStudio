@@ -14,6 +14,13 @@ const lessonSchema = new mongoose.Schema({
 videoFiles: [{ type: String }],
 resourceFiles: [{ type: String }],
   resourceFile: { type: String, default: '' },
+  assignmentFile: { type: String, default: '' },
+  assignmentSubmissions: [{
+    student:     { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    fileUrl:     { type: String },
+    fileName:    { type: String },
+    submittedAt: { type: Date, default: Date.now }
+  }],
   content: { type: String, default: '' },
   duration: { type: String, default: '' },
   resources: [resourceSchema]

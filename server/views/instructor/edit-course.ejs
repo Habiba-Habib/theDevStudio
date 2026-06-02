@@ -232,6 +232,25 @@
   />
 </div>
 <div class="lesson-subsection">
+  <h4><i class="fa-solid fa-clipboard-list"></i> Assignment / Quiz</h4>
+  <input
+    type="file"
+    class="form-input"
+    name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_assignmentFile"
+    accept=".pdf,.doc,.docx,.ppt,.pptx"
+  />
+  <% if (lesson.assignmentFile) { %>
+    <p class="saved-file">
+      <i class="fa-solid fa-file-circle-check"></i>
+      Existing assignment will be kept unless replaced.
+    </p>
+  <% } %>
+  <input type="hidden"
+    name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][existingAssignmentFile]"
+    value="<%= lesson.assignmentFile || '' %>"
+  />
+</div>
+<div class="lesson-subsection">
   <h4><i class="fa-solid fa-film"></i> Video</h4>
   <div class="video-item">
     <select

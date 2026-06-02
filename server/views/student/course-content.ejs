@@ -148,13 +148,13 @@
         <button class="tab-btn active" data-tab="overview">Overview</button>
         <button class="tab-btn" data-tab="transcript">Transcript</button>
         <button class="tab-btn" data-tab="notes">Notes</button>
-        <button class="tab-btn" data-tab="quiz">Assignment / Quiz</button>
+        <button class="tab-btn" data-tab="quiz">Assignments</button>
       </div>
 
       <div class="tab-pane active" id="tab-overview">
         <div class="instructor-row">
           <img class="inst-avatar"
-            src="<%= course.instructor?.avatar || '/images/default-avatar.png' %>"
+            src="<%= course.instructor?.avatar ? '/images/avatars/' + course.instructor.avatar : '/images/avatars/avatar1g.png' %>"
             alt="<%= course.instructor?.name %>"/>
           <div class="inst-info">
             <span class="inst-label">Instructor</span>
@@ -169,11 +169,105 @@
       </div>
 
       <div class="tab-pane" id="tab-notes">
-        <p class="pane-empty">No notes yet.</p>
+        <% if (activeLesson) { %>
+          <div class="notes-wrap">
+            <div class="notes-header">
+              <span class="notes-title"><i class="fa-solid fa-pen-to-square"></i> My Notes</span>
+              <span class="notes-saved-label" id="notesSavedLabel"></span>
+            </div>
+            <textarea
+              class="notes-textarea"
+              id="notesTextarea"
+              placeholder="Write your notes for this lesson here…"
+              data-course-id="<%= course._id %>"
+              data-lesson-id="<%= activeLesson._id %>"
+            ><%= activeNote || '' %></textarea>
+            <div class="notes-footer">
+              <span class="notes-hint"><i class="fa-regular fa-lightbulb"></i> Notes are saved per lesson automatically.</span>
+              <button class="notes-save-btn" id="notesSaveBtn">
+                <i class="fa-solid fa-floppy-disk"></i> Save Note
+              </button>
+            </div>
+          </div>
+        <% } else { %>
+          <p class="pane-empty">Select a lesson to start taking notes.</p>
+        <% } %>
       </div>
 
       <div class="tab-pane" id="tab-quiz">
-        <p class="pane-empty">No assignment or quiz for this lesson.</p>
+        <% if (activeLesson && activeLesson.assignmentFile) { %>
+          <%
+            const aFileName = decodeURIComponent(activeLesson.assignmentFile.split('/').pop().split('?')[0]);
+            const aHasDot   = aFileName.includes('.');
+            const aExt      = aHasDot ? aFileName.split('.').pop().toLowerCase() : 'pdf';
+            const aIconMap  = { pdf: 'fa-file-pdf', doc: 'fa-file-word', docx: 'fa-file-word', ppt: 'fa-file-powerpoint', pptx: 'fa-file-powerpoint' };
+            const aIcon     = aIconMap[aExt] || 'fa-file-lines';
+            const aLabel    = aExt.toUpperCase() + ' File';
+          %>
+          <div class="assignment-wrap">
+            <div class="assignment-header">
+              <i class="fa-solid fa-clipboard-list assignment-icon"></i>
+              <div>
+                <div class="assignment-title">Assignment</div>
+                <div class="assignment-sub">Download the file, complete it, and submit below.</div>
+              </div>
+            </div>
+
+            <!-- Download -->
+            <a class="resource-item assignment-download"
+               href="/student/course/<%= course._id %>/lesson/<%= activeLesson._id %>/download-assignment"
+               download="<%= aFileName %>">
+              <span class="res-file-icon"><i class="fa-solid <%= aIcon %>"></i></span>
+              <div class="res-info">
+                <div class="res-name"><%= aFileName %></div>
+                <div class="res-size"><%= aLabel %></div>
+              </div>
+              <span class="res-dl"><i class="fa-solid fa-download"></i></span>
+            </a>
+
+            <!-- Submit -->
+            <% if (!isInstructorOwner) { %>
+            <div class="submit-assignment-wrap">
+              <div class="submit-header">
+                <i class="fa-solid fa-upload submit-icon"></i>
+                <div>
+                  <div class="submit-title">Submit Your Work</div>
+                  <div class="submit-sub">Upload your completed assignment (PDF, DOC, DOCX, PPT, PPTX)</div>
+                </div>
+              </div>
+
+              <% if (activeSubmission) { %>
+                <div class="submission-existing" id="submissionExisting">
+                  <i class="fa-solid fa-circle-check"></i>
+                  <div class="submission-existing-info">
+                    <span class="submission-existing-name"><%= activeSubmission.fileName %></span>
+                    <span class="submission-existing-date">Submitted <%= new Date(activeSubmission.submittedAt).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }) %></span>
+                  </div>
+                  <button class="btn-resubmit" id="btnResubmit">Resubmit</button>
+                </div>
+              <% } %>
+
+              <div class="submit-form <%= activeSubmission ? 'hidden' : '' %>" id="submitForm">
+                <label class="upload-drop-zone" id="uploadDropZone" for="submissionFileInput">
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <span class="drop-label">Click to choose file or drag & drop</span>
+                  <span class="drop-hint" id="dropHint">PDF, DOC, DOCX, PPT, PPTX • Max 50MB</span>
+                </label>
+                <input type="file" id="submissionFileInput" accept=".pdf,.doc,.docx,.ppt,.pptx" style="display:none"
+                  data-course-id="<%= course._id %>"
+                  data-lesson-id="<%= activeLesson._id %>"
+                />
+                <button class="notes-save-btn" id="btnSubmitAssignment" disabled>
+                  <i class="fa-solid fa-paper-plane"></i> Submit Assignment
+                </button>
+              </div>
+            </div>
+            <% } %>
+
+          </div>
+        <% } else { %>
+          <p class="pane-empty">No assignment for this lesson.</p>
+        <% } %>
       </div>
     </div>
 

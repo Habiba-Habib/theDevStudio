@@ -115,6 +115,9 @@
         </div>
       </div>
       <a href="/courses/<%= course._id %>" class="id-btn-view">View Details</a>
+      <a href="/instructor/courses/<%= course._id %>/students" class="id-btn-view" style="background: rgba(45,212,191,0.12); border: 1px solid rgba(45,212,191,0.3); color: #2dd4bf;">
+        <i class="fa-solid fa-users"></i> Students
+      </a>
       <form action="/instructor/courses/<%= course._id %>/delete" method="POST"
         onsubmit="return confirm('Delete this course? This cannot be undone.')">
         <button type="submit" style="

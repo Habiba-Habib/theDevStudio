@@ -19,6 +19,9 @@ const storage = new CloudinaryStorage({
     } else if (file.fieldname.includes('resourceFile')) {
       folder = 'thedevstudio/resources';
       resource_type = 'raw'; // Keeps PDFs/Word docs in raw original formats
+    } else if (file.fieldname.includes('assignmentFile')) {
+      folder = 'thedevstudio/assignments';
+      resource_type = 'raw';
     }
 
     const ext = path.extname(file.originalname);

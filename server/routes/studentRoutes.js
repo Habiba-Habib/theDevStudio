@@ -1,9 +1,23 @@
-const express = require("express");
-const router  = express.Router();
-const bcrypt  = require("bcryptjs");
-const User    = require("../models/User");
-const Course  = require("../models/Course");
+const express  = require("express");
+const router   = express.Router();
+const bcrypt   = require("bcryptjs");
+const multer   = require("multer");
+const User     = require("../models/User");
+const Course   = require("../models/Course");
 const studentController = require("../controllers/studentController");
+
+// In-memory multer for student assignment submissions (uploaded to Cloudinary manually)
+const submissionUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 50 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowed = ['application/pdf','application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-powerpoint',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
+    cb(null, allowed.includes(file.mimetype) ? true : new Error('File type not allowed'));
+  }
+});
 
 function requireStudentSession(req, res, next) {
   if (!req.session || !req.session.userId) {
@@ -172,6 +186,18 @@ router.get("/course/:courseId/learn", async (req, res) => {
       activeLessonId,
       totalLessons,
       user,
+      isInstructorOwner,
+      activeNote: (() => {
+        if (!activeLessonId) return '';
+        const note = (enrollment.notes || []).find(n => n.lesson.toString() === activeLessonId);
+        return note ? note.content : '';
+      })(),
+      activeSubmission: (() => {
+        if (!activeLessonId) return null;
+        const lesson = course.sections.flatMap(s => s.lessons).find(l => l._id.toString() === activeLessonId);
+        if (!lesson) return null;
+        return (lesson.assignmentSubmissions || []).find(s => s.student.toString() === userId.toString()) || null;
+      })()
     });
   } catch (err) {
     console.error(err);
@@ -316,6 +342,144 @@ router.post("/edit-profile", async (req, res) => {
       ? ["Email or username is already taken."]
       : ["Something went wrong. Please try again."];
     res.render("shared/edit-profile", { user, errors });
+  }
+});
+
+// ── ASSIGNMENT DOWNLOAD PROXY ──
+router.get("/course/:courseId/lesson/:lessonId/download-assignment", async (req, res) => {
+  try {
+    const userId   = req.session.userId;
+    const { courseId, lessonId } = req.params;
+
+    const course = await Course.findById(courseId);
+    if (!course) return res.status(404).send("Course not found");
+
+    const user = await User.findById(userId);
+    const isEnrolled        = user.enrolledCourses.some(e => e.course.toString() === courseId);
+    const isInstructorOwner = course.instructor?.toString() === userId.toString();
+    if (!isEnrolled && !isInstructorOwner) return res.status(403).send("Access denied");
+
+    const lesson = course.sections.flatMap(s => s.lessons).find(l => l._id.toString() === lessonId);
+    if (!lesson || !lesson.assignmentFile) return res.status(404).send("Assignment not found");
+
+    const fileUrl  = lesson.assignmentFile;
+    const urlMatch = fileUrl.match(/\/raw\/upload\/(?:v\d+\/)?(.+)$/);
+    if (!urlMatch) return res.status(500).send("Invalid file URL");
+
+    const publicId   = decodeURIComponent(urlMatch[1]);
+    const cloudinary = require('../config/cloudinary');
+    const unzipper   = require('unzipper');
+    const https      = require('https');
+
+    const downloadUrl  = cloudinary.utils.download_zip_url({ public_ids: [publicId], resource_type: 'raw' });
+    const originalName = publicId.split('/').pop();
+
+    https.get(downloadUrl, (fileRes) => {
+      if (fileRes.statusCode !== 200) return res.status(502).send("Failed to fetch file");
+
+      const chunks = [];
+      fileRes.on('data', chunk => chunks.push(chunk));
+      fileRes.on('error', err => { if (!res.headersSent) res.status(500).send("Download failed"); });
+      fileRes.on('end', async () => {
+        try {
+          const buf     = Buffer.concat(chunks);
+          const dir     = await unzipper.Open.buffer(buf);
+          if (!dir.files.length) return res.status(500).send("Empty archive");
+
+          const fileContent = await dir.files[0].buffer();
+          const ext     = originalName.split('.').pop().toLowerCase();
+          const mimeMap = { pdf: 'application/pdf', doc: 'application/msword', docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', ppt: 'application/vnd.ms-powerpoint', pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' };
+
+          res.setHeader('Content-Type', mimeMap[ext] || 'application/octet-stream');
+          res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(originalName)}"`);
+          res.setHeader('Content-Length', fileContent.length);
+          res.send(fileContent);
+        } catch (err) {
+          console.error('Unzip error:', err);
+          if (!res.headersSent) res.status(500).send("Failed to extract file");
+        }
+      });
+    }).on('error', err => { if (!res.headersSent) res.status(500).send("Download failed"); });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
+// ── SUBMIT ASSIGNMENT ──
+router.post("/course/:courseId/lesson/:lessonId/submit-assignment",
+  submissionUpload.single('submissionFile'),
+  async (req, res) => {
+    try {
+      const userId             = req.session.userId;
+      const { courseId, lessonId } = req.params;
+
+      if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+
+      const course = await Course.findById(courseId);
+      if (!course) return res.status(404).json({ error: "Course not found" });
+
+      const user       = await User.findById(userId);
+      const isEnrolled = user.enrolledCourses.some(e => e.course.toString() === courseId);
+      if (!isEnrolled) return res.status(403).json({ error: "Not enrolled" });
+
+      const section = course.sections.find(s => s.lessons.some(l => l._id.toString() === lessonId));
+      const lesson  = section?.lessons.find(l => l._id.toString() === lessonId);
+      if (!lesson) return res.status(404).json({ error: "Lesson not found" });
+
+      // Upload to Cloudinary
+      const cloudinary = require('../config/cloudinary');
+      const fileStr    = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+      const result     = await cloudinary.uploader.upload(fileStr, {
+        folder:        'thedevstudio/submissions',
+        resource_type: 'raw',
+        public_id:     `${userId}_${lessonId}_${Date.now()}`
+      });
+
+      // Replace existing submission or add new one
+      const existingIdx = lesson.assignmentSubmissions.findIndex(s => s.student.toString() === userId.toString());
+      const submission  = { student: userId, fileUrl: result.secure_url, fileName: req.file.originalname, submittedAt: new Date() };
+
+      if (existingIdx > -1) {
+        lesson.assignmentSubmissions[existingIdx] = submission;
+      } else {
+        lesson.assignmentSubmissions.push(submission);
+      }
+
+      await course.save();
+      res.json({ success: true, fileName: req.file.originalname, submittedAt: submission.submittedAt });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+
+// ── SAVE LESSON NOTE ──
+router.post("/course/:courseId/lesson/:lessonId/note", async (req, res) => {
+  try {
+    const userId              = req.session.userId;
+    const { courseId, lessonId } = req.params;
+    const { content }         = req.body;
+
+    const user       = await User.findById(userId);
+    const enrollment = user.enrolledCourses.find(e => e.course.toString() === courseId);
+    if (!enrollment) return res.status(403).json({ error: "Not enrolled" });
+
+    const existing = enrollment.notes.find(n => n.lesson.toString() === lessonId);
+    if (existing) {
+      existing.content   = content || '';
+      existing.updatedAt = new Date();
+    } else {
+      enrollment.notes.push({ lesson: lessonId, content: content || '' });
+    }
+
+    await user.save();
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 

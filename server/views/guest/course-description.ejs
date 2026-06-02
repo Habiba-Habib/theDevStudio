@@ -53,7 +53,7 @@
     <!-- INSTRUCTOR -->
     <div class="Instructor">
       <div class="avatar">
-        <img src="<%= course.instructor?.avatar || '/images/default-avatar.png' %>" alt="Instructor">
+        <img src="<%= course.instructor?.avatar ? '/images/avatars/' + course.instructor.avatar : '/images/avatars/avatar1g.png' %>" alt="Instructor">
       </div>
       <div>
         <div class="title">Instructor</div>
