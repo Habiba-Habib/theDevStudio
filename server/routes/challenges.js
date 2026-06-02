@@ -48,7 +48,7 @@ router.get('/:id', async (req, res) => {
     return res.status(404).render('public/page-404', {message:'Challenge not found'});
   }
 
- res.render('guest/challenge-description', {
+res.render('guest/challenge-description', {
   challenge: {
     ...challenge.toObject(),
     desc: challenge.description,
@@ -65,7 +65,8 @@ router.get('/:id', async (req, res) => {
       accepted: challenge.solvedCount || 0,
       successRate: "0%"
     }
-  }
+  },
+  isAdminView: req.session.role === "admin" || req.session.user?.role === "admin"
 });
 }catch(err){
   console.error(err);
