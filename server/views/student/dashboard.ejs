@@ -110,22 +110,24 @@
             <a href="/challenges" class="section-link">View All →</a>
           </div>
           <div class="challenges-grid">
-              <% challenges.forEach(function(challenge) { %>
-            <div class="challenge-card">
-              <div class="challenge-card-top">
-                <span class="challenge-badge challenge-badge--<%= challenge.difficulty.toLowerCase() %>"><%= challenge.difficulty %></span>
-                <span class="challenge-pts">
-                  <i class="fa-solid fa-bolt-lightning"></i>
-                  <%= challenge.points %> pts
-                </span>
-              </div>
-              <h3 class="challenge-title"><%= challenge.title %></h3>
-              <p class="challenge-due">
-                <i class="fa-regular fa-clock"></i>
-                Due in <%= challenge.dueInDays %> days
-              </p>
-            </div>
-              <% }); %>
+           <% challenges.forEach(function(challenge) { %>
+  <a href="/student/start-challenge/<%= challenge._id %>" class="challenge-card">
+    <div class="challenge-card-top">
+      <span class="challenge-badge challenge-badge--<%= challenge.difficulty.toLowerCase() %>"><%= challenge.difficulty %></span>
+      <span class="challenge-pts">
+        <i class="fa-solid fa-bolt-lightning"></i>
+        <%= challenge.points %> pts
+      </span>
+    </div>
+
+    <h3 class="challenge-title"><%= challenge.title %></h3>
+
+    <p class="challenge-due">
+      <i class="fa-regular fa-clock"></i>
+      Due in <%= challenge.dueInDays %> days
+    </p>
+  </a>
+<% }); %>
           </div>
         </section>
 

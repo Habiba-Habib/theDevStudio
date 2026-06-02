@@ -30,6 +30,40 @@ body {
   letter-spacing: -0.8px;
 }
 
+.breadcrumb {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 22px;
+  padding: 10px 15px;
+  background: rgba(255, 64, 160, 0.10);
+  border: 1px solid rgba(255, 64, 160, 0.24);
+  border-radius: 10px;
+  color: #9fb4df;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.breadcrumb a,
+.breadcrumb a:visited {
+  color: var(--text-white);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: var(--pink-light);
+}
+
+.breadcrumb i {
+  color: var(--pink-light);
+  font-size: 11px;
+}
+
+.breadcrumb span {
+  color: #9fb4df;
+}
+
 .header p {
   margin-top: 11px;
   font-size: 14px;
