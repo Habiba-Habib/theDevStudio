@@ -19,15 +19,21 @@ router.get('/all-courses', async (req, res, next) => {
     const courses = await Course.find({ isPublished: true })
       .populate("instructor", "name");
 
-    const filteredCourses = courses.filter(c => {
-      // remove if in user.enrolledCourses
-      if (enrolledCourseIds.has(c._id.toString())) return false;
-      // remove if user is in course.students
-      if (userId && c.students.some(s => s.toString() === userId.toString())) return false;
-      return true;
+    const coursesWithStatus = courses.map(course => {
+      const isEnrolled =
+        enrolledCourseIds.has(course._id.toString()) ||
+        (userId && course.students.some(s => s.toString() === userId.toString()));
+
+      return {
+        ...course.toObject(),
+        isEnrolled
+      };
     });
 
-    res.render('guest/all-courses', { courses: filteredCourses, currentUserId: userId });
+    res.render('guest/all-courses', {
+      courses: coursesWithStatus,
+      currentUserId: userId
+    });
   } catch (err) {
     next(err);
   }
