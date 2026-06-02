@@ -1,16 +1,3 @@
-:root {
-  --pink:       #FF40A0;
-  --pink-light: #FFB7E6;
-  --yellow:     #F0FE72;
-  --teal:       #60A3A6;
-  --bg:         #0A0E27;
-  --surface:    #1A203A;
-  --border:     rgba(255, 255, 255, 0.08);
-  --text-white: #FFFFFC;
-  --text-muted: #BDC2C9;
-  --text-body:  #C8D0E7;
-  --font:       'Inter', sans-serif;
-}
 
 * {
   margin: 0;

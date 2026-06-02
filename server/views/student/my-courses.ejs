@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>My Courses</title>
-
+  <link rel="stylesheet" href="/css/base.css" />
   <link rel="stylesheet" href="/css/my-courses.css" />
 
   <link
@@ -95,7 +95,7 @@
     <section class="courses" id="coursesContainer">
       <% if (typeof courses !== "undefined" && courses && courses.length > 0) { %>
         <% courses.forEach(function(course) { %>
-
+          <% const progress = course.progress !== undefined ? course.progress : 0; %>
           <article class="course-card" data-status="<%= course.status || 'ongoing' %>">
             <div 
               class="course-image"
@@ -111,7 +111,7 @@
                 </span>
 
                 <span class="course-progress-text">
-                  <%= course.progress !== undefined ? course.progress : 0 %>%
+                  <%= progress %>%
                 </span>
               </div>
 
@@ -126,11 +126,11 @@
               </p>
 
               <div class="progress-bar">
-                <div
-                  class="progress-fill"
-                style="width: <%= course.progress !== undefined ? course.progress : 0 %>%;"
-                ></div>
-              </div>
+              <div
+                class="progress-fill"
+                data-progress="<%= progress %>"
+              ></div>
+            </div>
 
               <div class="course-footer">
                 <span>
@@ -144,6 +144,7 @@
 >
           <%= course.status === "completed" ? "Review Course" : "Continue Learning" %>
         </a>
+            </div>
             </div>
           </article>
 

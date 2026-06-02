@@ -38,3 +38,8 @@ tabs.forEach(function (tab) {
 });
 
 filterCourses("ongoing");
+
+document.querySelectorAll(".progress-fill[data-progress]").forEach(function (bar) {
+  const progress = Number(bar.getAttribute("data-progress")) || 0;
+  bar.style.width = progress + "%";
+});
