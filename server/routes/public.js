@@ -1,10 +1,24 @@
 const express = require('express');
 const router = express.Router();
+const cloudinary = require("../config/cloudinary");
+const fs = require("fs");
 const Course = require('../models/Course');
 const User = require('../models/User');
 const multer = require("multer");
 const { requireLoginPage } = require("../middleware/authMiddleware");
 const upload = multer({ dest: "uploads/instructor-verification/" });
+async function uploadInstructorDocument(file) {
+  const result = await cloudinary.uploader.upload(file.path, {
+    folder: "thedevstudio/instructor-verification",
+    resource_type: "raw",
+    use_filename: true,
+    unique_filename: true
+  });
+
+  fs.unlinkSync(file.path);
+
+  return result.secure_url;
+}
 
 // Allowed values for the experience dropdown (must match become-instructor.ejs)
 const EXPERIENCE_VALUES = ['1-2', '3-5', '5-10', '10+'];
@@ -113,7 +127,7 @@ router.get('/become-instructor/step2', requireLoginPage, (req, res, next) => {
   }
 });
 
-router.post('/become-instructor/step2', upload.fields([
+router.post('/become-instructor/step2',requireLoginPage, upload.fields([
   { name: 'cv', maxCount: 1 },
   { name: 'certificate', maxCount: 1 }
 ]), async (req, res, next) => {
@@ -126,14 +140,18 @@ router.post('/become-instructor/step2', upload.fields([
     }
 
     const { linkedinUrl, portfolioUrl, websiteUrl } = req.body;
-    req.session.instructorApplication = {
-      ...req.session.instructorApplication,
-      linkedinUrl: linkedinUrl || '',
-      portfolioUrl: portfolioUrl || '',
-      websiteUrl: websiteUrl || '',
-      cvUrl: req.files.cv[0].path,
-      certificateUrl: req.files.certificate[0].path
-    };
+
+const cvUrl = await uploadInstructorDocument(req.files.cv[0]);
+const certificateUrl = await uploadInstructorDocument(req.files.certificate[0]);
+
+req.session.instructorApplication = {
+  ...req.session.instructorApplication,
+  linkedinUrl: linkedinUrl || '',
+  portfolioUrl: portfolioUrl || '',
+  websiteUrl: websiteUrl || '',
+  cvUrl,
+  certificateUrl
+};
 
     res.redirect('/become-instructor/step3');
   } catch (err) {
