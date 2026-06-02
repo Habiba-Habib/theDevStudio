@@ -30,6 +30,42 @@ body {
   letter-spacing: -0.8px;
 }
 
+.back-btn,
+.back-btn:visited {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 22px;
+  padding: 10px 15px;
+  background: rgba(255, 64, 160, 0.12);
+  border: 1px solid rgba(255, 64, 160, 0.28);
+  border-radius: 10px;
+  color: var(--text-white);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.back-btn i {
+  color: var(--pink-light);
+  font-size: 13px;
+}
+
+.back-btn:hover {
+  background: rgba(255, 64, 160, 0.18);
+  border-color: var(--pink);
+  color: var(--text-white);
+  transform: translateX(-2px);
+}
+
+.back-btn:active {
+  transform: translateX(-1px) scale(0.98);
+  color: var(--text-white);
+}
+
 .header p {
   margin-top: 11px;
   font-size: 14px;
