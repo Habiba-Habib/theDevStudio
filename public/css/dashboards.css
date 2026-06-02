@@ -632,6 +632,9 @@ body {
   flex-direction: column;
   gap: 12px;
   transition: border-color 0.25s, transform 0.25s;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .challenge-card-top {

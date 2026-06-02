@@ -208,11 +208,14 @@ const courses = currentCourses.slice(0, 3);
   : 7;
 
   return {
-    title: challenge.title,
-    difficulty: challenge.difficulty,
-    points: challenge.points,
-    dueInDays
-  };
+  _id: challenge._id,
+  title: challenge.title,
+  difficulty: challenge.difficulty,
+  points: challenge.points,
+  dueInDays
+};
+
+
 });
     const stats = {
       enrolledCourses: allCourses.length,
