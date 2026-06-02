@@ -135,6 +135,144 @@ body {
   gap: 16px;
   margin-bottom: 4px;
 }
+.payment-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+.payment-form-column {
+  min-width: 0;
+}
+
+.card-preview-panel {
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.preview-label {
+  color: var(--text-white);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.credit-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.62 / 1;
+  perspective: 1000px;
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  padding: 24px;
+  backface-visibility: hidden;
+  transition: transform 0.55s ease;
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.card-front {
+  background:
+    radial-gradient(circle at 15% 15%, rgba(240, 254, 114, 0.45), transparent 25%),
+    linear-gradient(135deg, var(--pink), #ff8bd0);
+  color: #fff;
+}
+
+.card-back {
+  background: linear-gradient(135deg, #252b4b, #11162f);
+  color: #fff;
+  transform: rotateY(180deg);
+}
+
+.credit-card.flipped .card-front {
+  transform: rotateY(180deg);
+}
+
+.credit-card.flipped .card-back {
+  transform: rotateY(360deg);
+}
+
+.card-top,
+.card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.card-chip {
+  width: 54px;
+  height: 40px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #f7e36b, #fff0a0);
+}
+
+.card-brand-preview {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.preview-card-number {
+  margin: 38px 0 32px;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #fff;
+}
+
+.card-small-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.card-bottom strong {
+  display: block;
+  max-width: 170px;
+  font-size: 14px;
+  color: #fff;
+  word-break: break-word;
+}
+
+.card-strip {
+  height: 44px;
+  margin: 18px -24px 32px;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.card-cvv-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.card-cvv-box {
+  width: 100%;
+  min-height: 42px;
+  border-radius: 6px;
+  background: #fff;
+  color: #11162f;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 14px;
+  font-weight: 800;
+  letter-spacing: 3px;
+}
 
 .payment-icon {
   width: 48px;
@@ -372,6 +510,22 @@ body {
 }
 
 /* ── RESPONSIVE ──────────────────────────────── */
+@media (max-width: 1050px) {
+  .payment-content {
+    grid-template-columns: 1fr;
+  }
+
+  .card-preview-panel {
+    position: static;
+    order: -1;
+  }
+
+  .credit-card {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+}
+
 @media (max-width: 860px) {
   .enroll-grid { grid-template-columns: 1fr; }
   .enroll-wrapper { padding: 32px 20px 60px; }

@@ -156,6 +156,47 @@ function updateCardBrandUI(cardType) {
     mastercard.classList.toggle("active", cardType === "mastercard");
   }
 }
+function updateCardPreview() {
+  const nameInput = document.getElementById("cardName");
+  const numberInput = document.getElementById("cardNumber");
+  const expiryInput = document.getElementById("expiry");
+  const cvvInput = document.getElementById("cvv");
+  const cardTypeInput = document.getElementById("cardType");
+
+  const previewName = document.getElementById("previewCardName");
+  const previewNumber = document.getElementById("previewCardNumber");
+  const previewExpiry = document.getElementById("previewExpiry");
+  const previewCvv = document.getElementById("previewCvv");
+  const previewBrand = document.getElementById("previewBrand");
+
+  if (previewName) {
+    previewName.textContent = nameInput.value.trim().toUpperCase() || "YOUR NAME";
+  }
+
+  if (previewNumber) {
+    previewNumber.textContent = numberInput.value.trim() || "#### #### #### ####";
+  }
+
+  if (previewExpiry) {
+    previewExpiry.textContent = expiryInput.value.trim() || "MM/YY";
+  }
+
+  if (previewCvv) {
+    previewCvv.textContent = cvvInput.value.trim() || "###";
+  }
+
+  if (previewBrand) {
+    const cardType = cardTypeInput.value;
+
+    if (cardType === "visa") {
+      previewBrand.textContent = "VISA";
+    } else if (cardType === "mastercard") {
+      previewBrand.textContent = "MC";
+    } else {
+      previewBrand.textContent = "CARD";
+    }
+  }
+}
 // ─────────────────────────────────────────────
 //  Input formatting
 // ─────────────────────────────────────────────
@@ -165,8 +206,19 @@ document.getElementById('cardNumber').addEventListener('input', function () {
 
   const cardType = detectCardType(this.value);
   updateCardBrandUI(cardType);
+  updateCardPreview();
+});
+document.getElementById("cardName").addEventListener("input", updateCardPreview);
+document.getElementById("expiry").addEventListener("input", updateCardPreview);
+document.getElementById("cvv").addEventListener("input", updateCardPreview);
+
+document.getElementById("cvv").addEventListener("focus", function () {
+  document.getElementById("creditCard")?.classList.add("flipped");
 });
 
+document.getElementById("cvv").addEventListener("blur", function () {
+  document.getElementById("creditCard")?.classList.remove("flipped");
+});
 document.getElementById('expiry').addEventListener('input', function () {
   let val = this.value.replace(/\D/g, '').substring(0, 4);
   if (val.length >= 3) val = val.slice(0, 2) + '/' + val.slice(2);

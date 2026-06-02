@@ -75,7 +75,8 @@
             <p class="payment-sub">All transactions are secure and encrypted</p>
           </div>
         </div>
-
+        <div class="payment-content">
+  <div class="payment-form-column">
        <form id="paymentForm" action="/student/payment/<%= course._id %>" method="POST">
         <input type="hidden" name="paymentMethod" value="card">
         <input type="hidden" id="cardType" name="cardType" value="unknown">
@@ -164,6 +165,45 @@
           </button>
 
         </form>
+          </div>
+
+  <aside class="card-preview-panel">
+    <p class="preview-label">Card Preview</p>
+
+    <div class="credit-card" id="creditCard">
+      <div class="card-face card-front">
+        <div class="card-top">
+          <div class="card-chip"></div>
+          <span class="card-brand-preview" id="previewBrand">CARD</span>
+        </div>
+
+        <div class="preview-card-number" id="previewCardNumber">
+          #### #### #### ####
+        </div>
+
+        <div class="card-bottom">
+          <div>
+            <span class="card-small-label">Card Holder</span>
+            <strong id="previewCardName">YOUR NAME</strong>
+          </div>
+
+          <div>
+            <span class="card-small-label">Expires</span>
+            <strong id="previewExpiry">MM/YY</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-face card-back">
+        <div class="card-strip"></div>
+        <div class="card-cvv-row">
+          <span>CVV</span>
+          <div class="card-cvv-box" id="previewCvv">###</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
 
         <p class="secure-note">
           <i class="fa-solid fa-lock"></i>
