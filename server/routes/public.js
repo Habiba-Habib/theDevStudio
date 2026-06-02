@@ -3,6 +3,7 @@ const router = express.Router();
 const Course = require('../models/Course');
 const User = require('../models/User');
 const multer = require("multer");
+const { requireLoginPage } = require("../middleware/authMiddleware");
 const upload = multer({ dest: "uploads/instructor-verification/" });
 
 // Allowed values for the experience dropdown (must match become-instructor.ejs)
@@ -58,7 +59,7 @@ router.get('/page-404', (req, res, next) => {
 
 // Instructor application — step 1 & 2 = session only; step 3 = create user + pending
 
-router.get('/become-instructor', (req, res, next) => {
+router.get('/become-instructor', requireLoginPage, (req, res, next) => {
   try {
     res.render('instructor/become-instructor', {
       formError: null,
@@ -69,7 +70,7 @@ router.get('/become-instructor', (req, res, next) => {
   }
 });
 
-router.post('/become-instructor', async (req, res, next) => {
+router.post('/become-instructor', requireLoginPage, async (req, res, next) => {
   try {
     console.log("BIO RECEIVED:", req.body.bio, "LENGTH:", req.body.bio?.trim().length);
     const error = validateStep1(req.body);
@@ -100,7 +101,7 @@ router.post('/become-instructor', async (req, res, next) => {
 }
 });
 
-router.get('/become-instructor/step2', (req, res, next) => {
+router.get('/become-instructor/step2', requireLoginPage, (req, res, next) => {
   try {
     if (!req.session.instructorApplication?.fullName) {
       return res.redirect('/become-instructor');
@@ -141,11 +142,9 @@ router.post('/become-instructor/step2', upload.fields([
   }
 });
 
-router.get('/become-instructor/step3', (req, res, next) => {
+router.get('/become-instructor/step3',requireLoginPage, (req, res, next) => {
   try {
-    if (!req.session.userId) {
-      return res.redirect('/auth/login');
-    }
+   
     const application = req.session.instructorApplication;
 
     if (!application?.fullName) return res.redirect('/become-instructor');
@@ -166,11 +165,9 @@ router.get('/become-instructor/step3', (req, res, next) => {
   }
 });
 
-router.post('/become-instructor/step3', async (req, res) => {
+router.post('/become-instructor/step3', requireLoginPage, async (req, res) => {
   try {
-    if (!req.session.userId) {
-      return res.redirect('/auth/login');
-    }
+  
     const app = req.session.instructorApplication;
     if(!app?.fullName || !app.cvUrl) {
       return res.redirect('/become-instructor');
