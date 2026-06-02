@@ -102,17 +102,20 @@
               <% if (course.image) { %>
                 style="background-image: url('<%= course.image %>');"
               <% } %>
-            ></div>
+            >
+              <% if (course.status === 'completed') { %>
+                <div class="completed-badge">
+                  <i class="fa-solid fa-circle-check"></i> Completed
+                </div>
+              <% } %>
+            </div>
 
             <div class="course-content">
               <div class="course-top">
                 <span class="course-status <%= course.status || 'ongoing' %>">
                   <%= course.status === "completed" ? "Completed" : "Ongoing" %>
                 </span>
-
-                <span class="course-progress-text">
-                  <%= progress %>%
-                </span>
+                <span class="course-progress-text"><%= progress %>%</span>
               </div>
 
               <h3><%= course.title || "Course Title" %></h3>
@@ -126,30 +129,33 @@
               </p>
 
               <div class="progress-bar">
-              <div
-                class="progress-fill"
-                data-progress="<%= progress %>"
-              ></div>
-            </div>
+                <div class="progress-fill" data-progress="<%= progress %>"></div>
+              </div>
 
               <div class="course-footer">
                 <span>
                   <i class="fa-regular fa-clock"></i>
                   <%= course.duration || "12 hours" %>
                 </span>
-
                 <a
-  href="<%= course.status === 'completed' ? '/courses/' + (course._id || course.id || '') : '/student/course/' + (course._id || course.id || '') + '/learn' %>"
-  class="continue-btn"
->
-          <%= course.status === "completed" ? "Review Course" : "Continue Learning" %>
-        </a>
-            </div>
+                  href="<%= course.status === 'completed' ? '/courses/' + (course._id || course.id || '') : '/student/course/' + (course._id || course.id || '') + '/learn' %>"
+                  class="continue-btn <%= course.status === 'completed' ? 'completed-btn' : '' %>"
+                >
+                  <%= course.status === "completed" ? "View Course" : "Continue Learning" %>
+                </a>
+              </div>
             </div>
           </article>
 
         <% }); %>
       <% } %>
+
+      <!-- empty state shown by JS when a tab has no cards -->
+      <div class="empty-tab-state" id="emptyState" style="display:none;">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <p id="emptyStateMsg">No courses here yet.</p>
+      </div>
+
     </section>
 
   </main>

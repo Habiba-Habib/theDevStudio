@@ -11,6 +11,7 @@ const lessonSchema = new mongoose.Schema({
   type: { type: String, enum: ['video', 'text'], default: 'video' },
   videoSource: { type: String, enum: ['url', 'upload'], default: 'url' },
   videoUrl: { type: String, default: '' },
+  videoFile: { type: String, default: '' },
 videoFiles: [{ type: String }],
 resourceFiles: [{ type: String }],
   resourceFile: { type: String, default: '' },

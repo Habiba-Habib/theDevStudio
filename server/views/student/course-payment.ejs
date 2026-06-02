@@ -119,6 +119,36 @@
             </div>
           </div>
 
+          <!-- CARD PREVIEW — inline between CVV and Promo -->
+          <div class="inline-card-preview">
+            <div class="credit-card" id="creditCard">
+              <div class="card-face card-front">
+                <div class="card-top">
+                  <div class="card-chip"></div>
+                  <span class="card-brand-preview" id="previewBrand">CARD</span>
+                </div>
+                <div class="preview-card-number" id="previewCardNumber">#### #### #### ####</div>
+                <div class="card-bottom">
+                  <div>
+                    <span class="card-small-label">Card Holder</span>
+                    <strong id="previewCardName">YOUR NAME</strong>
+                  </div>
+                  <div>
+                    <span class="card-small-label">Expires</span>
+                    <strong id="previewExpiry">MM/YY</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="card-face card-back">
+                <div class="card-strip"></div>
+                <div class="card-cvv-row">
+                  <span>CVV</span>
+                  <div class="card-cvv-box" id="previewCvv">###</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="field-group">
             <label for="promo">Promo Code (Optional)</label>
             <input type="text" placeholder="Enter promo code" id="promo" name="promo"/>
@@ -165,45 +195,8 @@
           </button>
 
         </form>
-          </div>
-
-  <aside class="card-preview-panel">
-    <p class="preview-label">Card Preview</p>
-
-    <div class="credit-card" id="creditCard">
-      <div class="card-face card-front">
-        <div class="card-top">
-          <div class="card-chip"></div>
-          <span class="card-brand-preview" id="previewBrand">CARD</span>
-        </div>
-
-        <div class="preview-card-number" id="previewCardNumber">
-          #### #### #### ####
-        </div>
-
-        <div class="card-bottom">
-          <div>
-            <span class="card-small-label">Card Holder</span>
-            <strong id="previewCardName">YOUR NAME</strong>
-          </div>
-
-          <div>
-            <span class="card-small-label">Expires</span>
-            <strong id="previewExpiry">MM/YY</strong>
-          </div>
-        </div>
-      </div>
-
-      <div class="card-face card-back">
-        <div class="card-strip"></div>
-        <div class="card-cvv-row">
-          <span>CVV</span>
-          <div class="card-cvv-box" id="previewCvv">###</div>
-        </div>
-      </div>
-    </div>
-  </aside>
-</div>
+          </div><!-- /payment-form-column -->
+</div><!-- /payment-content -->
 
         <p class="secure-note">
           <i class="fa-solid fa-lock"></i>

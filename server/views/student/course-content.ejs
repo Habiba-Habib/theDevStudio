@@ -59,15 +59,28 @@
     <% if (activeLesson) { %>
       <div class="video-card">
         <% if (activeLesson.type === 'video') { %>
-          <% if (activeLesson.videoUrl) { %>
-            <%
-              let embedUrl = activeLesson.videoUrl;
-              const ytMatch = embedUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+          <%
+            const useUpload = activeLesson.videoSource === 'upload';
+            let videoSrc = useUpload
+              ? (activeLesson.videoFile || activeLesson.videoUrl || '')
+              : (activeLesson.videoUrl || activeLesson.videoFile || '');
+            let embedUrl = videoSrc;
+            if (videoSrc) {
+              const ytMatch = videoSrc.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
               if (ytMatch) embedUrl = 'https://www.youtube.com/embed/' + ytMatch[1];
-            %>
-            <iframe class="video-frame" src="<%= embedUrl %>" frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
+            }
+          %>
+          <% if (embedUrl) { %>
+            <% if (embedUrl.includes('youtube.com/embed') || embedUrl.includes('youtu.be') || embedUrl.includes('vimeo.com')) { %>
+              <iframe class="video-frame" src="<%= embedUrl %>" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+            <% } else { %>
+              <video class="video-frame" controls controlsList="nodownload">
+                <source src="<%= embedUrl %>">
+                Your browser does not support the video tag.
+              </video>
+            <% } %>
           <% } else { %>
             <div class="video-placeholder">
               <div class="vp-play">&#9654;</div>
