@@ -159,7 +159,7 @@ body {
 }
 
 .courses.completed-view {
-  grid-template-columns: 340px;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .course-card {
@@ -318,7 +318,7 @@ body {
 
 /* Responsive */
 
-@media (max-width: 1000px) {
+  @media (max-width: 1000px) {
   .stats {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -328,7 +328,7 @@ body {
   }
 
   .courses.completed-view {
-    grid-template-columns: 340px;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -428,4 +428,44 @@ body {
   margin-top: 0;
   text-decoration: none;
   white-space: nowrap;
+}
+
+/* Completed course card styles */
+.course-status.completed {
+  background: rgba(45, 212, 191, 0.15);
+  color: #2dd4bf;
+}
+
+.course-card[data-status="completed"] .progress-fill {
+  background: linear-gradient(90deg, #2dd4bf, #a3e635);
+}
+
+.completed-btn {
+  background: rgba(45, 212, 191, 0.15) !important;
+  border: 1px solid rgba(45, 212, 191, 0.4);
+  color: #2dd4bf !important;
+}
+
+.completed-btn:hover {
+  background: rgba(45, 212, 191, 0.25) !important;
+  box-shadow: 0 8px 18px rgba(45, 212, 191, 0.2) !important;
+}
+
+/* Empty state for completed tab */
+.empty-tab-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: #8fa1ca;
+}
+
+.empty-tab-state i {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  display: block;
+  opacity: 0.3;
+}
+
+.empty-tab-state p {
+  font-size: 15px;
 }

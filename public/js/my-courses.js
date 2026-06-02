@@ -13,15 +13,27 @@ function filterCourses(filter) {
     coursesContainer.classList.remove("completed-view");
   }
 
+  let visible = 0;
   courseCards.forEach(function (card) {
     const status = card.getAttribute("data-status");
-
     if (status === filter) {
       card.style.display = "";
+      visible++;
     } else {
       card.style.display = "none";
     }
   });
+
+  const emptyState = document.getElementById("emptyState");
+  const emptyMsg   = document.getElementById("emptyStateMsg");
+  if (emptyState) {
+    emptyState.style.display = visible === 0 ? "block" : "none";
+    if (emptyMsg) {
+      emptyMsg.textContent = filter === "completed"
+        ? "You haven't completed any courses yet. Keep going!"
+        : "No courses in progress.";
+    }
+  }
 }
 
 tabs.forEach(function (tab) {
