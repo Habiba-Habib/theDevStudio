@@ -42,7 +42,8 @@ exports.getPaymentPage = async (req, res) => {
       return res.status(404).send("Course not found");
     }
     // block course owner from enrolling
-if (course.instructor.toString() === req.session.userId.toString()) {
+// block course owner from enrolling
+if (course.instructor && course.instructor.toString() === req.session.userId.toString()) {
   return res.redirect(`/courses/${courseId}`);
 }
 
@@ -71,7 +72,8 @@ exports.processPayment = async (req, res) => {
       return res.status(404).send("Course not found");
     }
     // block course owner from enrolling
-if (course.instructor.toString() === req.session.userId.toString()) {
+// block course owner from enrolling
+if (course.instructor && course.instructor.toString() === req.session.userId.toString()) {
   return res.status(403).send("You cannot enroll in your own course.");
 }
 
