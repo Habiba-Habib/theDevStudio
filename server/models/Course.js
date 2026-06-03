@@ -34,6 +34,7 @@ const sectionSchema = new mongoose.Schema({
   
 });
 
+
 const courseSchema = new mongoose.Schema({
 
   title:            { type: String, required: true },
@@ -71,6 +72,12 @@ const courseSchema = new mongoose.Schema({
     comment: { type: String, default: '' },
     date:    { type: Date, default: Date.now }
   }],
+  
+  offersCertificate: {
+  type: Boolean,
+  default: false
+},
+
 
   isPublished: { type: Boolean, default: false },
   deletedAt:   { type: Date, default: null }

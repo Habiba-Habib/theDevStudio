@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Create Course – Curriculum</title>
-
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link rel="stylesheet" href="/css/create%20step%202.css">
@@ -15,41 +14,36 @@
 <div class="page-wrapper">
 
   <h1 class="course-title">Create New Course</h1>
-<p class="course-description">Build your course curriculum</p>
+  <p class="course-description">Build your course curriculum</p>
 
-  <!-- STEP 2 -->
-<div class="stepper">
-  <div class="step active">
-    <div class="step-circle">1</div>
-    <div class="step-label">Basic Info</div>
+  <div class="stepper">
+    <div class="step active">
+      <div class="step-circle">1</div>
+      <div class="step-label">Basic Info</div>
+    </div>
+    <div class="step-line done"></div>
+    <div class="step active">
+      <div class="step-circle">2</div>
+      <div class="step-label">Curriculum</div>
+    </div>
+    <div class="step-line pending"></div>
+    <div class="step inactive">
+      <div class="step-circle">3</div>
+      <div class="step-label">Pricing</div>
+    </div>
   </div>
-  <div class="step-line done"></div>
-  <div class="step active">
-    <div class="step-circle">2</div>
-    <div class="step-label">Curriculum</div>
-  </div>
-  <div class="step-line pending"></div>
-  <div class="step inactive">
-    <div class="step-circle">3</div>
-    <div class="step-label">Pricing</div>
-  </div>
-</div>
 
-
-
-  <!-- SINGLE FORM (IMPORTANT) -->
   <form id="courseForm" action="/instructor/create/step2" method="POST">
 
     <!-- OUTCOMES -->
     <div class="learn-box">
       <h3>What will students learn?</h3>
-
       <div id="outcomes-list">
         <div class="outcome-item">
           <input type="text" class="form-input" name="outcomes[]" placeholder="e.g., Build responsive websites"/>
+          <button type="button" class="btn-remove-outcome"><i class="fa-solid fa-xmark"></i></button>
         </div>
       </div>
-
       <button type="button" id="add-outcome" class="btn-add">
         <i class="fa-solid fa-plus"></i> Add Outcome
       </button>
@@ -58,26 +52,59 @@
     <!-- SECTIONS -->
     <div class="learn-box">
       <h3>Course Sections</h3>
-
       <div id="sections-list">
 
+        <!-- FIRST SECTION -->
         <div class="section-card">
-          <div class="form-group">
-            <input type="text" class="form-input" name="sections[0][title]" placeholder="Section title"/>
+          <div class="section-title-row">
+            <input type="text" class="form-input section-title-input" name="sections[0][title]" placeholder="Section title" required/>
+            <button type="button" class="btn-delete-section" title="Delete Section">
+              <i class="fa-solid fa-trash"></i>
+            </button>
           </div>
 
-          <div class="lesson-container">
-            <div class="form-group lesson-item">
-              <div class="outcome-item">
-              <input type="text" class="form-input" name="sections[0][lessons][]" placeholder="Lesson title"/>
-              <button type="button" class="btn-remove">
-                <i class="fa-solid fa-xmark"></i>
-              </button>
+          <div class="section-lessons">
+            <div class="lesson-item">
+              <div class="lesson-box">
+                <input type="text" class="form-input" name="sections[0][lessons][0][title]" placeholder="Lesson title" required/>
+                
+                <div class="video-source-toggle">
+                  <label class="radio-label">
+                    <input type="radio" name="sections[0][lessons][0][videoSource]" value="url" checked>
+                    <span>Video URL</span>
+                  </label>
+                  <label class="radio-label">
+                    <input type="radio" name="sections[0][lessons][0][videoSource]" value="file">
+                    <span>Upload Video</span>
+                  </label>
+                </div>
+                
+                <input type="url" class="form-input video-url-input" name="sections[0][lessons][0][videoUrl]" placeholder="Paste YouTube/Vimeo URL"/>
+                
+                <div class="file-upload-box video-file-box" style="display:none;">
+                  <input type="file" class="video-file-input" name="sections[0][lessons][0][videoFile]" accept="video/*">
+                  <div class="file-display">
+                    <i class="fa-solid fa-video"></i>
+                    <span class="file-name">Choose Video File</span>
+                    <button type="button" class="btn-clear-file" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+                  </div>
+                </div>
+                
+                <div class="file-upload-box doc-file-box">
+                  <input type="file" class="doc-file-input" name="sections[0][lessons][0][document]" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt">
+                  <div class="file-display">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <span class="file-name">Add Document (Optional)</span>
+                    <button type="button" class="btn-clear-file" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+                  </div>
+                </div>
+                
+                <button type="button" class="btn-remove-lesson"><i class="fa-solid fa-xmark"></i></button>
+              </div>
             </div>
           </div>
-          </div>
 
-          <button type="button" class="btn-add">
+          <button type="button" class="btn-add-lesson">
             <i class="fa-solid fa-plus"></i> Add Lesson
           </button>
         </div>
@@ -89,7 +116,6 @@
       </button>
     </div>
 
-    <!-- NAV BUTTONS -->
     <div class="btn-row">
       <a href="/instructor/create/step1" class="btn-back">Back</a>
       <button type="submit" class="btn-enroll">Next: Pricing</button>

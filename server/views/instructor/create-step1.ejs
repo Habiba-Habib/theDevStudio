@@ -46,13 +46,21 @@
 
         <div class="form-group">
           <label class="lessons">Short Description <span>*</span></label>
-          <input type="text" class="form-input" name="shortDescription" placeholder="Brief one-line description" value="<%= shortDescription || '' %>" required />
+          <input type="text" class="form-input" name="shortDescription" id="shortDescription" placeholder="Brief one-line description" maxlength="150" value="<%= shortDescription || '' %>" required />
+          <div class="char-counter">
+            <span id="short-count">0</span> / 150 characters
+          </div>
         </div>
+
 
         <div class="form-group">
           <label class="lessons">Full Description <span>*</span></label>
-          <textarea class="form-input" name="fullDescription" placeholder="Detailed course description..." required><%= fullDescription || '' %></textarea>
+          <textarea class="form-input" name="fullDescription" id="fullDescription" placeholder="Detailed course description..." maxlength="1000" required><%= fullDescription || '' %></textarea>
+          <div class="char-counter">
+            <span id="desc-count">0</span> / 1000 characters
+          </div>
         </div>
+
 
         <!-- reusing learn-grid for two columns -->
         <div class="learn-grid">
@@ -74,17 +82,41 @@
             </select>
           </div>
         </div>
+        <!-- Certificate Toggle -->
+      <div class="form-group">
+        <label class="certificate-toggle-label">
+          <input type="checkbox" name="offersCertificate" id="offers-certificate" value="true">
+          <span class="toggle-switch"></span>
+          <span class="toggle-text">
+            <i class="fa-solid fa-certificate" style="color: var(--yellow); margin-right: 8px;"></i>
+            Offer Certificate of Completion
+          </span>
+        </label>
+        <p class="field-hint" style="margin-top: 8px; margin-left: 50px;">
+          Students will receive a certificate when they complete 100% of the course
+        </p>
+      </div>
 
-        <div class="form-group">
-          <label class="lessons">Course Thumbnail</label>
-          <div class="upload-area" id="upload-area">
-            <input type="file" id="file-input" name="thumbnail" accept="image/*" style="display:none">
+
+              <div class="form-group">
+        <label class="lessons">Course Thumbnail</label>
+        <div class="upload-area" id="upload-area">
+          <input type="file" id="file-input" name="thumbnail" accept="image/*" style="display:none">
+          <div class="upload-placeholder" id="upload-placeholder">
             <div class="upload-icon">
               <i class="fa-solid fa-arrow-up-from-bracket"></i>
             </div>
             <div class="upload-text">Click to upload or drag and drop</div>
             <div class="upload-hint">PNG, JPG up to 5MB</div>
           </div>
+          <div class="thumbnail-preview" id="thumbnail-preview" style="display:none;">
+            <img id="preview-image" src="" alt="Course thumbnail preview">
+            <button type="button" class="btn-change-thumbnail" id="change-thumbnail">
+              <i class="fa-solid fa-image"></i> Change Image
+            </button>
+          </div>
+        </div>
+
           <% if (locals.thumbnailError) { %>
             <div class="error-message"><%= thumbnailError %></div>
           <% } %>

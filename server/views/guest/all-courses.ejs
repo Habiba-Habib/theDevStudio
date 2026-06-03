@@ -51,7 +51,7 @@
 
       <!-- Card -->
      <% courses.forEach(function(course) {
-  const isOwn = typeof currentUserId !== 'undefined' && currentUserId && course.instructor && course.instructor._id && course.instructor._id.toString() === currentUserId.toString();
+ const isOwn = course.isOwn;
 %>
 <article class="course-card <%= isOwn ? 'course-card--own' : '' %>" data-category="<%= course.category %>" data-level="<%= course.level %>">
 
@@ -65,6 +65,12 @@
     <i class="fa-solid fa-check"></i> Enrolled
   </div>
 <% } %>
+<% if (course.hasCertificate) { %>
+  <div class="card-certificate-ribbon">
+    <i class="fa-solid fa-certificate"></i> Certificate Earned
+  </div>
+<% } %>
+
 
   <div class="card-image-wrapper">
     <img src="<%= course.thumbnail %>" alt="<%= course.title %>" class="card-image" />

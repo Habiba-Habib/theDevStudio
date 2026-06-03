@@ -494,3 +494,96 @@ body {
   line-height: 1.6;
   margin: 0 0 20px 0;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   CERTIFICATE SECTION - REDESIGNED
+   ══════════════════════════════════════════════════════════════ */
+
+.cd-certificate-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  background: linear-gradient(135deg, rgba(240, 254, 114, 0.08), rgba(255, 64, 160, 0.05));
+  border: 1px solid rgba(240, 254, 114, 0.25);
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin: 24px 0;
+}
+
+.cd-cert-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--yellow), rgba(240, 254, 114, 0.8));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(240, 254, 114, 0.2);
+}
+
+.cd-cert-icon i {
+  font-size: 26px;
+  color: var(--bg);
+}
+
+.cd-cert-info h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-white);
+  margin: 0 0 8px 0;
+}
+
+.cd-cert-info p {
+  font-size: 14px;
+  color: var(--text-body);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Status Badge Styling */
+.cd-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.cd-owner-badge {
+  background: rgba(255, 64, 160, 0.12);
+  border: 1px solid rgba(255, 64, 160, 0.3);
+  color: var(--pink);
+}
+
+.cd-enrolled-badge {
+  background: rgba(96, 163, 166, 0.12);
+  border: 1px solid rgba(96, 163, 166, 0.3);
+  color: var(--teal);
+}
+
+.cd-certificate-badge {
+  background: rgba(240, 254, 114, 0.12);
+  border: 1px solid rgba(240, 254, 114, 0.3);
+  color: var(--yellow);
+}
+
+@media (max-width: 768px) {
+  .cd-certificate-box {
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .cd-cert-icon {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .cd-cert-icon i {
+    font-size: 22px;
+  }
+}
+

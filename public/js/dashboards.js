@@ -631,3 +631,91 @@ function showRejectionReason(btn) {
 function closeReasonModal() {
   document.getElementById('reasonModal').style.display = 'none';
 }
+// ══════════════════════════════════════════════════════════════
+// COURSE FILTERS & SEARCH (Instructor Dashboard)
+// ══════════════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', () => {
+  const filterTabs = document.querySelectorAll('.filter-tab');
+  const courseItems = document.querySelectorAll('.course-item');
+  const searchInput = document.getElementById('course-search');
+  const noResults = document.getElementById('no-results');
+  
+  // Skip if no filter tabs exist (not on instructor dashboard)
+  if (!filterTabs.length || !courseItems.length) return;
+  
+  let currentFilter = 'all';
+
+  // Filter functionality
+  filterTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Update active tab
+      filterTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      
+      // Get filter value
+      currentFilter = tab.getAttribute('data-filter');
+      
+      // Clear search when switching filters
+      if (searchInput) {
+        searchInput.value = '';
+      }
+      
+      // Apply filter
+      applyFilters();
+    });
+  });
+
+  // Search functionality
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      applyFilters();
+    });
+  }
+
+  // Apply both filter and search
+  function applyFilters() {
+    const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    let visibleCount = 0;
+    
+    courseItems.forEach(item => {
+      const status = item.getAttribute('data-status');
+      const title = item.getAttribute('data-course-title');
+      
+      // Check filter match
+      let filterMatch = false;
+      if (currentFilter === 'all') {
+        filterMatch = true;
+      } else if (currentFilter === 'published' && status === 'published') {
+        filterMatch = true;
+      } else if (currentFilter === 'drafts' && status === 'draft') {
+        filterMatch = true;
+      }
+      
+      // Check search match
+      const searchMatch = !searchTerm || title.includes(searchTerm);
+      
+      // Show/hide item
+      if (filterMatch && searchMatch) {
+        item.classList.remove('hidden');
+        item.style.display = 'flex';
+        visibleCount++;
+      } else {
+        item.classList.add('hidden');
+        item.style.display = 'none';
+      }
+    });
+    
+    // Show/hide no results message
+    if (noResults) {
+      if (visibleCount === 0) {
+        noResults.style.display = 'flex';
+      } else {
+        noResults.style.display = 'none';
+      }
+    }
+  }
+
+  // Initialize on page load
+  applyFilters();
+});

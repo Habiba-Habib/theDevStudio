@@ -86,58 +86,125 @@
     </div>
 
    <!-- Your Courses -->
+   <!-- Your Courses -->
 <section class="section-block">
   <div class="section-header">
     <h2 class="section-title" style="margin-bottom: 0;">Your Courses</h2>
-    <a href="/instructor/create/step1" class="id-btn-create">
-      <i class="fa-solid fa-plus"></i> Create New Course
-    </a>
+    <div class="header-actions">
+      <div class="search-box">
+        <i class="fa-solid fa-search"></i>
+        <input type="text" id="course-search" placeholder="Search courses...">
+      </div>
+      <a href="/instructor/create/step1" class="id-btn-create">
+        <i class="fa-solid fa-plus"></i> Create New Course
+      </a>
+    </div>
   </div>
 
-<% if (!courses || courses.length === 0) { %>
-    <div class="id-empty-courses">
-      <div class="id-empty-icon">
-        <i class="fa-solid fa-book-open"></i>
-      </div>
-      <h3>No courses yet</h3>
-      <p>Create your first course and start sharing your knowledge.</p>
-    </div>
-  <% } else { %>
-    <% courses.forEach(function(course) { %>
-    <div class="id-course-card">
-      <img src="<%= course.thumbnail %>" alt="<%= course.title %>" class="course-thumb" />
-      <div class="id-course-info">
-        <h3 class="course-progress-title"><%= course.title %></h3>
-        <div class="id-course-meta">
-          <span><i class="fa-solid fa-users"></i> <%= course.students.length.toLocaleString() %> students</span>
-          <span><i class="fa-solid fa-star"></i> <%= course.rating %></span>
-          <span>$<%= course.price %></span>
+  <!-- Filter Tabs -->
+  <div class="course-filters">
+    <button class="filter-tab active" data-filter="all">
+      <i class="fa-solid fa-book"></i>
+      All Courses
+      <span class="filter-count"><%= publishedCourses.length + draftCourses.length %></span>
+    </button>
+    <button class="filter-tab" data-filter="published">
+      <i class="fa-solid fa-check-circle"></i>
+      Published
+      <span class="filter-count"><%= publishedCourses.length %></span>
+    </button>
+    <button class="filter-tab" data-filter="drafts">
+      <i class="fa-solid fa-file-lines"></i>
+      Drafts
+      <span class="filter-count"><%= draftCourses.length %></span>
+    </button>
+  </div>
+
+  <!-- Courses Container -->
+  <div id="courses-container">
+    <% if (publishedCourses.length === 0 && draftCourses.length === 0) { %>
+      <div class="id-empty-courses">
+        <div class="id-empty-icon">
+          <i class="fa-solid fa-book-open"></i>
         </div>
+        <h3>No courses yet</h3>
+        <p>Create your first course and start sharing your knowledge.</p>
       </div>
-      <a href="/courses/<%= course._id %>" class="id-btn-view">View Details</a>
-      <a href="/instructor/courses/<%= course._id %>/students" class="id-btn-view" style="background: rgba(45,212,191,0.12); border: 1px solid rgba(45,212,191,0.3); color: #2dd4bf;">
-        <i class="fa-solid fa-users"></i> Students
-      </a>
-      <form action="/instructor/courses/<%= course._id %>/delete" method="POST"
-        onsubmit="return confirm('Delete this course? This cannot be undone.')">
-        <button type="submit" style="
-          background: rgba(255,64,160,0.12);
-          border: 1px solid rgba(255,64,160,0.3);
-          color: #FF40A0;
-          padding: 10px 18px;
-          border-radius: 8px;
-          font-size: 0.875rem;
-          font-weight: 600;
-          cursor: pointer;
-          font-family: inherit;
-        ">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </form>
-    </div>
-    <% }); %>
-  <% } %>
+    <% } else { %>
+      
+      <!-- Published Courses -->
+      <% publishedCourses.forEach(function(course) { %>
+        <div class="course-item id-course-card published-course-card" 
+             data-status="published"
+             data-course-title="<%= course.title.toLowerCase() %>">
+          <img src="<%= course.thumbnail %>" alt="<%= course.title %>" class="course-thumb" />
+          <div class="id-course-info">
+            <h3 class="course-progress-title"><%= course.title %></h3>
+            <div class="id-course-meta">
+              <span><i class="fa-solid fa-users"></i> <%= course.students.length %> students</span>
+              <span><i class="fa-solid fa-star"></i> <%= course.rating || '0.0' %></span>
+              <span class="price-badge">$<%= course.price %></span>
+            </div>
+          </div>
+          <a href="/courses/<%= course._id %>" class="id-btn-view">
+            <i class="fa-solid fa-eye"></i> View
+          </a>
+          <a href="/instructor/courses/<%= course._id %>/students" class="id-btn-view id-btn-students">
+            <i class="fa-solid fa-users"></i> Students
+          </a>
+          <form action="/instructor/courses/<%= course._id %>/delete" method="POST"
+            onsubmit="return confirm('Delete this course? This cannot be undone.')">
+            <button type="submit" class="btn-delete-inline">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </form>
+        </div>
+      <% }); %>
+
+      <!-- Draft Courses -->
+      <% draftCourses.forEach(function(course) { %>
+        <div class="course-item id-course-card draft-course-card" 
+             data-status="draft"
+             data-course-title="<%= course.title.toLowerCase() %>">
+          <div class="draft-ribbon">
+            <i class="fa-solid fa-pen-to-square"></i>
+            DRAFT
+          </div>
+          <img src="<%= course.thumbnail || '/images/default-thumbnail.jpg' %>" 
+               alt="<%= course.title %>" 
+               class="course-thumb" />
+          <div class="id-course-info">
+            <h3 class="course-progress-title"><%= course.title %></h3>
+            <div class="id-course-meta">
+              <span class="draft-status"><i class="fa-solid fa-clock"></i> Unpublished</span>
+              <span><i class="fa-solid fa-list"></i> <%= (course.curriculum || []).length %> sections</span>
+            </div>
+          </div>
+          <a href="/instructor/create/step3?courseId=<%= course._id %>" class="id-btn-view id-btn-continue">
+            <i class="fa-solid fa-pen"></i> Continue Editing
+          </a>
+          <form action="/instructor/delete-draft/<%= course._id %>" method="POST"
+            onsubmit="return confirm('Delete this draft? This cannot be undone.')">
+            <button type="submit" class="btn-delete-inline">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </form>
+        </div>
+      <% }); %>
+
+      <!-- No Results Message (hidden by default) -->
+      <div id="no-results" class="id-empty-courses" style="display: none;">
+        <div class="id-empty-icon">
+          <i class="fa-solid fa-search"></i>
+        </div>
+        <h3>No courses found</h3>
+        <p>Try adjusting your search or filter.</p>
+      </div>
+
+    <% } %>
+  </div>
 </section>
+
 
 
 

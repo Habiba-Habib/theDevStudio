@@ -9,26 +9,44 @@ router.get('/all-courses', async (req, res, next) => {
     const userId = req.session.userId || req.session.user?._id || null;
 
     let enrolledCourseIds = new Set();
+    let userCertificates = new Set();
+    
     if (userId) {
-      const user = await User.findById(userId).select('enrolledCourses');
+      const user = await User.findById(userId).select('enrolledCourses certificates');
+      
+      // Get enrolled courses
       (user?.enrolledCourses || []).forEach(e => {
         if (e.course) enrolledCourseIds.add(e.course.toString());
+      });
+      
+      // Get certificates
+      (user?.certificates || []).forEach(cert => {
+        if (cert.course) userCertificates.add(cert.course.toString());
       });
     }
 
     const courses = await Course.find({ isPublished: true })
       .populate("instructor", "name");
+const coursesWithStatus = courses.map(course => {
+  const courseObj = course.toObject();
+  
+  const isEnrolled =
+    enrolledCourseIds.has(course._id.toString()) ||
+    (userId && course.students.some(s => s.toString() === userId.toString()));
+  
+  const hasCertificate = userCertificates.has(course._id.toString());
+  
+  const isOwn = userId && course.instructor?._id?.toString() === userId.toString();
 
-    const coursesWithStatus = courses.map(course => {
-      const isEnrolled =
-        enrolledCourseIds.has(course._id.toString()) ||
-        (userId && course.students.some(s => s.toString() === userId.toString()));
+  return {
+    ...courseObj,
+    isEnrolled,
+    hasCertificate,
+    isOwn
+  };
+});
 
-      return {
-        ...course.toObject(),
-        isEnrolled
-      };
-    });
+
 
     res.render('guest/all-courses', {
       courses: coursesWithStatus,
@@ -38,6 +56,7 @@ router.get('/all-courses', async (req, res, next) => {
     next(err);
   }
 });
+
 
 router.get('/:id', async (req, res, next) => {
   try {

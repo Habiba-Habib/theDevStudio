@@ -4,78 +4,86 @@ const Payment = require('../models/payment');
 const bcrypt = require("bcryptjs");
 //const upload = require('../config/cloudinary');
 
-function pickUploadedUrl(file) {
-  if (!file) return '';
-  return file.path || file.secure_url || file.url || '';
-}
-
 // ─── DASHBOARD ────────────────────────────────────────────────
 
 exports.getDashboard = async (req, res) => {
   try {
     const instructor = await User.findById(req.session.user._id);
-const courses = await Course.find({ instructor: req.session.user._id });
+    
+    // Get published courses
+    const publishedCourses = await Course.find({ 
+      instructor: req.session.user._id,
+      isPublished: true 
+    });
+    
+    // Get draft courses
+    const draftCourses = await Course.find({ 
+      instructor: req.session.user._id,
+      isPublished: false 
+    });
 
-const courseIds = courses.map(course => course._id);
+    const courseIds = publishedCourses.map(course => course._id);
 
-const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+    const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
-const enrollmentData = new Array(6).fill(0);
-const revenueData = new Array(6).fill(0);
+    const enrollmentData = new Array(6).fill(0);
+    const revenueData = new Array(6).fill(0);
 
-courses.forEach(course => {
-  const createdMonth = course.createdAt ? course.createdAt.getMonth() : null;
+    publishedCourses.forEach(course => {
+      const createdMonth = course.createdAt ? course.createdAt.getMonth() : null;
 
-  if (createdMonth !== null && createdMonth < 6) {
-    enrollmentData[createdMonth] += course.students.length;
-  }
-});
+      if (createdMonth !== null && createdMonth < 6) {
+        enrollmentData[createdMonth] += course.students.length;
+      }
+    });
 
-const payments = await Payment.find({
-  course: { $in: courseIds },
-  status: 'successful'
-});
+    const payments = await Payment.find({
+      course: { $in: courseIds },
+      status: 'successful'
+    });
 
-payments.forEach(payment => {
-  const paymentMonth = payment.createdAt ? payment.createdAt.getMonth() : null;
+    payments.forEach(payment => {
+      const paymentMonth = payment.createdAt ? payment.createdAt.getMonth() : null;
 
-  if (paymentMonth !== null && paymentMonth < 6) {
-    revenueData[paymentMonth] += payment.amount;
-  }
-});
+      if (paymentMonth !== null && paymentMonth < 6) {
+        revenueData[paymentMonth] += payment.amount;
+      }
+    });
 
-// Stats for dashboard
-    const totalCourses = courses.length;
-    const totalStudents = courses.reduce((sum, c) => sum + c.students.length, 0);
-    const totalRevenue = courses.reduce((sum, c) => sum + (c.price * c.students.length), 0);
+    // Stats for dashboard (only published courses)
+    const totalCourses = publishedCourses.length;
+    const totalStudents = publishedCourses.reduce((sum, c) => sum + c.students.length, 0);
+    const totalRevenue = publishedCourses.reduce((sum, c) => sum + (c.price * c.students.length), 0);
 
-   res.render('instructor/dashboard', {
-  instructor,
-  courses,
-  stats: {
-    totalCourses,
-    totalStudents,
-    totalRevenue,
-    studentsChange: '',
-    coursesChange: '',
-    revenueChange: '',
-    ratingChange: '',
-    avgRating: courses.length
-      ? (courses.reduce((sum, course) => sum + (course.rating || 0), 0) / courses.length).toFixed(1)
-      : '0.0'
-  },
-  chartData: {
-    months: monthLabels,
-    enrollments: enrollmentData,
-    revenue: revenueData
-  }
-});
+    res.render('instructor/dashboard', {
+      instructor,
+      publishedCourses,     // ← Make sure this is here
+      draftCourses,         // ← Make sure this is here
+      stats: {
+        totalCourses,
+        totalStudents,
+        totalRevenue,
+        studentsChange: '',
+        coursesChange: '',
+        revenueChange: '',
+        ratingChange: '',
+        avgRating: publishedCourses.length
+          ? (publishedCourses.reduce((sum, course) => sum + (course.rating || 0), 0) / publishedCourses.length).toFixed(1)
+          : '0.0'
+      },
+      chartData: {
+        months: monthLabels,
+        enrollments: enrollmentData,
+        revenue: revenueData
+      }
+    });
 
   } catch (err) {
-    console.error(err);
+    console.error('Dashboard error:', err);
     res.status(500).render('error');
   }
 };
+
 
 // ─── PROFILE ──────────────────────────────────────────────────
 
@@ -263,8 +271,8 @@ exports.getCreateStep1 = async (req, res) => {
 
 exports.postCreateStep1 = async (req, res) => {
   try {
-    const { title, shortDescription, fullDescription, category, level } = req.body;
-
+    const { title, shortDescription, fullDescription, category, level, offersCertificate } = req.body;
+    
     // Check if a draft already exists — update it, don't create a new one
     let course = await Course.findOne({
       instructor: req.session.user._id,
@@ -272,10 +280,8 @@ exports.postCreateStep1 = async (req, res) => {
     });
 
     const thumbnailUrl = req.file
-      ? pickUploadedUrl(req.file) // Streams remote Cloudinary URL!
+      ? req.file.path // Streams remote Cloudinary URL!
       : (course?.thumbnail || '');
-    ;
-
 
     if (course) {
       // Update existing draft
@@ -285,7 +291,8 @@ exports.postCreateStep1 = async (req, res) => {
         fullDescription,
         category,
         level,
-        thumbnail: thumbnailUrl
+        thumbnail: thumbnailUrl,
+        offersCertificate: offersCertificate === 'true'
       });
     } else {
       // Create new draft
@@ -297,7 +304,8 @@ exports.postCreateStep1 = async (req, res) => {
         level,
         thumbnail: thumbnailUrl,
         instructor: req.session.user._id,
-        isPublished: false
+        isPublished: false,
+        offersCertificate: offersCertificate === 'true'
       });
     }
 
@@ -306,8 +314,8 @@ exports.postCreateStep1 = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).render('public/page-404', {
-  message: 'Failed to create course'
-});
+      message: 'Failed to create course'
+    });
   }
 };
 
@@ -345,25 +353,31 @@ exports.postCreateStep2 = async (req, res) => {
     if (!Array.isArray(outcomesArray)) outcomesArray = [outcomesArray];
     outcomesArray = outcomesArray.map(o => o.trim()).filter(o => o);
 
-    // sections come as sections[0][title], sections[0][lessons][] etc.
+    // sections come as sections[0][title], sections[0][lessons][0][title], sections[0][lessons][0][videoUrl] etc.
     const rawSections = req.body.sections || {};
     const sectionsArray = Object.keys(rawSections).map(i => {
       const sec = rawSections[i];
-      let lessons = sec.lessons || [];
-      if (!Array.isArray(lessons)) lessons = [lessons];
+      const rawLessons = sec.lessons || {};
+      
+      // Convert lessons object to array
+      const lessonsArray = Object.keys(rawLessons).map(j => {
+        const lesson = rawLessons[j];
+        return {
+          title: (lesson.title || '').trim(),
+          type: 'video',
+          videoSource: lesson.videoSource || 'url',
+          videoUrl: (lesson.videoUrl || '').trim(),
+          videoFile: '', // Will be handled in edit page with file uploads
+          content: '',
+          duration: ''
+        };
+      }).filter(l => l.title); // Only include lessons with titles
+      
       return {
-        title: sec.title || '',
-        lessons: lessons
-          .map(l => ({
-            title:    l.trim(),
-            type:     'video',
-            videoUrl: '',
-            content:  '',
-            duration: ''
-          }))
-          .filter(l => l.title)
+        title: (sec.title || '').trim(),
+        lessons: lessonsArray
       };
-    }).filter(s => s.title);
+    }).filter(s => s.title); // Only include sections with titles
 
     await Course.findByIdAndUpdate(draft._id, {
       learningOutcomes: outcomesArray,
@@ -372,10 +386,11 @@ exports.postCreateStep2 = async (req, res) => {
 
     res.redirect('/instructor/create/step3');
   } catch (err) {
-    console.error(err);
+    console.error('Step 2 error:', err);
     res.status(500).render('public/page-404', { message: 'Failed to save curriculum' });
   }
 };
+
 
 
 // ─── CREATE COURSE — STEP 3 ───────────────────────────────────
@@ -383,10 +398,24 @@ exports.postCreateStep2 = async (req, res) => {
 
 exports.getCreateStep3 = async (req, res) => {
   try {
-    const draft = await Course.findOne({
-      instructor: req.session.user._id,
-      isPublished : false
-    });
+    // Check if a specific course ID is provided (editing existing draft)
+    const courseId = req.query.courseId;
+    
+    let draft;
+    if (courseId) {
+      // Load specific draft by ID
+      draft = await Course.findOne({
+        _id: courseId,
+        instructor: req.session.user._id,
+        isPublished: false
+      });
+    } else {
+      // Find any draft for this instructor
+      draft = await Course.findOne({
+        instructor: req.session.user._id,
+        isPublished: false
+      });
+    }
 
     if (!draft) return res.redirect('/instructor/create/step1');
 
@@ -397,32 +426,148 @@ exports.getCreateStep3 = async (req, res) => {
   }
 };
 
+
 exports.postCreateStep3 = async (req, res) => {
   try {
-    const { price, duration } = req.body;
+    console.log('========================================');
+    console.log('POST CREATE STEP 3 - DEBUGGING');
+    console.log('========================================');
+    console.log('req.body:', req.body);
+    console.log('req.query:', req.query);
+    console.log('User ID:', req.session.user._id);
+    
+    const { price, duration, action, courseId } = req.body;
+    
+    console.log('Extracted values:');
+    console.log('- price:', price);
+    console.log('- duration:', duration);
+    console.log('- action:', action);
+    console.log('- courseId:', courseId);
 
-    const draft = await Course.findOne({
+    // Try to find the specific draft
+    let draft;
+    if (courseId) {
+      console.log('Looking for draft with specific courseId:', courseId);
+      draft = await Course.findOne({
+        _id: courseId,
+        instructor: req.session.user._id,
+        isPublished: false
+      });
+    } else {
+      console.log('Looking for ANY draft for this instructor');
+      draft = await Course.findOne({
+        instructor: req.session.user._id,
+        isPublished: false
+      });
+    }
+
+    console.log('Draft found?', draft ? 'YES' : 'NO');
+    if (draft) {
+      console.log('Draft ID:', draft._id);
+      console.log('Draft title:', draft.title);
+      console.log('Draft isPublished:', draft.isPublished);
+    }
+
+    if (!draft) {
+      console.log('NO DRAFT FOUND - Redirecting or returning error');
+      if (action === 'draft') {
+        return res.json({ success: false, message: 'No draft found' });
+      }
+      return res.redirect('/instructor/create/step1');
+    }
+
+    console.log('Updating course with:');
+    console.log('- price:', Number(price) || 0);
+    console.log('- duration:', duration);
+    console.log('- isPublished:', action === 'publish');
+
+    // Update price and duration
+    const updatedCourse = await Course.findByIdAndUpdate(
+      draft._id,
+      {
+        price: Number(price) || 0,
+        duration: duration,
+        isPublished: action === 'publish'
+      },
+      { new: true }
+    );
+
+    console.log('Course updated successfully');
+    console.log('Updated course isPublished:', updatedCourse.isPublished);
+
+    // If saving as draft, return JSON response
+    if (action === 'draft') {
+      console.log('Action is DRAFT - returning JSON response');
+      return res.json({ 
+        success: true, 
+        message: 'Draft saved successfully' 
+      });
+    }
+
+    // If publishing, render success page
+    if (action === 'publish') {
+      console.log('Action is PUBLISH - rendering page-created');
+      console.log('Course title:', updatedCourse.title);
+      return res.render('instructor/page-created', {
+        courseTitle: updatedCourse.title
+      });
+    }
+
+    // Default fallback
+    console.log('No specific action - redirecting to dashboard');
+    res.redirect('/instructor/dashboard');
+
+  } catch (err) {
+    console.error('========================================');
+    console.error('STEP 3 ERROR:');
+    console.error('========================================');
+    console.error(err);
+    console.error('Stack trace:', err.stack);
+    
+    if (req.body.action === 'draft') {
+      return res.status(500).json({ 
+        success: false, 
+        message: 'Failed to save draft' 
+      });
+    }
+    
+    res.status(500).render('public/page-404', { 
+      message: 'Failed to publish course' 
+    });
+  }
+};
+
+
+
+
+// ─── DELETE DRAFT ─────────────────────────────────────────────
+
+exports.deleteDraft = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+    
+    const draft = await Course.findOneAndDelete({
+      _id: courseId,
       instructor: req.session.user._id,
       isPublished: false
     });
 
-    if (!draft) return res.redirect('/instructor/create/step1');
+    if (!draft) {
+      return res.status(404).render('public/page-404', { 
+        message: 'Draft not found or already published' 
+      });
+    }
 
-    await Course.findByIdAndUpdate(draft._id, {
-      price: Number(price),
-      duration,
-      isPublished: true
-    });
-
-    // RENDER success page instead of redirect
-    res.render('instructor/page-created', {
-      courseTitle: draft.title
-    });
+    res.redirect('/instructor/dashboard');
   } catch (err) {
-    console.error(err);
-    res.status(500).render('public/page-404', { message: 'Failed to publish course' });
+    console.error('Delete draft error:', err);
+    res.status(500).render('public/page-404', { 
+      message: 'Failed to delete draft' 
+    });
   }
 };
+
+
 
 
 // ─── EDIT COURSE ──────────────────────────────────────────────
@@ -462,7 +607,7 @@ exports.updateCourse = async (req, res) => {
     if (req.files && req.files.length > 0) {
       const thumbnailFile = req.files.find(f => f.fieldname === 'thumbnail');
       if (thumbnailFile) {
-        updateData.thumbnail = pickUploadedUrl(thumbnailFile); // Remote Cloudinary path
+        updateData.thumbnail = thumbnailFile.path; // Remote Cloudinary path
       }
     }
 
@@ -474,55 +619,66 @@ exports.updateCourse = async (req, res) => {
 
 
     // 1. Process all uploaded files first to build a map of lesson videos
-    // 1. Process all uploaded files first to build a map of lesson videos
-const uploadedVideos = {};
-const uploadedResources = {};
-const uploadedAssignments = {};    // ← assignment files
+    const uploadedVideos = {};
+    (req.files || []).forEach(file => {
+      if (file.fieldname === 'thumbnail') {
+        updateData.thumbnail = file.path; // Remote Cloudinary path
+      }
+      const rMatch = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_resourceFile$/);
+if (rMatch) uploadedResources[`${rMatch[1]}_${rMatch[2]}`] = file.path;
 
-(req.files || []).forEach(file => {
-  if (file.fieldname === 'thumbnail') {
-    updateData.thumbnail = pickUploadedUrl(file);
-  }
+      const uploadedResources = {};
 
-  const match = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_videoFile$/);
-  if (match) {
-    uploadedVideos[`${match[1]}_${match[2]}`] = pickUploadedUrl(file);
-  }
 
-  const rMatch = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_resourceFile$/);
-  if (rMatch) {
-    uploadedResources[`${rMatch[1]}_${rMatch[2]}`] = pickUploadedUrl(file);
-  }
-
-  const aMatch = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_assignmentFile$/);
-  if (aMatch) {
-    uploadedAssignments[`${aMatch[1]}_${aMatch[2]}`] = pickUploadedUrl(file);
-  }
-});
-
+      const match = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_videoFile$/);
+      if (match) {
+        uploadedVideos[`${match[1]}_${match[2]}`] = file.path; // Remote Cloudinary path
+      }
+    });
 
     // 2. Handle sections, mapping lessons robustly whether they are arrays or sparse objects
     const rawSections = req.body.sections || {};
 
     updateData.sections = Object.keys(rawSections).map(i => {
       const sec = rawSections[i];
-      const lessons = sec.lessons || {};
-      const lessonsList = Object.keys(lessons).map(j => {
-        const l = lessons[j] || {};
-        const fileKey = `${i}_${j}`;
-        const videoFile = uploadedVideos[fileKey] || l.existingVideoFile || '';
-        return {
-          title: (l.title || '').trim(),
-          type: 'video',
-          videoSource: l.videoSource || 'url',
-          videoUrl: (l.videoUrl || '').trim(),
-          videoFile: videoFile,
-          resourceFile: uploadedResources[fileKey] || l.existingResourceFile || '',
-          assignmentFile: uploadedAssignments[fileKey] || l.existingAssignmentFile || '',
-          duration: (l.duration || '').trim(),
-          content: ''
-        };
-      });
+      let lessons = sec.lessons || [];
+      let lessonsList = [];
+
+      if (Array.isArray(lessons)) {
+        lessonsList = lessons.map((l, j) => {
+          const fileKey = `${i}_${j}`;
+          const videoFile = uploadedVideos[fileKey] || l.existingVideoFile || '';
+          return {
+            title: (l.title || '').trim(),
+            type: 'video',
+            videoSource: l.videoSource || 'url',
+            videoUrl: (l.videoUrl || '').trim(),
+            videoFile: videoFile,
+            resourceFile: uploadedResources[fileKey] || l.existingResourceFile || '',
+
+            duration: (l.duration || '').trim(),
+            content: ''
+            
+          };
+        });
+      } else {
+        // It's an object with keys (e.g. '0', '1', '2' due to sparse indices after deletions)
+        lessonsList = Object.keys(lessons).map(j => {
+          const l = lessons[j];
+          const fileKey = `${i}_${j}`;
+          const videoFile = uploadedVideos[fileKey] || l.existingVideoFile || '';
+          return {
+            title: (l.title || '').trim(),
+            type: 'video',
+            videoSource: l.videoSource || 'url',
+            videoUrl: (l.videoUrl || '').trim(),
+            videoFile: videoFile,
+            resourceFile: uploadedResources[fileKey] || l.existingResourceFile || '',
+            duration: (l.duration || '').trim(),
+            content: ''
+          };
+        });
+      }
 
       return {
         title: (sec.title || '').trim(),
@@ -575,40 +731,10 @@ exports.getEnrolledStudents = async (req, res) => {
 
     if (!course) return res.status(404).render('public/error-404');
 
-    const enrolledUsers = await User.find({
-      'enrolledCourses.course': course._id,
-      role: { $in: ['student', 'instructor'] }
-    }).select('name email avatar lastActive enrolledCourses');
-
-    const students = enrolledUsers.map(u => {
-      const enrollment = u.enrolledCourses.find(e => e.course.toString() === course._id.toString());
-      return {
-        _id:        u._id,
-        name:       u.name,
-        email:      u.email,
-        avatar:     u.avatar,
-        lastActive: u.lastActive,
-        progress:   enrollment?.progress || 0,
-        enrolledAt: enrollment?.enrolledAt || u.createdAt
-      };
-    });
-
-    // Collect all submissions across all lessons for this course
-    const submissions = [];
-    course.sections.forEach(section => {
-      section.lessons.forEach(lesson => {
-        (lesson.assignmentSubmissions || []).forEach(sub => {
-          submissions.push({
-            lessonId:    lesson._id,
-            lessonTitle: lesson.title,
-            studentId:   sub.student.toString(),
-            fileName:    sub.fileName,
-            fileUrl:     sub.fileUrl,
-            submittedAt: sub.submittedAt
-          });
-        });
-      });
-    });
+    const students = await User.find({
+      enrolledCourses: course._id,
+      role: 'student'
+    }).select('name email avatar memberSince progress lastActive enrolledAt');
 
     // Calculate stats
     const avgProgress = students.length
@@ -617,21 +743,32 @@ exports.getEnrolledStudents = async (req, res) => {
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const activeToday    = students.filter(s => s.lastActive && new Date(s.lastActive) >= today).length;
-    const nearCompletion = students.filter(s => (s.progress || 0) >= 80).length;
+
+    const activeToday = students.filter(s =>
+      s.lastActive && new Date(s.lastActive) >= today
+    ).length;
+
+    const nearCompletion = students.filter(s =>
+      (s.progress || 0) >= 80
+    ).length;
+
+    // Fetch submissions for this course (if you have a Submission model)
+    // For now, pass empty array to prevent error
+    const submissions = [];
 
     res.render('instructor/enrolled-students', {
       course,
       students,
-      submissions,
       avgProgress,
       activeToday,
-      nearCompletion
+      nearCompletion,
+      submissions  // Add this
     });
   } catch (err) {
     console.error(err);
     res.status(500).render('error');
   }
 };
+
 
 

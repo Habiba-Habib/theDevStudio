@@ -20,10 +20,20 @@
   <div class="left-col">
 
     <!-- BADGES -->
-    <div class="badges">
-      <span class="badge badge-frosted-blue"><%= course.category %></span>
-      <span class="badge badge-Dragonfruit"><%= course.level %></span>
-    </div>
+   <!-- Status Badge (Owner/Enrolled/Certificate) -->
+<% if (isOwner) { %>
+  <span class="cd-status-badge cd-owner-badge">
+    <i class="fa-solid fa-crown"></i> Owner
+  </span>
+<% } else if (isEnrolled) { %>
+  <span class="cd-status-badge cd-enrolled-badge">
+    <i class="fa-solid fa-check-circle"></i> Enrolled
+  </span>
+<% } else if (course.offersCertificate) { %>
+  <span class="cd-status-badge cd-certificate-badge">
+    <i class="fa-solid fa-certificate"></i> Certificate Included
+  </span>
+<% } %>
 
     <!-- TITLE -->
     <h1 class="course-title"><%= course.title %></h1>
@@ -104,6 +114,20 @@
 
       </div>
     <% }) %>
+<!-- Certificate Section -->
+<% if (course.offersCertificate && !isOwner) { %>
+  <div class="cd-certificate-box">
+    <div class="cd-cert-icon">
+      <i class="fa-solid fa-award"></i>
+    </div>
+    <div class="cd-cert-info">
+      <h3>Certificate of Completion</h3>
+      <p>Earn an official certificate when you complete this course. Share it on LinkedIn, add it to your resume, or display it in your professional portfolio.</p>
+    </div>
+  </div>
+<% } %>
+
+
 
 <h3 class="learn-title">Student Reviews</h3>
 <% if (course.reviews && course.reviews.length > 0) { %>

@@ -37,57 +37,95 @@
 </div>
 
   <!-- FORM (IMPORTANT) -->
-<form action="/instructor/create/step3" method="POST">
+<!-- DRAFT ACTIONS -->
+
+
+<form action="/instructor/create/step3" method="POST" id="publish-form">
+
+  <!-- Add this hidden input -->
+  <% if (draft && draft._id) { %>
+    <input type="hidden" name="courseId" value="<%= draft._id %>">
+  <% } %>
 
     <div class="learn-box">
 
-      <div class="learn-grid">
+    <div class="free-toggle-wrapper">
+      <label class="toggle-label">
+        <input type="checkbox" id="free-toggle" name="isFree">
+        <span class="toggle-text">Make this course free</span>
+      </label>
+    </div>
 
-        <div class="form-group">
-          <label>Course Price ($) *</label>
-          <input type="number" class="form-input" name="price" id="price-input" placeholder="49.99" required>
-        </div>
+    <div class="learn-grid">
+      <div class="form-group">
+        <label>Course Price ($) *</label>
+       <input type="number" class="form-input" name="price" id="price-input" placeholder="49.99" step="0.01" min="0" required>
 
-        <div class="form-group">
-          <label>Course Duration *</label>
-          <input type="text" class="form-input" name="duration" placeholder="e.g., 40 hours" required>
-        </div>
-
+        <div class="pricing-hint">Suggested: $29-99 for beginner courses</div>
       </div>
+
+      <div class="form-group">
+        <label>Course Duration *</label>
+        <input type="text" class="form-input" name="duration" id="duration-input" placeholder="e.g., 40 hours" required>
+      </div>
+    </div>
+
 
       <!-- PREVIEW -->
-      <div class="preview-card">
-        <h3>Course Preview</h3>
-
-        <div class="preview-row">
-          <span>Title:</span>
-         <%= draft ? draft.title : "Not set" %>
-        </div>
-
-        <div class="preview-row">
-          <span>Category:</span>
-         <%= draft ? draft.category : "Not set" %>
-        </div>
-
-        <div class="preview-row">
-          <span>Level:</span>
-          <%= draft ? draft.level : "Not set" %>
-        </div>
-
-        <div class="preview-row">
-          <span>Price:</span>
-          <span id="preview-price">$0</span>
-        </div>
-
+  
+<div class="preview-card-enhanced">
+  <h3>Course Card Preview</h3>
+  <p class="preview-subtitle">This is how your course will appear to students</p>
+  
+  <div class="course-card-preview">
+    <div class="preview-image">
+      <img id="preview-thumbnail" src="<%= draft && draft.thumbnail ? draft.thumbnail : '/images/course1.jpg' %>" alt="Course thumbnail">
+      <span class="preview-badge" id="preview-level"><%= draft ? draft.level : 'Beginner' %></span>
+    </div>
+    
+    <div class="preview-content">
+      <h4 id="preview-title"><%= draft ? draft.title : 'Your Course Title' %></h4>
+      <p id="preview-description"><%= draft ? draft.shortDescription : 'Your course description will appear here' %></p>
+      
+      <div class="preview-meta">
+        <span><i class="fa-solid fa-book"></i> <span id="preview-sections"><%= draft && draft.sections ? draft.sections.length : 0 %></span> sections</span>
+        <span><i class="fa-solid fa-clock"></i> <span id="preview-duration">0 hours</span></span>
+        <span><i class="fa-solid fa-signal"></i> <span id="preview-level-text"><%= draft ? draft.level : 'Beginner' %></span></span>
       </div>
+      
+      <div class="preview-footer">
+        <span class="preview-price-tag" id="preview-price">$0</span>
+        <button type="button" class="preview-enroll-btn">Enroll Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
     </div>
 
     <!-- BUTTONS -->
-   <div class="btn-row">
-  <a href="/instructor/create/step2" class="btn-back">Back</a>
-  <button type="submit" class="btn-publish">Publish Course</button>
+ <div class="btn-row-three">
+  <button type="button" class="btn-action btn-save-draft" onclick="saveDraft()">
+    <i class="fa-solid fa-floppy-disk"></i> Save Draft
+  </button>
+  
+  <button type="button" class="btn-action btn-delete-draft" onclick="deleteDraft()">
+    <i class="fa-solid fa-trash"></i> Delete Draft
+  </button>
+  
+<button type="submit" class="btn-action btn-publish-now" name="action" value="publish">
+  <i class="fa-solid fa-rocket"></i> Publish Course
+</button>
+
+
+<div class="btn-row">
+  <a href="/instructor/create/step2" class="btn-back">
+    <i class="fa-solid fa-arrow-left"></i> Back
+  </a>
 </div>
+
+
 
   </form>
 

@@ -173,111 +173,459 @@
       color: var(--teal);
     }
     .btn-add i { font-size: 14px; }
-
-    /* ── SECTION CARD ── */
-    .section-card {
-      background: var(--bg);
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      padding: 20px;
-      margin-bottom: 12px;
-    }
-.section-card .form-group {
-  margin-bottom: 12px;
-}
-
-.section-card .form-group:last-of-type {
-  margin-bottom: 0;
-}
-
     /* ── ADD SECTION BUTTON ── */
-    .btn-add-section {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px 18px;
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text-muted);
-      font-family: var(--font);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: border-color 0.2s, color 0.2s;
-      margin-top: 4px;
-    }
-    .btn-add-section:hover {
-      border-color: var(--pink);
-      color: var(--pink);
-    }
+.btn-add-section {
+  width: 100%;
+  background: rgba(255, 64, 129, 0.08);  /* Subtle pink tint */
+  border: 1px solid rgba(255, 64, 129, 0.3);
+  border-radius: 10px;
+  padding: 16px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--pink);
+  font-family: var(--font);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  margin-top: 4px;
+}
 
-    /* ── BOTTOM BUTTONS ── */
-    .btn-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 16px;
-    }
+.btn-add-section:hover {
+  background: rgba(255, 64, 129, 0.15);
+  border-color: var(--pink);
+  transform: translateY(-1px);
+}
 
-    .btn-back {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px;
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text-white);
-      font-family: var(--font);
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-    .btn-back:hover { border-color: var(--text-muted); }
-
-    .btn-enroll {
-      background: linear-gradient(90deg, var(--pink), var(--pink-light));
-      border: none;
-      border-radius: 12px;
-      padding: 18px;
-      font-size: 16px;
-      font-weight: 700;
-      color: white;
-      font-family: var(--font);
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.15s;
-    }
-    .btn-enroll:hover { opacity: 0.9; transform: translateY(-1px); }
-    .btn-back {
+.btn-enroll {
+  background: linear-gradient(90deg, var(--pink), var(--pink-light));
+  border: none;
+  border-radius: 12px;
+  padding: 18px;
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
   text-decoration: none;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-    /* ── OUTCOME ITEM ── */
-    .outcome-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .outcome-item .form-input { margin: 0; }
-    .btn-remove {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 16px;
-      flex-shrink: 0;
-      transition: color 0.2s;
-    }
-    .btn-remove:hover { color: var(--pink); }
+.btn-enroll:hover { 
+  opacity: 0.9; 
+  transform: translateY(-1px); 
+}
 
-    @media (max-width: 640px) {
-      .page-wrapper { padding: 40px 20px 60px; }
-      .learn-box { padding: 20px; }
-      .btn-row { grid-template-columns: 1fr; }
-    }
- 
+.btn-back {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-white);
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-back:hover { 
+  border-color: var(--text-muted);
+  transform: translateY(-1px);
+}
+
+/* ── BOTTOM BUTTONS ── */
+.btn-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+
+    /* ══════════════════════════════════════════════════════════════
+   SECTION CARD STYLES
+   ══════════════════════════════════════════════════════════════ */
+
+.section-card {
+  background: rgba(16, 16, 36, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+  transition: border-color 0.2s;
+}
+
+.section-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Section Title Row with Delete Button */
+.section-title-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-title-input {
+  flex: 1;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.btn-delete-section {
+  background: rgba(255, 64, 129, 0.1);
+  color: #ff4081;
+  border: 1px solid rgba(255, 64, 129, 0.25);
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-delete-section:hover {
+  background: rgba(255, 64, 129, 0.2);
+  border-color: #ff4081;
+}
+
+/* Section Lessons Container */
+.section-lessons {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LESSON BOX STYLES
+   ══════════════════════════════════════════════════════════════ */
+
+.lesson-item {
+  position: relative;
+}
+
+.lesson-box {
+  background: rgba(10, 14, 39, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  padding-right: 55px; /* Space for X button */
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  transition: border-color 0.2s;
+}
+
+.lesson-box:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Remove Lesson Button (X) */
+.btn-remove-lesson {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 30px;
+  height: 30px;
+  background: rgba(255, 64, 129, 0.12);
+  color: #ff4081;
+  border: 1px solid rgba(255, 64, 129, 0.25);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.btn-remove-lesson:hover {
+  background: rgba(255, 64, 129, 0.25);
+  border-color: #ff4081;
+  transform: scale(1.08);
+}
+
+.btn-remove-lesson i {
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   VIDEO SOURCE TOGGLE
+   ══════════════════════════════════════════════════════════════ */
+
+.video-source-toggle {
+  display: flex;
+  gap: 20px;
+  padding: 0;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.radio-label:hover {
+  color: var(--text-body);
+}
+
+.radio-label input[type="radio"] {
+  cursor: pointer;
+  width: 17px;
+  height: 17px;
+  accent-color: var(--pink);
+}
+
+.radio-label input[type="radio"]:checked + span {
+  color: var(--pink);
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FILE UPLOAD LABELS
+   ══════════════════════════════════════════════════════════════ */
+
+.file-upload-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+.file-upload-label:hover {
+  background: rgba(255, 64, 129, 0.08);
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+.file-upload-label i {
+  font-size: 15px;
+}
+
+.file-upload-label.file-selected {
+  background: rgba(76, 175, 80, 0.15);
+  border-color: #4caf50;
+  border-style: solid;
+  color: #4caf50;
+}
+
+.file-upload-label.file-selected i {
+  color: #4caf50;
+}
+
+
+.video-file-upload {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LESSON INPUT FIELDS
+   ══════════════════════════════════════════════════════════════ */
+
+.lesson-box .form-input {
+  margin: 0;
+}
+
+.lesson-video-input {
+  font-size: 14px;
+  padding: 12px 16px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   AUTO-SAVE INDICATOR
+   ══════════════════════════════════════════════════════════════ */
+
+#save-indicator-step2 {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  color: white;
+  padding: 10px 24px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* ══════════════════════════════════════════════════════════════
+   FILE UPLOAD BOX
+   ══════════════════════════════════════════════════════════════ */
+
+.file-upload-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.file-upload-box:hover {
+  background: rgba(255, 64, 129, 0.08);
+  border-color: var(--pink);
+}
+
+.file-upload-box.file-selected {
+  background: rgba(76, 175, 80, 0.1);
+  border-color: #4caf50;
+  border-style: solid;
+}
+
+.file-upload-box input[type="file"] {
+  display: none;
+}
+
+.file-display {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.file-upload-box.file-selected .file-display {
+  color: #4caf50;
+}
+
+.file-display i {
+  font-size: 16px;
+}
+
+.btn-clear-file {
+  background: rgba(255, 64, 129, 0.15);
+  color: #ff4081;
+  border: 1px solid rgba(255, 64, 129, 0.3);
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-clear-file:hover {
+  background: rgba(255, 64, 129, 0.25);
+  border-color: #ff4081;
+}
+
+/* Outcome remove button */
+.btn-remove-outcome {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: color 0.2s;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-remove-outcome:hover {
+  color: var(--pink);
+}
+
+.outcome-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.outcome-item .form-input {
+  margin: 0;
+}
+
+/* Add lesson button */
+.btn-add-lesson {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-family: var(--font);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: border-color 0.2s, color 0.2s;
+  margin-top: 16px;
+}
+
+.btn-add-lesson:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  .page-wrapper { padding: 40px 20px 60px; }
+  .learn-box { padding: 20px; }
+  .btn-row { grid-template-columns: 1fr; }
+  .section-card { padding: 16px; }
+  .lesson-box { padding: 16px; padding-right: 50px; }
+  .section-title-row { flex-direction: column; gap: 8px; }
+  .btn-delete-section { width: 100%; }
+}
