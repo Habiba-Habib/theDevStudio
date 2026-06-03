@@ -1,4 +1,17 @@
-<% const courseList = Array.isArray(courses) ? courses : []; %>
+<%
+  const courseList = Array.isArray(courses) ? courses : [];
+
+  const instructorName = (course) =>
+    course && course.instructor && course.instructor.name
+      ? course.instructor.name
+      : "Unknown";
+
+  const formatDate = (dateValue) => {
+    if (!dateValue) return "N/A";
+    const date = new Date(dateValue);
+    return Number.isNaN(date.getTime()) ? "N/A" : date.toISOString().slice(0, 10);
+  };
+%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -63,7 +76,7 @@
         <% courseList.forEach(course => { %>
           <tr
             data-title="<%= (course.title || '').toLowerCase() %>"
-            data-instructor="<%= (course.instructor?.name || '').toLowerCase() %>"
+            data-instructor="<%= instructorName(course).toLowerCase() %>"
             data-status="<%= course.approvalStatus || 'pending' %>"
           >
             <td>
@@ -74,7 +87,7 @@
               </div>
             </td>
 
-            <td><%= course.instructor?.name || "Unknown" %></td>
+            <td><%= instructorName(course) %></td>
             <td><%= course.category || "Uncategorized" %></td>
 
             <td>
@@ -83,12 +96,7 @@
               </span>
             </td>
 
-            <td>
-              <%= course.submittedAt || course.createdAt
-                ? new Date(course.submittedAt || course.createdAt).toISOString().slice(0, 10)
-                : "N/A"
-              %>
-            </td>
+            <td><%= formatDate(course.submittedAt || course.createdAt) %></td>
 
             <td>
               <span class="status <%= course.approvalStatus || 'pending' %>">

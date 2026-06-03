@@ -102,13 +102,6 @@ function openCourseModal(courseId) {
   }
 </section>
 
-     
-
-      <section class="admin-notes-block">
-        <label>Admin Notes (Optional)</label>
-        <textarea placeholder="Add internal notes about this course..."></textarea>
-      </section>
-
       ${course.approvalStatus === "pending" ? `
         <div class="admin-decision-plain">
           <div class="decision-buttons admin-decision-buttons">
