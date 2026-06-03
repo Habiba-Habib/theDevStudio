@@ -131,17 +131,19 @@
 .inline-card-preview {
   width: 100%;
   padding: 8px 0 10px;
+  margin-bottom: 10px;
+  
 
 }
 
 .credit-card {
   position: relative;
-  width: 100%;
+  width: 95%;
   aspect-ratio: 1.62 / 1;
-  max-width: 480px;
+  max-width: 420px;
   perspective: 1000px;
-   transform: scaleX(1.35); 
-  transform-origin: left   center; 
+   margin: 0 auto;
+  
 }
 
 .card-face {
@@ -185,7 +187,8 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
+  
 }
 
 .card-chip {
@@ -392,6 +395,7 @@
   font-weight: 700;
   color: var(--text-white);
   font-size: 15px;
+  
 }
 
 .total-amount { color: var(--pink); font-size: 20px; }
@@ -405,6 +409,7 @@
   color: var(--text-muted);
   line-height: 1.6;
   cursor: pointer;
+ 
 }
 
 .terms-label input[type="checkbox"] {
@@ -414,6 +419,7 @@
   accent-color: var(--pink);
   flex-shrink: 0;
   cursor: pointer;
+  
 }
 
 /* ── CONFIRM BUTTON ──────────────────────────── */
@@ -507,4 +513,112 @@
   .enroll-grid { grid-template-columns: 1fr; }
   .enroll-wrapper { padding: 32px 20px 60px; }
   .enroll-title { font-size: 28px; }
+}
+
+.terms-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.terms-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-right: 7px;
+  accent-color: var(--pink);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.terms-check-label,
+.terms-label-text {
+  color: var(--text-muted);
+}
+
+.terms-link-btn {
+  border: 0;
+  background: transparent;
+  color: var(--pink);
+  font: inherit;
+  font-weight: 700;
+  padding: 0;
+  cursor: pointer;
+}
+
+.terms-link-btn:hover,
+.legal-full-link:hover {
+  text-decoration: underline;
+}
+
+.payment-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(5, 8, 24, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.payment-popup.hidden {
+  display: none;
+}
+
+.payment-popup-card {
+  width: min(520px, 100%);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  color: var(--text-body);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+  position: relative;
+}
+
+.payment-popup-card h3 {
+  color: var(--text-white);
+  font-size: 22px;
+  margin-bottom: 14px;
+}
+
+.terms-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.terms-modal-body ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.legal-full-link {
+  color: var(--pink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.terms-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-white);
+  cursor: pointer;
+}
+
+.terms-modal-close-btn {
+  margin-top: 18px;
 }

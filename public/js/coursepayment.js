@@ -303,3 +303,31 @@ paymentForm.addEventListener('submit', function (event) {
 
   paymentForm.submit();
 });
+
+function setupLegalModal(modalId, openBtnId, closeBtnIds) {
+  const modal = document.getElementById(modalId);
+  const openBtn = document.getElementById(openBtnId);
+
+  function closeModal() {
+    modal?.classList.add("hidden");
+    modal?.setAttribute("aria-hidden", "true");
+  }
+
+  openBtn?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    modal?.classList.remove("hidden");
+    modal?.setAttribute("aria-hidden", "false");
+  });
+
+  closeBtnIds.forEach((id) => {
+    document.getElementById(id)?.addEventListener("click", closeModal);
+  });
+
+  modal?.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+}
+
+setupLegalModal("terms-modal", "open-terms", ["terms-modal-close", "terms-modal-close-btn"]);
+setupLegalModal("privacy-modal", "open-privacy", ["privacy-modal-close", "privacy-modal-close-btn"]);

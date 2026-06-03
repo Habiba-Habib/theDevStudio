@@ -353,3 +353,8 @@ async function confirmRejectCourse() {
 }
 
 if (searchInput) searchInput.addEventListener("input", filterCourses);
+
+const courseToOpen = new URLSearchParams(window.location.search).get("course");
+if (courseToOpen) {
+  openCourseModal(courseToOpen);
+}
