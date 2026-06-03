@@ -219,7 +219,7 @@ exports.updateProfile = async (req, res) => {
     }
 
     const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
-      new: true,
+      returnDocument: 'after',
       runValidators: true
     });
 
@@ -479,7 +479,8 @@ exports.postCreateStep3 = async (req, res) => {
     console.log('Updating course with:');
     console.log('- price:', Number(price) || 0);
     console.log('- duration:', duration);
-    console.log('- isPublished:', action === 'publish');
+    console.log('- isPublished: false (pending admin approval)');
+    console.log('- approvalStatus:', action === "publish" ? "pending" : "draft");
 
     // Update price and duration
     const updatedCourse = await Course.findByIdAndUpdate(
@@ -487,11 +488,11 @@ exports.postCreateStep3 = async (req, res) => {
       {
         price: Number(price) || 0,
         duration: duration,
-        isPublished: false,
-        approvalStatus: action === "publish" ? "pending" : "pending",
+        isPublished: false, // Stays false until admin approves
+        approvalStatus: action === "publish" ? "pending" : "draft",
         submittedAt: action === "publish" ? new Date() : draft.submittedAt
       },
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     console.log('Course updated successfully');
@@ -692,7 +693,7 @@ if (rMatch) uploadedResources[`${rMatch[1]}_${rMatch[2]}`] = file.path;
     await Course.findOneAndUpdate(
       { _id: req.params.id, instructor: req.session.user._id },
       updateData,
-      { new: true }
+      { returnDocument: 'after' }
     );
 
        // Redirect with query parameter so EJS shows the popup

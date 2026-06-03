@@ -543,7 +543,7 @@ exports.postEditChallenge = async (req, res) => {
         testCases,
         isPublished: Boolean(isPublished)
       },
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     );
 
     if (!updatedChallenge) {

@@ -172,6 +172,11 @@
           <div class="inst-info">
             <span class="inst-label">Instructor</span>
             <span class="inst-name"><%= course.instructor?.name || 'Unknown' %></span>
+            <% if (canCompleteLessons && course.instructor?.email) { %>
+              <a href="mailto:<%= course.instructor.email %>" class="inst-email">
+                <i class="fa-solid fa-envelope"></i> <%= course.instructor.email %>
+              </a>
+            <% } %>
           </div>
         </div>
         <p class="info-desc"><%= course.shortDescription || '' %></p>

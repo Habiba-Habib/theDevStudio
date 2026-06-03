@@ -172,7 +172,7 @@ router.get("/challenge/:id/review",  studentController.getChallengeReview);
 router.get("/course/:courseId/learn", async (req, res) => {
   try {
     const userId = req.session.userId;
-    const course = await Course.findById(req.params.courseId).populate("instructor", "name avatar");
+    const course = await Course.findById(req.params.courseId).populate("instructor", "name avatar email");
 
     if (!course) return res.status(404).render("public/page-404");
 
@@ -410,7 +410,7 @@ router.post("/edit-profile", async (req, res) => {
 
   try {
     const updated = await User.findByIdAndUpdate(
-      req.session.userId, updateData, { new: true }
+      req.session.userId, updateData, { returnDocument: 'after' }
     );
 
     // update session so navbar reflects changes immediately
