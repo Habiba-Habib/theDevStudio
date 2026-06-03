@@ -37,6 +37,32 @@ function requireStudentSession(req, res, next) {
 
 router.use(requireStudentSession);
 
+function buildCertificateId(userId, courseId) {
+  return `TDS-${courseId.toString().slice(-6).toUpperCase()}-${userId.toString().slice(-6).toUpperCase()}`;
+}
+
+function ensureCertificate(user, courseId) {
+  const existing = user.certificates.find(
+    (cert) => cert.course?.toString() === courseId.toString()
+  );
+
+  if (existing) {
+    if (!existing.certificateId) {
+      existing.certificateId = buildCertificateId(user._id, courseId);
+    }
+    return existing;
+  }
+
+  const certificate = {
+    course: courseId,
+    certificateId: buildCertificateId(user._id, courseId),
+    issuedAt: new Date()
+  };
+
+  user.certificates.push(certificate);
+  return certificate;
+}
+
 // ── RESOURCE DOWNLOAD PROXY ──
 // Streams file from Cloudinary through server using authenticated API endpoint
 router.get("/course/:courseId/lesson/:lessonId/download-resource", async (req, res) => {
@@ -246,6 +272,7 @@ router.post("/course/:courseId/lesson/:lessonId/complete", async (req, res) => {
       if (!alreadyCompleted) {
         user.completedCourses.push({ course: courseId });
       }
+      ensureCertificate(user, courseId);
     }
 
     await user.save();
@@ -265,13 +292,69 @@ router.post("/course/:courseId/lesson/:lessonId/complete", async (req, res) => {
 router.get("/profile", async (req, res) => {
   if (!req.session.userId) return res.redirect("/auth/login");
 
-  const user = await User.findById(req.session.userId).populate("completedCourses.course");
+  const user = await User.findById(req.session.userId)
+    .populate("completedCourses.course")
+    .populate("certificates.course");
 
   res.render("shared/profile", {
     user,
     completedCourses: user.completedCourses || [],
     certificates: user.certificates || [],
   });
+});
+
+router.get("/certificate/:courseId", async (req, res) => {
+  try {
+    if (!req.session.userId) return res.redirect("/auth/login");
+
+    const user = await User.findById(req.session.userId)
+      .populate({
+        path: "completedCourses.course",
+        populate: { path: "instructor", select: "name" }
+      })
+      .populate({
+        path: "certificates.course",
+        populate: { path: "instructor", select: "name" }
+      });
+
+    if (!user || user.role !== "student") {
+      return res.status(403).render("public/page-404");
+    }
+
+    const completedItem = user.completedCourses.find(
+      (item) => item.course?._id?.toString() === req.params.courseId
+    );
+
+    if (!completedItem?.course) {
+      return res.status(404).render("public/page-404");
+    }
+
+    let certificate = user.certificates.find(
+      (cert) => cert.course?._id?.toString() === req.params.courseId
+    );
+
+    if (!certificate) {
+      ensureCertificate(user, completedItem.course._id);
+      await user.save();
+      certificate = user.certificates.find(
+        (cert) => cert.course?.toString() === req.params.courseId
+      );
+      certificate.course = completedItem.course;
+    } else if (!certificate.certificateId) {
+      certificate.certificateId = buildCertificateId(user._id, completedItem.course._id);
+      await user.save();
+    }
+
+    res.render("student/certificate", {
+      user,
+      course: completedItem.course,
+      certificate,
+      completedAt: completedItem.completedAt
+    });
+  } catch (err) {
+    console.error("certificate error:", err);
+    res.status(500).render("public/page-404");
+  }
 });
 
 router.get("/edit-profile", async (req, res) => {

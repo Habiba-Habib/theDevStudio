@@ -98,7 +98,9 @@
       <% completedCourses.forEach(item => { %>
         <div class="course-card">
           <span><%= item.course?.title || item.title || "Untitled Course" %></span>
-          <button class="view-btn" onclick="goToCertificate()">View Certificate</button>
+          <% if (item.course?._id) { %>
+            <a class="view-btn" href="/student/certificate/<%= item.course._id %>">View Certificate</a>
+          <% } %>
         </div>
       <% }) %>
     <% } else { %>
@@ -122,10 +124,14 @@
           <div class="certificate-card">
             <div class="cert-icon"><i class="fa-solid fa-award"></i></div>
             <h3>Certificate of Completion</h3>
+            <p><%= cert.course?.title || "Completed Course" %></p>
             <p>
               Issued:
               <%= cert.issuedAt ? cert.issuedAt.toLocaleDateString() : "N/A" %>
             </p>
+            <% if (cert.course?._id) { %>
+              <a class="view-btn certificate-link" href="/student/certificate/<%= cert.course._id %>">Open Certificate</a>
+            <% } %>
           </div>
         <% }) %>
       <% } else { %>

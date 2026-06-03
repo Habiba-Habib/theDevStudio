@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Certificate - <%= course.title %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/css/certificate.css"/>
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="certificate-page">
+    <div class="certificate-actions">
+      <a class="cert-action secondary" href="/student/profile">
+        <i class="fa-solid fa-chevron-left"></i>
+        Back to Profile
+      </a>
+      <button class="cert-action" type="button" onclick="window.print()">
+        <i class="fa-solid fa-download"></i>
+        Download / Print
+      </button>
+    </div>
+
+    <section class="certificate-sheet" aria-label="Certificate of completion">
+      <div class="certificate-frame">
+        <div class="cert-brand">TheDevStudio</div>
+
+        <div class="cert-content">
+          <p class="cert-kicker">Certificate of Completion</p>
+          <h1>This certificate is proudly presented to</h1>
+          <div class="student-name"><%= user.name || user.fullname || "Student" %></div>
+          <p class="cert-copy">for successfully completing the course</p>
+          <h2><%= course.title %></h2>
+          <p class="cert-details">
+            Completed on
+            <strong><%= completedAt ? completedAt.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "N/A" %></strong>
+          </p>
+        </div>
+
+        <div class="cert-footer">
+          <div class="signature-block">
+            <div class="signature-line"></div>
+            <strong><%= course.instructor?.name || "Instructor" %></strong>
+            <span>Instructor</span>
+          </div>
+
+          <div class="cert-seal">
+            <i class="fa-solid fa-award"></i>
+            <span>Certified</span>
+          </div>
+
+          <div class="signature-block">
+            <div class="signature-line"></div>
+            <strong><%= certificate.certificateId || "TDS-CERT" %></strong>
+            <span>Certificate ID</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

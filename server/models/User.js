@@ -99,6 +99,7 @@ avatar: { type: String, default: "" },
     certificates: [
       {
         course: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
+        certificateId: String,
         certificateUrl: String,
         issuedAt: { type: Date, default: Date.now },
       },
