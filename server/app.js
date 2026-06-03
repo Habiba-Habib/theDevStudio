@@ -44,6 +44,7 @@ const challengeRoutes  = require("./routes/challenges");
 const coursesRoutes     = require("./routes/coursesRoutes");
 const publicRoutes     = require("./routes/public");  
 const uploadRoute = require('./routes/upload'); //added
+const chatbotRoutes = require("./routes/chatbotRoutes");
 
 app.use("/auth",       authRoutes);
 app.use("/student",    studentRoutes);
@@ -52,6 +53,7 @@ app.use("/admin",      adminRoutes);
 app.use("/challenges", challengeRoutes);
 app.use("/courses", coursesRoutes);
 app.use('/api', uploadRoute); //added
+app.use("/api/chatbot", chatbotRoutes);
 app.use("/",           publicRoutes);
 
 app.get("/me", (req, res) => res.json(req.session.user || null));

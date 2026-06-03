@@ -60,5 +60,66 @@ Rules:
   const text = completion.choices[0].message.content;
   return parseJsonResponse(text);
 }
+async function askDevStudioAssistant({ message, courses = [], user = null }) {
+  const courseList = courses.length
+    ? courses.map(course => {
+        return `- ${course.title} | ${course.category} | ${course.level} | $${course.price} | ${course.duration || "No duration"}`;
+      }).join("\n")
+    : "No published courses were found.";
 
-module.exports = { generateChallenge };
+  const userContext = user
+    ? `The current user is logged in as ${user.role}. Their name is ${user.name}.`
+    : "The current user is not logged in.";
+
+  const completion = await groq.chat.completions.create({
+    model: "llama-3.1-8b-instant",
+    messages: [
+      {
+        role: "system",
+        content: `
+You are The Dev Studio assistant.
+
+The Dev Studio is a coding education platform with:
+- Courses
+- Coding challenges
+- Student dashboard
+- Payments/enrollment
+- Instructor applications
+- Admin management
+
+Your job:
+- Help users navigate the website
+- Recommend relevant published courses
+- Explain how to enroll
+- Explain where to find challenges
+- Explain student/instructor features
+- Keep answers short and friendly
+- Do not invent routes that are not listed
+
+Valid website routes:
+- Home: /
+- All courses: /courses/all-courses
+- Coding challenges: /challenges
+- Student dashboard: /student/dashboard
+- My courses: /student/my-courses
+- Become instructor: /become-instructor
+- Login: /auth/login
+- Signup: /auth/signup
+
+${userContext}
+
+Published courses currently available:
+${courseList}
+`
+      },
+      {
+        role: "user",
+        content: message
+      }
+    ],
+    temperature: 0.4
+  });
+
+  return completion.choices[0].message.content;
+}
+module.exports = { generateChallenge, askDevStudioAssistant };
