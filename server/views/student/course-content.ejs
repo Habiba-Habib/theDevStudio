@@ -30,6 +30,7 @@
   });
   const isActiveDone = activeLesson && completedLessons.includes(activeLesson._id.toString());
   const sidebarPct   = totalLessons > 0 ? Math.round((completedLessons.length / totalLessons) * 100) : 0;
+  const canCompleteLessons = user?.role === 'student' && !isInstructorOwner;
 %>
 
 <!-- ── COURSE HEADER (below navbar) ── -->
@@ -159,7 +160,6 @@
     <div class="tabs-card">
       <div class="tabs-nav">
         <button class="tab-btn active" data-tab="overview">Overview</button>
-        <button class="tab-btn" data-tab="transcript">Transcript</button>
         <button class="tab-btn" data-tab="notes">Notes</button>
         <button class="tab-btn" data-tab="quiz">Assignments</button>
       </div>
@@ -175,10 +175,6 @@
           </div>
         </div>
         <p class="info-desc"><%= course.shortDescription || '' %></p>
-      </div>
-
-      <div class="tab-pane" id="tab-transcript">
-        <p class="pane-empty">Transcript not available for this lesson.</p>
       </div>
 
       <div class="tab-pane" id="tab-notes">
@@ -353,7 +349,7 @@
     </span>
   <% } %>
 
-  <% if (activeLesson) { %>
+  <% if (canCompleteLessons && activeLesson) { %>
     <button class="btn-mark <%= isActiveDone ? 'is-done' : '' %>"
       id="btnComplete"
       data-course-id="<%= course._id %>"
@@ -361,7 +357,7 @@
       <i class="fa-solid fa-check"></i>
       <%= isActiveDone ? 'Completed' : 'Mark Complete' %>
     </button>
-  <% } else { %>
+  <% } else if (canCompleteLessons) { %>
     <span class="btn-mark is-disabled">
       <i class="fa-solid fa-check"></i> Mark Complete
     </span>
@@ -370,6 +366,14 @@
   <% if (nextLessonId) { %>
     <a class="btn-next" href="/student/course/<%= course._id %>/learn?lesson=<%= nextLessonId %>">
       Next Lesson <i class="fa-solid fa-chevron-right"></i>
+    </a>
+  <% } else if (user?.role === 'admin') { %>
+    <a class="btn-next" href="/admin/course-applications?course=<%= course._id %>">
+      <i class="fa-solid fa-chevron-left"></i> Back to Course Details
+    </a>
+  <% } else if (!canCompleteLessons) { %>
+    <a class="btn-next" href="/courses/<%= course._id %>">
+      <i class="fa-solid fa-chevron-left"></i> Back to Course Description
     </a>
   <% } else { %>
     <span class="btn-next is-disabled">

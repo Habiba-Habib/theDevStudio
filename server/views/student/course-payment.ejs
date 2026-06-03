@@ -180,11 +180,13 @@
 
           <!-- Terms -->
           <div class="field-group">
-            <label class="terms-label">
+            <div class="terms-row">
               <input type="checkbox" id="terms" name="terms"/>
-              I agree to the terms and conditions and understand that this is a
-              one-time payment for lifetime access to the course.
-            </label>
+              <label for="terms" class="terms-check-label">I agree to the</label>
+              <button type="button" class="terms-link-btn" id="open-terms">Terms of Service</button>
+              <span class="terms-label-text"> and </span>
+              <button type="button" class="terms-link-btn" id="open-privacy">Privacy Policy</button>
+            </div>
             <span class="field-error" id="err-terms"></span>
           </div>
 
@@ -208,6 +210,48 @@
       </section>
     </div>
   </main>
+
+  <!-- Terms popup (summary) -->
+  <div class="payment-popup hidden" id="terms-modal" aria-hidden="true">
+    <div class="payment-popup-card terms-modal-card" role="dialog">
+      <button type="button" class="terms-modal-close" id="terms-modal-close" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <h3>Terms of Service</h3>
+      <div class="terms-modal-body">
+        <p>By using TheDevStudio you agree to:</p>
+        <ul>
+          <li>Provide accurate account information</li>
+          <li>Use courses and challenges honestly</li>
+          <li>Follow instructor verification rules if applying to teach</li>
+          <li>Not upload harmful, illegal, or infringing content</li>
+        </ul>
+        <a href="/auth/terms-of-services" target="_blank" rel="noopener noreferrer" class="legal-full-link">Read full Terms of Service</a>
+      </div>
+      <button type="button" class="btn-confirm terms-modal-close-btn" id="terms-modal-close-btn">Close</button>
+    </div>
+  </div>
+
+  <!-- Privacy popup (summary) -->
+  <div class="payment-popup hidden" id="privacy-modal" aria-hidden="true">
+    <div class="payment-popup-card terms-modal-card" role="dialog">
+      <button type="button" class="terms-modal-close" id="privacy-modal-close" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <h3>Privacy Policy</h3>
+      <div class="terms-modal-body">
+        <p>We collect data needed to run the platform, including:</p>
+        <ul>
+          <li>Name, email, and account details</li>
+          <li>Course progress and challenge submissions</li>
+          <li>Instructor verification documents if you apply</li>
+        </ul>
+        <p>We do not sell your personal data.</p>
+        <a href="/auth/privacy-policy" target="_blank" rel="noopener noreferrer" class="legal-full-link">Read full Privacy Policy</a>
+      </div>
+      <button type="button" class="btn-confirm terms-modal-close-btn" id="privacy-modal-close-btn">Close</button>
+    </div>
+  </div>
 
   <script src="/js/coursepayment.js"></script>
  
