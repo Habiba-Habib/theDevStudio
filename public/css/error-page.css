@@ -209,3 +209,12 @@ body {
     right: -80px;
   }
 }
+
+.full-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.actions {
+  grid-template-columns: 1fr;
+}

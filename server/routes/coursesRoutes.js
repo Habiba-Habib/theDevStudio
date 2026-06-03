@@ -63,7 +63,11 @@ const coursesWithStatus = courses.map(course => {
 router.get('/:id', async (req, res, next) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(404).render('public/page-404');
+      return res.status(404).render("public/error-page", {
+      statusCode: 404,
+      errorTitle: "Course Not Found",
+      message: "This course does not exist or was removed."
+});
     }
 
     const course = await Course.findById(req.params.id)
@@ -71,7 +75,11 @@ router.get('/:id', async (req, res, next) => {
       .populate("reviews.user", "name avatar");
 
     if (!course) {
-      return res.status(404).render('public/page-404');
+     return res.status(404).render("public/error-page", {
+        statusCode: 404,
+        errorTitle: "Course Not Found",
+        message: "This course does not exist or was removed."
+      });
     }
 
         if (!course.isPublished || course.approvalStatus !== "approved") {
@@ -80,7 +88,11 @@ router.get('/:id', async (req, res, next) => {
       const isAdmin = req.session.role === "admin" || req.session.user?.role === "admin";
 
       if (!isOwner && !isAdmin) {
-        return res.status(404).render("public/page-404");
+        return res.status(404).render("public/error-page", {
+        statusCode: 404,
+        errorTitle: "Course Not Found",
+        message: "This course does not exist or was removed."
+      })
       }
     }
     const userId = req.session.userId || req.session.user?._id;

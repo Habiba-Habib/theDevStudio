@@ -25,11 +25,19 @@ function requireStudentSession(req, res, next) {
       req.session.returnTo = req.originalUrl;
     }
 
-    return res.redirect("/auth/login");
+    return res.status(401).render("public/error-page", {
+      statusCode: 401,
+      errorTitle: "Unauthorized",
+      message: "You need to log in before accessing this page."
+    });
   }
 
   if (req.session.role !== "student" && req.session.role !== "instructor") {
-    return res.redirect("/dashboard");
+    return res.status(403).render("public/error-page", {
+      statusCode: 403,
+      errorTitle: "Access Denied",
+      message: "Students and instructors only."
+    });
   }
 
   next();
@@ -71,22 +79,46 @@ router.get("/course/:courseId/lesson/:lessonId/download-resource", async (req, r
     const { courseId, lessonId } = req.params;
 
     const course = await Course.findById(courseId);
-    if (!course) return res.status(404).send("Course not found");
+    if (!course) {
+  return res.status(404).render("public/error-page", {
+    statusCode: 404,
+    errorTitle: "Course Not Found",
+    message: "This course does not exist or was removed."
+  });
+}
 
     // verify the user is enrolled or is the instructor owner
     const user = await User.findById(userId);
     const isEnrolled        = user.enrolledCourses.some(e => e.course.toString() === courseId);
     const isInstructorOwner = course.instructor?.toString() === userId.toString();
-    if (!isEnrolled && !isInstructorOwner) return res.status(403).send("Access denied");
+    if (!isEnrolled && !isInstructorOwner) {
+  return res.status(403).render("public/error-page", {
+    statusCode: 403,
+    errorTitle: "Access Denied",
+    message: "You do not have permission to access this file."
+  });
+}
 
     const lesson = course.sections.flatMap(s => s.lessons).find(l => l._id.toString() === lessonId);
-    if (!lesson || !lesson.resourceFile) return res.status(404).send("Resource not found");
+   if (!lesson || !lesson.resourceFile) {
+  return res.status(404).render("public/error-page", {
+    statusCode: 404,
+    errorTitle: "Resource Not Found",
+    message: "This resource does not exist or was removed."
+  });
+}
 
     const fileUrl  = lesson.resourceFile;
 
     // Extract and decode the public_id from the stored Cloudinary URL
     const urlMatch = fileUrl.match(/\/raw\/upload\/(?:v\d+\/)?(.+)$/);
-    if (!urlMatch) return res.status(500).send("Invalid resource URL");
+   if (!urlMatch) {
+  return res.status(500).render("public/error-page", {
+    statusCode: 500,
+    errorTitle: "Invalid Resource",
+    message: "The resource file URL is invalid."
+  });
+}
 
     const publicId   = decodeURIComponent(urlMatch[1]);
     const cloudinary = require('../config/cloudinary');
@@ -105,21 +137,33 @@ router.get("/course/:courseId/lesson/:lessonId/download-resource", async (req, r
     https.get(downloadUrl, (fileRes) => {
       if (fileRes.statusCode !== 200) {
         console.error('Cloudinary archive fetch failed:', fileRes.statusCode);
-        return res.status(502).send("Failed to fetch resource from storage");
+        return res.status(502).render("public/error-page", {
+          statusCode: 502,
+          errorTitle: "Download Failed",
+          message: "Failed to fetch resource from storage"
+        });
       }
 
       const chunks = [];
       fileRes.on('data', chunk => chunks.push(chunk));
       fileRes.on('error', err => {
         console.error('Fetch stream error:', err);
-        if (!res.headersSent) res.status(500).send("Download failed");
+        if (!res.headersSent) res.status(500).render("public/error-page", {
+          statusCode: 500,
+          errorTitle: "Download Failed",
+          message: "Something went wrong while downloading this file."
+        });
       });
       fileRes.on('end', async () => {
         try {
           const buf = Buffer.concat(chunks);
           const dir = await unzipper.Open.buffer(buf);
 
-          if (!dir.files.length) return res.status(500).send("Empty archive");
+          if (!dir.files.length) return res.status(500).render("public/error-page", {
+            statusCode: 500,
+            errorTitle: "Download Failed",
+            message: "Something went wrong while downloading this file."
+          });
 
           const fileContent = await dir.files[0].buffer();
 
@@ -142,18 +186,30 @@ router.get("/course/:courseId/lesson/:lessonId/download-resource", async (req, r
 
         } catch (err) {
           console.error('Unzip error:', err);
-          if (!res.headersSent) res.status(500).send("Failed to extract file");
+          if (!res.headersSent) res.status(500).render("public/error-page", {
+        statusCode: 500,
+        errorTitle: "Download Failed",
+        message: "Something went wrong while downloading this file."
+      });
         }
       });
 
     }).on('error', (err) => {
       console.error('HTTPS request error:', err);
-      if (!res.headersSent) res.status(500).send("Download failed");
+      if (!res.headersSent) res.status(500).render("public/error-page", {
+        statusCode: 500,
+        errorTitle: "Download Failed",
+        message: "Something went wrong while downloading this file."
+      });
     });
 
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong on our side."
+    });
   }
 });
 
@@ -174,7 +230,11 @@ router.get("/course/:courseId/learn", async (req, res) => {
     const userId = req.session.userId;
     const course = await Course.findById(req.params.courseId).populate("instructor", "name avatar email");
 
-    if (!course) return res.status(404).render("public/page-404");
+    if (!course) return res.status(404).render("public/error-page", {
+      statusCode: 404,
+      errorTitle: "Not Found",
+      message: "The item you are looking for does not exist."
+    });
 
     const user = await User.findById(userId);
     let enrollment = user.enrolledCourses.find(
@@ -231,7 +291,11 @@ router.get("/course/:courseId/learn", async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).render("public/page-404");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 });
 
@@ -318,7 +382,11 @@ router.get("/certificate/:courseId", async (req, res) => {
       });
 
     if (!user || user.role !== "student") {
-      return res.status(403).render("public/page-404");
+      return res.status(403).render("public/error-page", {
+        statusCode: 403,
+        errorTitle: "Forbidden",
+        message: "You are not authorized to view this content."
+      });
     }
 
     const completedItem = user.completedCourses.find(
@@ -326,7 +394,11 @@ router.get("/certificate/:courseId", async (req, res) => {
     );
 
     if (!completedItem?.course) {
-      return res.status(404).render("public/page-404");
+      return res.status(404).render("public/error-page", {
+        statusCode: 404,
+        errorTitle: "Not Found",
+        message: "The item you are looking for does not exist."
+      });
     }
 
     let certificate = user.certificates.find(
@@ -353,7 +425,11 @@ router.get("/certificate/:courseId", async (req, res) => {
     });
   } catch (err) {
     console.error("certificate error:", err);
-    res.status(500).render("public/page-404");
+    res.status(500).render("public/error-page", {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong on our side."
+    });
   }
 });
 
@@ -439,19 +515,40 @@ router.get("/course/:courseId/lesson/:lessonId/download-assignment", async (req,
     const { courseId, lessonId } = req.params;
 
     const course = await Course.findById(courseId);
-    if (!course) return res.status(404).send("Course not found");
+   if (!course) {
+  return res.status(404).render("public/error-page", {
+    statusCode: 404,
+    errorTitle: "Course Not Found",
+    message: "This course does not exist or was removed."
+  });
+}
 
     const user = await User.findById(userId);
     const isEnrolled        = user.enrolledCourses.some(e => e.course.toString() === courseId);
     const isInstructorOwner = course.instructor?.toString() === userId.toString();
-    if (!isEnrolled && !isInstructorOwner) return res.status(403).send("Access denied");
-
+    if (!isEnrolled && !isInstructorOwner) {
+  return res.status(403).render("public/error-page", {
+    statusCode: 403,
+    errorTitle: "Access Denied",
+    message: "You do not have permission to access this assignment."
+  });
+}
     const lesson = course.sections.flatMap(s => s.lessons).find(l => l._id.toString() === lessonId);
-    if (!lesson || !lesson.assignmentFile) return res.status(404).send("Assignment not found");
+   if (!lesson || !lesson.assignmentFile) {
+  return res.status(404).render("public/error-page", {
+    statusCode: 404,
+    errorTitle: "Assignment Not Found",
+    message: "This assignment does not exist or was removed."
+  });
+}
 
     const fileUrl  = lesson.assignmentFile;
     const urlMatch = fileUrl.match(/\/raw\/upload\/(?:v\d+\/)?(.+)$/);
-    if (!urlMatch) return res.status(500).send("Invalid file URL");
+    if (!urlMatch) return res.status(500).render("public/error-page", {
+        statusCode: 500,
+        errorTitle: "Internal Server Error",
+        message: "Something went wrong on our side."
+      });
 
     const publicId   = decodeURIComponent(urlMatch[1]);
     const cloudinary = require('../config/cloudinary');
@@ -462,16 +559,28 @@ router.get("/course/:courseId/lesson/:lessonId/download-assignment", async (req,
     const originalName = publicId.split('/').pop();
 
     https.get(downloadUrl, (fileRes) => {
-      if (fileRes.statusCode !== 200) return res.status(502).send("Failed to fetch file");
+      if (fileRes.statusCode !== 200) return res.status(502).render("public/error-page", {
+      statusCode: 502,
+      errorTitle: "Download Failed",
+      message: "Failed to fetch the file from storage."
+    });
 
       const chunks = [];
       fileRes.on('data', chunk => chunks.push(chunk));
-      fileRes.on('error', err => { if (!res.headersSent) res.status(500).send("Download failed"); });
+      fileRes.on('error', err => { if (!res.headersSent) res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+}); });
       fileRes.on('end', async () => {
         try {
           const buf     = Buffer.concat(chunks);
           const dir     = await unzipper.Open.buffer(buf);
-          if (!dir.files.length) return res.status(500).send("Empty archive");
+          if (!dir.files.length) return res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
 
           const fileContent = await dir.files[0].buffer();
           const ext     = originalName.split('.').pop().toLowerCase();
@@ -483,14 +592,26 @@ router.get("/course/:courseId/lesson/:lessonId/download-assignment", async (req,
           res.send(fileContent);
         } catch (err) {
           console.error('Unzip error:', err);
-          if (!res.headersSent) res.status(500).send("Failed to extract file");
+          if (!res.headersSent) res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
         }
       });
-    }).on('error', err => { if (!res.headersSent) res.status(500).send("Download failed"); });
+    }).on('error', err => { if (!res.headersSent) res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+}); });
 
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 });
 

@@ -63,9 +63,13 @@ router.get('/home', (req, res, next) => {
     next(err);
   }
 });
-router.get('/page-404', (req, res, next) => {
+router.get('/error-page', (req, res, next) => {
   try {
-    res.render('public/page-404');
+    res.render("public/error-page", {
+      statusCode: 404,
+      errorTitle: "Page Not Found",
+      message: "The page you are looking for does not exist."
+    });
   } catch (err) {
     next(err);
   }
@@ -139,7 +143,11 @@ router.post('/become-instructor/step2',requireLoginPage, upload.fields([
       return res.redirect('/become-instructor');
     }
     if (!req.files?.cv?.[0] || !req.files?.certificate?.[0]) {
-      return res.status(400).send('CV and certificate are required.');
+      return res.status(400).render("public/error-page", {
+        statusCode: 400,
+        errorTitle: "Missing Documents",
+        message: "CV and certificate are required."
+      });
     }
 
     const { linkedinUrl, portfolioUrl, websiteUrl } = req.body;
@@ -159,7 +167,11 @@ req.session.instructorApplication = {
     res.redirect('/become-instructor/step3');
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server error');
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 });
 
@@ -195,7 +207,11 @@ router.post('/become-instructor/step3', requireLoginPage, async (req, res) => {
     }
 
     if (req.body.agreeAccurate !== 'on' || req.body.agreePolicies !== 'on') {
-      return res.status(400).send('You must accept both agreements.');
+      return res.status(400).render("public/error-page", {
+        statusCode: 400,
+        errorTitle: "Agreement Required",
+        message: "You must accept both agreements."
+      });
     }
 
         // User is already logged in
@@ -221,7 +237,11 @@ router.post('/become-instructor/step3', requireLoginPage, async (req, res) => {
     res.render('instructor/application-submitted');
   } catch (err) {
     console.error(err);
-    res.status(500).send('Server error');
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 });
 

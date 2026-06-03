@@ -21,7 +21,11 @@ exports.getAllChallenges = async (req, res) => {
     });
   } catch (err) {
     console.error("getAllChallenges error:", err);
-    res.status(500).render("public/error404", { message: "Server error" });
+    res.status(500).render("public/error-page", {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong on our side."
+    });
   }
 };
 
@@ -33,8 +37,10 @@ exports.getChallengeById = async (req, res) => {
     );
 
     if (!challenge) {
-      return res.status(404).render("public/error404", {
-        message: "Challenge not found",
+      return res.status(404).render("public/error-page", {
+        statusCode: 404,
+        errorTitle: "Challenge Not Found",
+        message: "This challenge does not exist or was removed."
       });
     }
 
@@ -46,7 +52,11 @@ exports.getChallengeById = async (req, res) => {
     });
   } catch (err) {
     console.error("getChallengeById error:", err);
-    res.status(500).render("public/error404", { message: "Server error" });
+    res.status(500).render("public/error-page", {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong on our side."
+    });
   }
 };
 
@@ -59,7 +69,11 @@ exports.getManageChallenges = async (req, res) => {
     res.render("admin/manage-challenges", { challenges });
   } catch (err) {
     console.error("getManageChallenges error:", err);
-    res.status(500).render("public/error404", { message: "Server error" });
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 exports.getCreateChallenge = (req, res) => {
@@ -128,14 +142,20 @@ exports.getEditChallenge = async (req, res) => {
   try {
     const challenge = await Challenge.findById(req.params.id);
     if (!challenge) {
-      return res.status(404).render("public/error404", {
-        message: "Challenge not found",
+      return res.status(404).render("public/error-page", {
+        statusCode: 404,
+        errorTitle: "Challenge Not Found",
+        message: "This challenge does not exist or was removed."
       });
     }
     res.render("admin/create-challenge", { challenge, error: null });
   } catch (err) {
     console.error("getEditChallenge error:", err);
-    res.status(500).render("public/error404", { message: "Server error" });
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 
@@ -188,7 +208,11 @@ exports.postEditChallenge = async (req, res) => {
     res.redirect("/admin/challenges");
   } catch (err) {
     console.error("postEditChallenge error:", err);
-    res.status(500).render("public/error404", { message: "Server error" });
+  res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 
@@ -198,7 +222,11 @@ exports.deleteChallenge = async (req, res) => {
     res.redirect("/admin/challenges");
   } catch (err) {
     console.error("deleteChallenge error:", err);
-    res.status(500).render("public/error404", { message: "Server error" });
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 

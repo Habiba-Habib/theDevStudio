@@ -39,7 +39,11 @@ exports.getPaymentPage = async (req, res) => {
     const course = await Course.findById(courseId);
 
     if (!course) {
-      return res.status(404).send("Course not found");
+      return res.status(404).render("public/error-page", {
+  statusCode: 404,
+  errorTitle: "Course Not Found",
+  message: "This course does not exist or was removed."
+});
     }
     // block course owner from enrolling
 // block course owner from enrolling
@@ -53,7 +57,11 @@ if (course.instructor && course.instructor.toString() === req.session.userId.toS
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 
@@ -69,12 +77,20 @@ exports.processPayment = async (req, res) => {
     const course = await Course.findById(courseId);
 
     if (!course) {
-      return res.status(404).send("Course not found");
+      return res.status(404).render("public/error-page", {
+  statusCode: 404,
+  errorTitle: "Course Not Found",
+  message: "This course does not exist or was removed."
+});
     }
     // block course owner from enrolling
 // block course owner from enrolling
 if (course.instructor && course.instructor.toString() === req.session.userId.toString()) {
-  return res.status(403).send("You cannot enroll in your own course.");
+  return res.status(403).render("public/error-page", {
+  statusCode: 403,
+  errorTitle: "Access Denied",
+  message: "You cannot enroll in your own course."
+});
 }
 
 
@@ -130,7 +146,11 @@ if (cleanCardNumber.length === 16) {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 
@@ -239,7 +259,11 @@ const courses = currentCourses.slice(0, 3);
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 exports.getMyCourses = async (req, res) => {
@@ -287,7 +311,11 @@ res.render("student/my-courses", {
 
   } catch (error) {
     console.log(error);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 //leaderboard page
@@ -314,7 +342,11 @@ exports.getLeaderboard = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 
@@ -323,8 +355,10 @@ exports.getStartChallenge = async (req, res) => {
     const challenge = await Challenge.findById(req.params.id);
 
     if (!challenge) {
-      return res.status(404).render("public/page-404", {
-        message: "Challenge not found",
+      return res.status(404).render("public/error-page", {
+        statusCode: 404,
+        errorTitle: "Not Found",
+        message: "The item you are looking for does not exist or was removed."
       });
     }
 
@@ -344,9 +378,12 @@ exports.getStartChallenge = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).render("public/page-404", {
-      message: "Server error",
-    });
+
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+})
   }
 };
 // ── parse input string into an array of arguments ──
@@ -568,7 +605,11 @@ exports.getChallengeReview = async (req, res) => {
     res.render('student/challenge-review', { review });
   } catch (err) {
     console.error(err);
-    res.status(500).render('public/page-404', { message: 'Server error' });
+    res.status(500).render('public/error-page', {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong on our side."
+    }); 
   }
 };
 

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <%
+    const code = statusCode || 404;
+
+    const titles = {
+      400: "Bad Request",
+      401: "Unauthorized",
+      403: "Forbidden",
+      404: "Page Not Found",
+      409: "Conflict",
+      422: "Validation Error",
+      500: "Internal Server Error",
+      502: "Bad Gateway",
+      503: "Service Unavailable"
+    };
+
+    const defaultMessages = {
+      400: "The request could not be understood. Please check your input and try again.",
+      401: "You need to log in before accessing this page.",
+      403: "You do not have permission to access this page.",
+      404: "The page you are looking for does not exist, has been moved, or the link you entered is incorrect.",
+      409: "There is a conflict with the current data.",
+      422: "Some submitted information is invalid. Please review it and try again.",
+      500: "Something went wrong on our side. Please try again later.",
+      502: "The server received an invalid response. Please try again later.",
+      503: "The service is temporarily unavailable. Please try again later."
+    };
+
+    const titleText = errorTitle || titles[code] || "Error";
+    const messageText = message || defaultMessages[code] || "Something went wrong.";
+  %>
+
+  <title><%= code %> - <%= titleText %></title>
+
+  <link rel="stylesheet" href="/css/error-page.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<body>
+  <main class="error-page">
+    <div class="bg-circle circle-one"></div>
+    <div class="bg-circle circle-two"></div>
+
+    <section class="error-card">
+      <div class="badge"><%= code %> Error</div>
+
+      <h1><%= titleText %></h1>
+
+      <p><%= messageText %></p>
+
+      <div class="error-number"><%= code %></div>
+
+      <div class="actions">
+        <a href="/" class="btn primary-btn">Back to Home</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

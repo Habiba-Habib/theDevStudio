@@ -80,7 +80,11 @@ exports.getDashboard = async (req, res) => {
 
   } catch (err) {
     console.error('Dashboard error:', err);
-    res.status(500).render('error');
+   res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong while loading the instructor dashboard."
+});
   }
 };
 
@@ -96,9 +100,11 @@ exports.getProfile = async (req, res) => {
     const instructor = await User.findById(req.session.user._id);
 
     if (!instructor) {
-      return res.status(404).render("public/page-404", {
-        message: "Instructor not found"
-      });
+     return res.status(404).render("public/error-page", {
+  statusCode: 404,
+  errorTitle: "Instructor Not Found",
+  message: "This instructor does not exist or was removed."
+});
     }
 
     const instructorCourses = await Course.find({
@@ -115,8 +121,10 @@ exports.getProfile = async (req, res) => {
     });
   } catch (err) {
     console.error("Instructor profile error:", err);
-    res.status(500).render("public/page-404", {
-      message: "Server error"
+    res.status(500).render("public/error-page", {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong while loading the instructor profile."
     });
   }
 };
@@ -127,7 +135,11 @@ exports.getEditProfile = async (req, res) => {
     res.render('shared/edit-profile', { user: instructor, errors: [] });
   } catch (err) {
     console.error(err);
-    res.status(500).render('error');
+    res.status(500).render("public/error-page", {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong while loading the instructor profile."
+    });
   }
 };
 
@@ -233,7 +245,11 @@ exports.updateProfile = async (req, res) => {
     res.redirect("/instructor/profile");
   } catch (err) {
     console.error("Instructor update profile error:", err);
-    res.status(500).send("Failed to update profile.");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 
@@ -265,7 +281,11 @@ exports.getCreateStep1 = async (req, res) => {
 });
   } catch (err) {
     console.error(err);
-    res.status(500).render('error');
+    res.status(500).render("public/error-page", {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong while loading the course creation form."
+    });
   }
 };
 
@@ -313,8 +333,10 @@ exports.postCreateStep1 = async (req, res) => {
     res.redirect('/instructor/create/step2');
   } catch (err) {
     console.error(err);
-    res.status(500).render('public/page-404', {
-      message: 'Failed to create course'
+    res.status(500).render("public/error-page", {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong while creating the course."
     });
   }
 };
@@ -335,7 +357,11 @@ exports.getCreateStep2 = async (req, res) => {
     res.render('instructor/create-step2', { draft, errors: [] });
   } catch (err) {
     console.error(err);
-    res.status(500).render('error');
+    res.status(500).render("public/error-page", {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong while loading the curriculum creation form."
+    });
   }
 };
 
@@ -387,7 +413,11 @@ exports.postCreateStep2 = async (req, res) => {
     res.redirect('/instructor/create/step3');
   } catch (err) {
     console.error('Step 2 error:', err);
-    res.status(500).render('public/page-404', { message: 'Failed to save curriculum' });
+    res.status(500).render("public/error-page", {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong while saving the curriculum."
+    });
   }
 };
 
@@ -422,7 +452,11 @@ exports.getCreateStep3 = async (req, res) => {
     res.render('instructor/create-step3', { draft, errors: [] });
   } catch (err) {
     console.error(err);
-    res.status(500).render('error');
+    res.status(500).render("public/error-page", {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong while loading the course creation form."
+    });
   }
 };
 
@@ -701,7 +735,11 @@ if (rMatch) uploadedResources[`${rMatch[1]}_${rMatch[2]}`] = file.path;
 
   } catch (err) {
     console.error('Update course error:', err);
-    res.status(500).send('Failed to update course. Please try again.');
+  res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 
@@ -718,7 +756,11 @@ exports.deleteCourse = async (req, res) => {
     res.redirect('/instructor/dashboard');
   } catch (err) {
     console.error(err);
-    res.status(500).render('error');
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong while deleting the course."
+});
   }
 };
 
@@ -731,7 +773,13 @@ exports.getEnrolledStudents = async (req, res) => {
       instructor: req.session.user._id
     });
 
-    if (!course) return res.status(404).render('public/error-404');
+    if (!course) {
+  return res.status(404).render("public/error-page", {
+    statusCode: 404,
+    errorTitle: "Course Not Found",
+    message: "This course does not exist or was removed."
+  });
+}
 
     const students = await User.find({
       enrolledCourses: course._id,
@@ -768,7 +816,11 @@ exports.getEnrolledStudents = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).render('error');
+    res.status(500).render("public/error-page", {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong while loading the enrolled students."
+    });
   }
 };
 

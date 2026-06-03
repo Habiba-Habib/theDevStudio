@@ -125,7 +125,11 @@ const chartData = {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 
@@ -148,7 +152,11 @@ exports.getProfile = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 
@@ -158,7 +166,11 @@ exports.getEditProfile = async (req, res) => {
     res.render("shared/edit-profile", { user, errors: [] });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 
@@ -221,7 +233,11 @@ res.render("admin/admin-users", {
 });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 exports.getUserProfile = async (req, res) => {
@@ -231,7 +247,11 @@ exports.getUserProfile = async (req, res) => {
       .populate("certificates.course");
 
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).render("public/error-page", {
+      statusCode: 404,
+      errorTitle: "User Not Found",
+      message: "This user does not exist or was removed."
+    });
     }
 
     res.render("shared/profile", {
@@ -244,7 +264,11 @@ exports.getUserProfile = async (req, res) => {
     });
   } catch (err) {
     console.error("getUserProfile error:", err);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 
@@ -305,6 +329,7 @@ exports.blockInstructor = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error." });
   }
 };
+
 
 exports.unblockInstructor = async (req, res) => {
   try {
@@ -414,7 +439,11 @@ exports.getInstructorApplications = async (req, res) => {
     res.render("admin/instructor-applications", { applications });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong on our side."
+    });
   }
 };
 
@@ -523,7 +552,11 @@ exports.getCreateChallenge = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 exports.postCreateChallenge = async (req, res) => {
@@ -581,7 +614,11 @@ exports.getEditChallenge = async (req, res) => {
     const challenge = await Challenge.findById(req.params.id);
 
     if (!challenge) {
-      return res.status(404).send("Challenge not found");
+      return res.status(404).render("public/error-page", {
+      statusCode: 404,
+      errorTitle: "Challenge Not Found",
+      message: "This challenge does not exist or was removed."
+    });
     }
 
     res.render("admin/create-challenge", {
@@ -590,7 +627,11 @@ exports.getEditChallenge = async (req, res) => {
     });
   } catch (err) {
     console.error("getEditChallenge error:", err);
-    res.status(500).send("Server error");
+   res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 exports.postEditChallenge = async (req, res) => {
@@ -669,7 +710,11 @@ exports.getUserCourses = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).render("public/error-page", {
+        statusCode: 404,
+        errorTitle: "User Not Found",
+        message: "This user does not exist or was removed."
+      });
     }
 
     let courses = [];
@@ -713,7 +758,11 @@ exports.getUserCourses = async (req, res) => {
 });
 } catch (err) {
   console.error("getUserCourses error:", err);
-  res.status(500).send("Server error");
+ res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
 }
 };
 
@@ -765,7 +814,11 @@ exports.getCourseApplications = async (req, res) => {
     });
   } catch (err) {
     console.error("getCourseApplications error:", err);
-    res.status(500).send("Server error");
+  res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };
 
@@ -862,6 +915,10 @@ exports.getAdminCourseStudents = async (req, res) => {
     });
   } catch (err) {
     console.error("getAdminCourseStudents error:", err);
-    res.status(500).send("Server error");
+    res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong on our side."
+});
   }
 };

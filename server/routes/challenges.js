@@ -37,7 +37,11 @@ router.get('/', async (req, res) => {
 }
 catch(err){
   console.error(err);
-  res.status(500).render('public/page-404',{message:'Server error'});
+  res.status(500).render("public/error-page", {
+    statusCode: 500,
+    errorTitle: "Internal Server Error",
+    message: "Something went wrong while loading the challenges."
+  });
 }
 });
 
@@ -48,7 +52,12 @@ router.get('/:id', async (req, res) => {
 
   const challenge = await Challenge.findById(req.params.id);
   if(!challenge){
-    return res.status(404).render('public/page-404', {message:'Challenge not found'});
+    return res.status(404).render("public/error-page", {
+  statusCode: 404,
+  errorTitle: "Challenge Not Found",
+  message: "This challenge does not exist or was removed."
+});
+
   }
 
 res.render('guest/challenge-description', {
@@ -73,7 +82,11 @@ res.render('guest/challenge-description', {
 });
 }catch(err){
   console.error(err);
-  res.status(500).render('public/page-404',{message:'Server error'})
+  res.status(500).render("public/error-page", {
+  statusCode: 500,
+  errorTitle: "Internal Server Error",
+  message: "Something went wrong while loading this challenge."
+});
 }
 });
 

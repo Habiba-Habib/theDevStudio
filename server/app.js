@@ -68,20 +68,27 @@ app.get("/dashboard", (req, res) => {
 });
 
 app.use((req, res) => {
-  res.status(404).render("public/page-404");
+  res.status(404).render("public/error-page", {
+    statusCode: 404,
+    errorTitle: "Page Not Found",
+    message: "The page you are looking for does not exist, has been moved, or the link you entered is incorrect."
+  });
 });
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({ message: err.message || "Internal server error" });
+  console.error(err.stack || err);
+
+  const statusCode = err.status || err.statusCode || 500;
+
+  res.status(statusCode).render("public/error-page", {
+    statusCode,
+    errorTitle: err.title,
+    message: err.message || "Internal server error"
+  });
 });
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Server running on port ${process.env.PORT || 3000}`);
 });
-
-
-
-
 
 
