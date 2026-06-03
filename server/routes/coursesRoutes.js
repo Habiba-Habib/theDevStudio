@@ -25,8 +25,10 @@ router.get('/all-courses', async (req, res, next) => {
       });
     }
 
-    const courses = await Course.find({ isPublished: true })
-      .populate("instructor", "name");
+   const courses = await Course.find({
+  isPublished: true,
+  approvalStatus: "approved"
+}).populate("instructor", "name");
 const coursesWithStatus = courses.map(course => {
   const courseObj = course.toObject();
   
@@ -72,6 +74,15 @@ router.get('/:id', async (req, res, next) => {
       return res.status(404).render('public/page-404');
     }
 
+        if (!course.isPublished || course.approvalStatus !== "approved") {
+      const userId = req.session.userId || req.session.user?._id;
+      const isOwner = userId && course.instructor?._id?.toString() === userId.toString();
+      const isAdmin = req.session.role === "admin" || req.session.user?.role === "admin";
+
+      if (!isOwner && !isAdmin) {
+        return res.status(404).render("public/page-404");
+      }
+    }
     const userId = req.session.userId || req.session.user?._id;
     let isEnrolled = false;
     let progress = 0;

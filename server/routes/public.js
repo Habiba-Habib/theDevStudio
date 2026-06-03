@@ -44,9 +44,12 @@ function validateStep1(body) {
 // Public pages
 router.get('/', async (req, res, next) => {
   try {
-    const courses = await Course.find({ isPublished: true })
-      .populate("instructor", "name")
-      .limit(3);
+    const courses = await Course.find({
+  isPublished: true,
+  approvalStatus: "approved"
+})
+  .populate("instructor", "name")
+  .limit(3);
 
     res.render('public/index', { courses });
   } catch (err) {

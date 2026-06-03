@@ -1,5 +1,6 @@
 <%
   const courseList = Array.isArray(courses) ? courses : [];
+  const safeCourseDataJson = typeof courseDataJson !== "undefined" ? courseDataJson : "[]";
 
   const instructorName = (course) =>
     course && course.instructor && course.instructor.name
@@ -40,23 +41,24 @@
 
     <section class="toolbar">
       <input id="courseSearch" placeholder="Search by course title or instructor..." />
+
       <div class="custom-select" id="statusFilterWrap">
-  <div class="select-selected" id="statusFilterSelected">
-    <span>All Courses</span>
-    <i class="fa-solid fa-chevron-down select-arrow"></i>
-  </div>
+        <div class="select-selected" id="statusFilterSelected">
+          <span>All Courses</span>
+          <i class="fa-solid fa-chevron-down select-arrow"></i>
+        </div>
 
-  <div class="select-items hidden" id="statusFilterItems">
-    <div class="select-item active" data-value="all">
-      All Courses <i class="fa-solid fa-check"></i>
-    </div>
-    <div class="select-item" data-value="pending">Pending</div>
-    <div class="select-item" data-value="approved">Approved</div>
-    <div class="select-item" data-value="rejected">Rejected</div>
-  </div>
-</div>
+        <div class="select-items hidden" id="statusFilterItems">
+          <div class="select-item active" data-value="all">
+            All Courses <i class="fa-solid fa-check"></i>
+          </div>
+          <div class="select-item" data-value="pending">Pending</div>
+          <div class="select-item" data-value="approved">Approved</div>
+          <div class="select-item" data-value="rejected">Rejected</div>
+        </div>
+      </div>
 
-<input type="hidden" id="statusFilter" value="all" />
+      <input type="hidden" id="statusFilter" value="all" />
     </section>
 
     <table class="courses-table">
@@ -116,9 +118,10 @@
     </table>
   </main>
 
-  <script>
-    const courses = <%- JSON.stringify(courseList) %>;
-  </script>
+ <script>
+  const courses = <%- safeCourseDataJson %>;
+</script>
+
   <script src="/js/course-application.js"></script>
 </body>
 </html>

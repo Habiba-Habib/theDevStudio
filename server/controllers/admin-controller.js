@@ -629,11 +629,55 @@ exports.getUserCourses = async (req, res) => {
 };
 
 exports.getCourseApplications = async (req, res) => {
-  const courses = await Course.find({ deletedAt: null })
-    .populate("instructor", "name email avatar")
-    .sort({ submittedAt: -1, createdAt: -1 });
+  try {
+    const courses = await Course.find({ deletedAt: null })
+      .populate("instructor", "name email avatar")
+      .sort({ submittedAt: -1, createdAt: -1 });
 
-  res.render("admin/course-application", { courses });
+    const courseData = courses.map(course => ({
+      _id: course._id ? course._id.toString() : "",
+      title: course.title || "",
+      shortDescription: course.shortDescription || "",
+      fullDescription: course.fullDescription || "",
+      category: course.category || "",
+      level: course.level || "",
+      thumbnail: course.thumbnail || "/images/course1.jpg",
+      price: course.price || 0,
+      duration: course.duration || "",
+      approvalStatus: course.approvalStatus || "pending",
+      submittedAt: course.submittedAt || course.createdAt
+        ? new Date(course.submittedAt || course.createdAt).toISOString()
+        : null,
+      learningOutcomes: course.learningOutcomes || [],
+      sections: (course.sections || []).map(section => ({
+        _id: section._id ? section._id.toString() : "",
+        title: section.title || "",
+        lessons: (section.lessons || []).map(lesson => ({
+          _id: lesson._id ? lesson._id.toString() : "",
+          title: lesson.title || "",
+          duration: lesson.duration || "",
+          resourceFiles: lesson.resourceFiles || [],
+          resources: lesson.resources || []
+        }))
+      })),
+      instructor: {
+        name: course.instructor && course.instructor.name ? course.instructor.name : "Unknown",
+        email: course.instructor && course.instructor.email ? course.instructor.email : "",
+        avatar: course.instructor && course.instructor.avatar ? course.instructor.avatar : ""
+      }
+    }));
+
+    const courseDataJson = JSON.stringify(courseData).replace(/</g, "\\u003c");
+
+    res.render("admin/course-application", {
+      courses,
+      courseData,
+      courseDataJson
+    });
+  } catch (err) {
+    console.error("getCourseApplications error:", err);
+    res.status(500).send("Server error");
+  }
 };
 
 exports.approveCourse = async (req, res) => {

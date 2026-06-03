@@ -66,7 +66,7 @@ function openCourseModal(courseId) {
         <div class="curriculum-section">
           <button class="curriculum-section-header" type="button" onclick="toggleCurriculumSection(${sectionIndex})">
             <span class="section-title-left">
-              <i class="fa-solid fa-chevron-down curriculum-chevron" id="curriculumChevron${sectionIndex}"></i>
+             <i class="fa-solid fa-chevron-down curriculum-chevron collapsed" id="curriculumChevron${sectionIndex}"></i>
               <strong>${section.title || "Untitled Section"}</strong>
             </span>
             <span class="lesson-count">
@@ -74,7 +74,7 @@ function openCourseModal(courseId) {
             </span>
           </button>
 
-          <div class="curriculum-lessons" id="curriculumLessons${sectionIndex}">
+          <div class="curriculum-lessons collapsed" id="curriculumLessons${sectionIndex}">
             ${
               section.lessons && section.lessons.length
                 ? section.lessons.map(lesson => `

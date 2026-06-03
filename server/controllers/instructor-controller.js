@@ -489,7 +489,7 @@ exports.postCreateStep3 = async (req, res) => {
         price: Number(price) || 0,
         duration: duration,
         isPublished: false, // Stays false until admin approves
-        approvalStatus: action === "publish" ? "pending" : "draft",
+        approvalStatus: "pending",
         submittedAt: action === "publish" ? new Date() : draft.submittedAt
       },
       { returnDocument: 'after' }
@@ -593,7 +593,7 @@ exports.getEditCourse = async (req, res) => {
 
 exports.updateCourse = async (req, res) => {
   try {
-    const { title, shortDescription, fullDescription, category, level, price, duration, isPublished } = req.body;
+   const { title, shortDescription, fullDescription, category, level, price, duration } = req.body;
 
     const updateData = { 
       title, 
@@ -603,7 +603,6 @@ exports.updateCourse = async (req, res) => {
       level, 
       price, 
       duration,
-      isPublished: isPublished === 'true' // Save published state!
     };
 
     // Handle thumbnail upload
