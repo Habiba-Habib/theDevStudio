@@ -178,12 +178,13 @@ body {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 22px 24px;
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  position: relative;
+  gap: 14px;
   overflow: hidden;
   transition: transform 0.2s, border-color 0.2s;
+  height: 270px;
 }
 
 .challenge-card:hover {
@@ -241,6 +242,8 @@ body {
   color: var(--text-muted);
   line-height: 1.65;
   flex: 1;
+  max-height: 88px;
+  overflow: hidden;
 }
 
 .card-footer {

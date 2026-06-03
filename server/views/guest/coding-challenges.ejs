@@ -58,10 +58,10 @@
         <span>Category</span>
         <div class="filter-btns" data-type="category">
           <button class="active" data-value="all">All</button>
-          <button data-value="algorithms">Algorithms</button>
-          <button data-value="backend">Backend</button>
-          <button data-value="data structures">Data Structures</button>
-          <button data-value="frontend">Frontend</button>
+
+          <% [...new Set(challenges.map(c => c.category).filter(Boolean))].forEach(category => { %>
+            <button data-value="<%= category.toLowerCase() %>"><%= category %></button>
+          <% }) %>
         </div>
       </div>
     </div>

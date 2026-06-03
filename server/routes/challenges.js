@@ -15,7 +15,10 @@ const User = require('../models/User');
 router.get('/', async (req, res) => {
 
   try{
-  const challenges = await Challenge.find({isPublished: true});
+ const challenges = await Challenge.find({
+  deletedAt: null
+}).sort({ createdAt: -1 });
+
   const totalPoints = challenges.reduce((sum, c) => sum + c.points, 0);
   const activeSince = new Date(Date.now() - 24 * 60 * 60 * 1000);
   const totalUsers = await User.countDocuments({

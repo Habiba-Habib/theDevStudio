@@ -474,7 +474,7 @@ exports.postCreateChallenge = async (req, res) => {
       starterCode: starterCode || "// Write your solution here\n",
       testCases,
       createdBy: req.session.user._id,
-      isPublished: Boolean(isPublished)
+     isPublished: true
     });
 
     res.status(201).json({
@@ -541,7 +541,7 @@ exports.postEditChallenge = async (req, res) => {
         points: Number(points) || 100,
         starterCode: starterCode || "// Write your solution here\n",
         testCases,
-        isPublished: Boolean(isPublished)
+        isPublished: true
       },
       { returnDocument: 'after', runValidators: true }
     );

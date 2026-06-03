@@ -209,18 +209,17 @@ saveBtn.addEventListener('click', async () => {
   }
 
   const payload = {
-    title: titleInput.value.trim(),
-    description: descriptionArea.value.trim(),
-    difficulty: difficultySelect.value.toLowerCase(),
-    category: categorySelect.value.trim(),
-    points: generatedPoints || getPointsFromDifficulty(difficultySelect.value),
-    starterCode: starterCodeArea.classList.contains('placeholder-active')
-      ? ''
-      : starterCodeArea.value.trim(),
-    testCases: parsedTestCases,
-    isPublished: false
-  };
-
+  title: titleInput.value.trim(),
+  difficulty: difficultySelect.value.toLowerCase(),
+  category: categorySelect.value,
+  description: descriptionArea.value.trim(),
+  points: generatedPoints || getPointsFromDifficulty(difficultySelect.value),
+  starterCode: starterCodeArea.classList.contains('placeholder-active')
+    ? ''
+    : starterCodeArea.value.trim(),
+  testCases: parsedTestCases,
+  isPublished: true
+};
   saveBtn.disabled = true;
   saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
