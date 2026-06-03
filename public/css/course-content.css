@@ -312,6 +312,23 @@ body {
 .inst-info  { display: flex; flex-direction: column; gap: 2px; }
 .inst-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
 .inst-name  { font-size: 16px; font-weight: 700; color: var(--text-white); }
+.inst-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--pink);
+  text-decoration: none;
+  margin-top: 4px;
+  transition: color 0.2s, opacity 0.2s;
+}
+.inst-email:hover {
+  color: var(--pink-light);
+  opacity: 0.9;
+}
+.inst-email i {
+  font-size: 12px;
+}
 
 .pane-empty {
   font-size: 14px;
