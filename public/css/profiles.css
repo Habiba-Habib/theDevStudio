@@ -213,7 +213,7 @@ textarea {
   background:linear-gradient(145deg,#3a2d4f,#2a3b59);
   padding:25px;
   border-radius:18px;
-  height:180px;
+  min-height:210px;
 
   display:flex;
   flex-direction:column;
@@ -261,6 +261,8 @@ textarea {
   padding:8px 16px;
   border-radius:10px;
   cursor:pointer;
+  text-decoration:none;
+  font-weight:600;
 }
 .view-btn:hover{
   background:rgb(71, 71, 71);
@@ -283,6 +285,10 @@ textarea {
 .certificate-card p{
   font-size:14px;
   opacity:0.7;
+}
+
+.certificate-link {
+  width: fit-content;
 }
 
 .cert-icon{
