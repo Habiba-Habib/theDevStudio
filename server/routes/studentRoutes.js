@@ -296,7 +296,7 @@ router.post("/edit-profile", async (req, res) => {
   };
 
   // ── password change ──
-  if (currentPassword || newPassword || confirmPassword) {
+   if (newPassword || confirmPassword) {
     if (!currentPassword || !newPassword || !confirmPassword) {
       return res.render("shared/edit-profile", {
         user, errors: ["Please fill all password fields."]

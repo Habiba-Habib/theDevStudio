@@ -44,7 +44,7 @@ function validatePasswords() {
 
     clearErrors();
 
-    if (!current && !newPass && !confirm) return true;
+    if (!newPass && !confirm) return true;
 
     let valid = true;
 
