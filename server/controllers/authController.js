@@ -87,17 +87,20 @@ exports.login = async (req, res) => {
     req.session.userId = user._id;
     req.session.role = user.role;
 
-        const dashboards = {
-      student: "/student/dashboard",
-      instructor: "/instructor/dashboard",
-      admin: "/admin/dashboard"
-    };
+     const dashboards = {
+  student: "/student/dashboard",
+  instructor: "/instructor/dashboard",
+  admin: "/admin/dashboard"
+};
 
-    return res.status(200).json({
-      message: "Login successful",
-      user: req.session.user,
-      redirectUrl: dashboards[user.role] || "/student/dashboard"
-    });
+const redirectUrl = req.session.returnTo || dashboards[user.role] || "/student/dashboard";
+delete req.session.returnTo;
+
+return res.status(200).json({
+  message: "Login successful",
+  user: req.session.user,
+  redirectUrl
+});
     
   } catch (error) {
     console.error("Login database error:", error);

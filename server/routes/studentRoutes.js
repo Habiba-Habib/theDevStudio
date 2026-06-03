@@ -21,6 +21,10 @@ const submissionUpload = multer({
 
 function requireStudentSession(req, res, next) {
   if (!req.session || !req.session.userId) {
+    if (req.method === "GET") {
+      req.session.returnTo = req.originalUrl;
+    }
+
     return res.redirect("/auth/login");
   }
 
