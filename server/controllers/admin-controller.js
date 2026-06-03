@@ -1,6 +1,7 @@
 const User      = require("../models/User");
 const Challenge = require("../models/challenges");
 const Course = require("../models/Course");
+const Payment = require("../models/payment");
 
 exports.getDashboard = async (req, res) => {
   try {
@@ -17,6 +18,93 @@ exports.getDashboard = async (req, res) => {
       highlightColor: u.role === "student" ? "teal" : u.role === "instructor" ? "yellow" : "pink"
     }));
 
+    const totalCourses = await Course.countDocuments({ deletedAt: null });
+
+const revenueResult = await Payment.aggregate([
+  { $match: { status: "successful" } },
+  { $group: { _id: null, total: { $sum: "$amount" } } }
+]);
+
+const totalRevenue = revenueResult[0]?.total || 0;
+
+const now = new Date();
+const startDate = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+
+const monthLabels = [];
+const monthKeys = [];
+
+for (let i = 5; i >= 0; i--) {
+  const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+  monthLabels.push(d.toLocaleString("en-US", { month: "short" }));
+  monthKeys.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
+}
+
+const usersByMonth = await User.aggregate([
+  { $match: { createdAt: { $gte: startDate } } },
+  {
+    $group: {
+      _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+      count: { $sum: 1 }
+    }
+  }
+]);
+
+const usersBeforeStart = await User.countDocuments({
+  createdAt: { $lt: startDate }
+});
+
+const userMap = Object.fromEntries(usersByMonth.map(item => [item._id, item.count]));
+
+let runningUsers = usersBeforeStart;
+const userData = monthKeys.map(key => {
+  runningUsers += userMap[key] || 0;
+  return runningUsers;
+});
+
+const revenueByMonth = await Payment.aggregate([
+  {
+    $match: {
+      status: "successful",
+      createdAt: { $gte: startDate }
+    }
+  },
+  {
+    $group: {
+      _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+      total: { $sum: "$amount" }
+    }
+  }
+]);
+
+const revenueMap = Object.fromEntries(revenueByMonth.map(item => [item._id, item.total]));
+const revenueData = monthKeys.map(key => revenueMap[key] || 0);
+
+const categoryRows = await Course.aggregate([
+  { $match: { deletedAt: null } },
+  {
+    $group: {
+      _id: "$category",
+      count: { $sum: 1 }
+    }
+  },
+  { $sort: { count: -1 } }
+]);
+
+const colors = ["#FF40A0", "#F2FF4D", "#60A3A6", "#8B8BF5", "#FFB7E6", "#7DD3FC"];
+
+const categorySlices = categoryRows.map((item, index) => ({
+  label: item._id || "Uncategorized",
+  value: item.count,
+  color: colors[index % colors.length]
+}));
+
+const chartData = {
+  months: monthLabels,
+  userData,
+  revenueData,
+  categorySlices
+};
+
     res.render("admin/dashboard", {
       admin: {
         name:     req.session.user.name,
@@ -25,13 +113,14 @@ exports.getDashboard = async (req, res) => {
       stats: {
         totalUsers,
         usersChange:      "+12%",
-        totalCourses:     0,
+        totalCourses,
         coursesChange:    "+5%",
-        totalRevenue:     "0",
+        totalRevenue,
         revenueChange:    "+0%",
         totalChallenges,
         challengesChange: "+3%"
       },
+       chartData,
       recentActivity
     });
   } catch (err) {

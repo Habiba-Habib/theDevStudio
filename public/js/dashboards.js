@@ -65,9 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (userGrowthCanvas && revenueGrowthCanvas && donutCanvas) {
 
-    const months      = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-    const userData    = [36000, 42000, 45000, 46500, 47500, 50000];
-    const revenueData = [175, 210, 235, 255, 280, 0];
+    const adminChartDataEl = document.getElementById("adminChartData");
+const adminChartData = adminChartDataEl ? JSON.parse(adminChartDataEl.textContent) : {};
+
+const months = adminChartData.months || [];
+const userData = adminChartData.userData || [];
+const revenueData = adminChartData.revenueData || [];
 
     // ---- Line Chart: User Growth ----
     function drawUserGrowthChart() {
@@ -284,13 +287,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const innerRadius = 52;
       const gapAngle    = 0.04;
 
-      const slices = [
-        { label: 'Web Dev',      value: 30, color: PINK },
-        { label: 'Data Science', value: 25, color: YELLOW },
-        { label: 'Mobile',       value: 20, color: TEAL },
-        { label: 'ML/AI',        value: 15, color: '#8B8BF5' },
-        { label: 'Design',       value: 10, color: '#FFB7E6' },
-      ];
+      const slices = adminChartData.categorySlices && adminChartData.categorySlices.length
+  ? adminChartData.categorySlices
+  : [{ label: "No courses", value: 1, color: "#334155" }];
 
       const total = slices.reduce((s, d) => s + d.value, 0);
 

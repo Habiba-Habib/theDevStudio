@@ -26,7 +26,6 @@
           <div class="stat-icon stat-icon--pink">
             <i class="fa-solid fa-users"></i>
           </div>
-          <span class="ad-stat-change">↗ <%= stats.usersChange %></span>
         </div>
         <div class="stat-value"><%= stats.totalUsers.toLocaleString() %></div>
         <div class="stat-label">Total Users</div>
@@ -37,7 +36,6 @@
           <div class="stat-icon stat-icon--yellow">
             <i class="fa-solid fa-book-open"></i>
           </div>
-          <span class="ad-stat-change">↗ <%= stats.coursesChange %></span>
         </div>
         <div class="stat-value"><%= stats.totalCourses %></div>
         <div class="stat-label">Total Courses</div>
@@ -48,7 +46,6 @@
           <div class="stat-icon stat-icon--teal">
             <i class="fa-solid fa-dollar-sign"></i>
           </div>
-          <span class="ad-stat-change">↗ <%= stats.revenueChange %></span>
         </div>
         <div class="stat-value">$<%= stats.totalRevenue %></div>
         <div class="stat-label">Total Revenue</div>
@@ -59,7 +56,6 @@
           <div class="stat-icon stat-icon--purple">
             <i class="fa-solid fa-code"></i>
           </div>
-          <span class="ad-stat-change">↗ <%= stats.challengesChange %></span>
         </div>
         <div class="stat-value"><%= stats.totalChallenges %></div>
         <div class="stat-label">Total Challenges</div>
@@ -79,7 +75,7 @@
       </div>
 
       <div class="ad-chart-card">
-        <h2 class="section-title">Revenue Growth (K$)</h2>
+        <h2 class="section-title">Revenue Growth ($)</h2>
         <div class="ad-chart-wrapper">
           <canvas id="revenueGrowthChart"></canvas>
           <div class="ad-tooltip hidden" id="revenueTooltip"></div>
@@ -155,6 +151,10 @@
     <button class="fp-help-btn">?</button>
 
   </main>
+
+  <script id="adminChartData" type="application/json">
+  <%- JSON.stringify(chartData || {}) %>
+</script>
 
   <script src="/js/dashboards.js"></script>
 
