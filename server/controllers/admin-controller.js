@@ -614,16 +614,121 @@ exports.getUserCourses = async (req, res) => {
     }
 
     res.render("student/my-courses", {
-      courses,
-      totalCourses: courses.length,
-      inProgressCourses: courses.filter(course => course.status !== "completed").length,
-      completedCourses: courses.filter(course => course.status === "completed").length,
-      avgProgress: courses.length
-        ? `${Math.round(courses.reduce((sum, course) => sum + course.progress, 0) / courses.length)}%`
-        : "0%"
+  courses,
+  totalCourses: courses.length,
+  inProgressCourses: courses.filter(course => course.status !== "completed").length,
+  completedCourses: courses.filter(course => course.status === "completed").length,
+  avgProgress: courses.length
+    ? `${Math.round(courses.reduce((sum, course) => sum + course.progress, 0) / courses.length)}%`
+    : "0%"
+});
+} catch (err) {
+  console.error("getUserCourses error:", err);
+  res.status(500).send("Server error");
+}
+};
+
+exports.getCourseApplications = async (req, res) => {
+  const courses = await Course.find({ deletedAt: null })
+    .populate("instructor", "name email avatar")
+    .sort({ submittedAt: -1, createdAt: -1 });
+
+  res.render("admin/course-application", { courses });
+};
+
+exports.approveCourse = async (req, res) => {
+  await Course.findByIdAndUpdate(req.params.courseId, {
+    approvalStatus: "approved",
+    isPublished: true,
+    rejectionReason: ""
+  });
+
+  res.json({ success: true });
+};
+
+exports.rejectCourse = async (req, res) => {
+  await Course.findByIdAndUpdate(req.params.courseId, {
+    approvalStatus: "rejected",
+    isPublished: false,
+    rejectionReason: req.body.reason || "No reason provided"
+  });
+
+  res.json({ success: true });
+};
+
+exports.previewCourseContent = async (req, res) => {
+  const course = await Course.findById(req.params.courseId).populate("instructor", "name avatar");
+  if (!course) return res.status(404).render("public/page-404");
+
+  const completedLessons = [];
+  const allLessons = course.sections.flatMap(s => s.lessons);
+  const activeLessonId = req.query.lesson || allLessons[0]?._id?.toString() || null;
+
+  res.render("student/course-content", {
+    course,
+    user: req.session.user,
+    enrollment: { progress: 0, completedLessons: [], notes: [] },
+    completedLessons,
+    activeLessonId,
+    totalLessons: allLessons.length,
+    isInstructorOwner: false,
+    activeNote: "",
+    activeSubmission: null
+  });
+};
+exports.getAdminCourseStudents = async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.courseId);
+
+    if (!course) {
+      return res.status(404).render("public/page-404");
+    }
+
+    const users = await User.find({
+      role: "student",
+      "enrolledCourses.course": course._id
+    }).select("name email avatar createdAt lastActive enrolledCourses");
+
+    const students = users.map(user => {
+      const enrollment = user.enrolledCourses.find(e =>
+        e.course.toString() === course._id.toString()
+      );
+
+      return {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        memberSince: user.createdAt,
+        lastActive: user.lastActive,
+        enrolledAt: enrollment?.enrolledAt,
+        progress: enrollment?.progress || 0
+      };
+    });
+
+    const avgProgress = students.length
+      ? Math.round(students.reduce((sum, s) => sum + (s.progress || 0), 0) / students.length)
+      : 0;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const activeToday = students.filter(s =>
+      s.lastActive && new Date(s.lastActive) >= today
+    ).length;
+
+    const nearCompletion = students.filter(s => (s.progress || 0) >= 80).length;
+
+    res.render("instructor/enrolled-students", {
+      course,
+      students,
+      avgProgress,
+      activeToday,
+      nearCompletion,
+      submissions: []
     });
   } catch (err) {
-    console.error("getUserCourses error:", err);
+    console.error("getAdminCourseStudents error:", err);
     res.status(500).send("Server error");
   }
 };

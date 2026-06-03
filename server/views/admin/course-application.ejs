@@ -1,0 +1,116 @@
+<% const courseList = Array.isArray(courses) ? courses : []; %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course Applications - EduPlatform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/css/course-application.css" />
+</head>
+
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="course-app-page">
+    <h1>Course Applications</h1>
+    <p>Review and approve courses submitted by instructors</p>
+
+    <section class="stats-grid">
+      <div>Total Submitted <strong><%= courseList.length %></strong></div>
+      <div>Pending Reviews <strong><%= courseList.filter(c => (c.approvalStatus || "pending") === "pending").length %></strong></div>
+      <div>Approved Courses <strong><%= courseList.filter(c => c.approvalStatus === "approved").length %></strong></div>
+      <div>Rejected Courses <strong><%= courseList.filter(c => c.approvalStatus === "rejected").length %></strong></div>
+    </section>
+
+    <section class="toolbar">
+      <input id="courseSearch" placeholder="Search by course title or instructor..." />
+      <div class="custom-select" id="statusFilterWrap">
+  <div class="select-selected" id="statusFilterSelected">
+    <span>All Courses</span>
+    <i class="fa-solid fa-chevron-down select-arrow"></i>
+  </div>
+
+  <div class="select-items hidden" id="statusFilterItems">
+    <div class="select-item active" data-value="all">
+      All Courses <i class="fa-solid fa-check"></i>
+    </div>
+    <div class="select-item" data-value="pending">Pending</div>
+    <div class="select-item" data-value="approved">Approved</div>
+    <div class="select-item" data-value="rejected">Rejected</div>
+  </div>
+</div>
+
+<input type="hidden" id="statusFilter" value="all" />
+    </section>
+
+    <table class="courses-table">
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Instructor</th>
+          <th>Category</th>
+          <th>Difficulty</th>
+          <th>Submitted</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% courseList.forEach(course => { %>
+          <tr
+            data-title="<%= (course.title || '').toLowerCase() %>"
+            data-instructor="<%= (course.instructor?.name || '').toLowerCase() %>"
+            data-status="<%= course.approvalStatus || 'pending' %>"
+          >
+            <td>
+              <img src="<%= course.thumbnail || '/images/course1.jpg' %>" alt="<%= course.title || 'Course thumbnail' %>" />
+              <div>
+                <strong><%= course.title || "Untitled Course" %></strong>
+                <span>$<%= course.price || 0 %></span>
+              </div>
+            </td>
+
+            <td><%= course.instructor?.name || "Unknown" %></td>
+            <td><%= course.category || "Uncategorized" %></td>
+
+            <td>
+              <span class="level <%= (course.level || 'Beginner').toLowerCase() %>">
+                <%= course.level || "Beginner" %>
+              </span>
+            </td>
+
+            <td>
+              <%= course.submittedAt || course.createdAt
+                ? new Date(course.submittedAt || course.createdAt).toISOString().slice(0, 10)
+                : "N/A"
+              %>
+            </td>
+
+            <td>
+              <span class="status <%= course.approvalStatus || 'pending' %>">
+                <%= course.approvalStatus || "pending" %>
+              </span>
+            </td>
+
+            <td>
+              <button onclick="openCourseModal('<%= course._id %>')">
+                <i class="fa-regular fa-eye"></i>
+                View Details
+              </button>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    const courses = <%- JSON.stringify(courseList) %>;
+  </script>
+  <script src="/js/course-application.js"></script>
+</body>
+</html>

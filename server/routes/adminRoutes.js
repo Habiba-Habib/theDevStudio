@@ -32,5 +32,9 @@ router.post("/create-challenge", controller.postCreateChallenge);
 router.get("/challenges/:id/edit", controller.getEditChallenge);
 router.post("/challenges/:id/edit", controller.postEditChallenge);
 router.post("/generate-challenge", aiController.generateChallengeDraft);
-
+router.get("/course-applications", controller.getCourseApplications);
+router.post("/course-applications/:courseId/approve", controller.approveCourse);
+router.post("/course-applications/:courseId/reject", controller.rejectCourse);
+router.get("/courses/:courseId/content", controller.previewCourseContent);
+router.get("/courses/:courseId/students", controller.getAdminCourseStudents);
 module.exports = router;

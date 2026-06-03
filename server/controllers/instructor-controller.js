@@ -487,7 +487,9 @@ exports.postCreateStep3 = async (req, res) => {
       {
         price: Number(price) || 0,
         duration: duration,
-        isPublished: action === 'publish'
+        isPublished: false,
+        approvalStatus: action === "publish" ? "pending" : "pending",
+        submittedAt: action === "publish" ? new Date() : draft.submittedAt
       },
       { new: true }
     );

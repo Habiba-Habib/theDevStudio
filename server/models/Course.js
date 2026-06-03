@@ -80,9 +80,22 @@ const courseSchema = new mongoose.Schema({
 
 
   isPublished: { type: Boolean, default: false },
-  deletedAt:   { type: Date, default: null }
 
-}, { timestamps: true });
+approvalStatus: {
+  type: String,
+  enum: ["pending", "approved", "rejected"],
+  default: "pending"
+},
+
+submittedAt: { type: Date, default: Date.now },
+rejectionReason: { type: String, default: "" },
+
+deletedAt:   { type: Date, default: null }
+
+  
+}, 
+
+{ timestamps: true });
 
 const Course = mongoose.model("Course", courseSchema);
 module.exports = Course;
