@@ -1,0 +1,386 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --pink:       #FF40A0;
+  --teal:       #60A3A6;
+  --bg:         #0A0E27;
+  --surface:    #1A203A;
+  --surface2:   #222844;
+  --border:     rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.18);
+  --text-white: #FFFFFC;
+  --text-muted: #9aa5b8;
+  --font:       'Inter', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text-white);
+  min-height: 100vh;
+}
+
+/* ── PAGE ── */
+.onboarding-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 48px 20px;
+  gap: 28px;
+}
+
+/* ── PROGRESS DOTS ── */
+.progress-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--surface2);
+  border: 1px solid var(--border-hover);
+  transition: all 0.3s ease;
+}
+.dot.active {
+  width: 24px;
+  border-radius: 4px;
+  background: var(--pink);
+  border-color: var(--pink);
+}
+
+/* ── STEPS WRAPPER ── */
+.steps-wrapper {
+  width: 100%;
+  max-width: 580px;
+}
+
+.step { display: none; }
+.step.active {
+  display: block;
+  animation: fadeUp 0.35s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── CARD ── */
+.step-inner {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px 36px;
+}
+
+/* ── TYPOGRAPHY ── */
+.step-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 10px;
+}
+
+h1 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 12px;
+}
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.gradient {
+  background: linear-gradient(90deg, var(--pink), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 28px;
+}
+
+/* ── WELCOME ICON ── */
+.welcome-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+/* ── AVATAR GRID ── */
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.avatar-item {
+  position: relative;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.avatar-item img {
+  width: 100%;
+  border-radius: 50%;
+  display: block;
+  pointer-events: none;
+}
+.avatar-item:hover { transform: scale(1.07); }
+.avatar-item.selected {
+  border-color: var(--pink);
+  transform: scale(1.07);
+}
+
+.avatar-check {
+  position: absolute;
+  bottom: -2px; right: -2px;
+  width: 20px; height: 20px;
+  background: var(--pink);
+  border-radius: 50%;
+  border: 2px solid var(--surface);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+}
+.avatar-item.selected .avatar-check { display: flex; }
+
+/* ── SELECTED PREVIEW ── */
+.selected-preview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 18px;
+  margin-bottom: 28px;
+}
+.selected-preview img {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--pink);
+  flex-shrink: 0;
+}
+.preview-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-white);
+}
+.preview-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── EXPERIENCE LEVEL CARDS ── */
+.level-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.level-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+}
+.level-card:hover {
+  border-color: var(--border-hover);
+  background: #28305a;
+}
+.level-card.selected {
+  border-color: var(--pink);
+  background: rgba(255, 64, 160, 0.08);
+}
+
+.level-icon {
+  font-size: 26px;
+  flex-shrink: 0;
+  width: 40px;
+  text-align: center;
+}
+
+.level-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.level-text strong {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-white);
+}
+.level-text span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.level-check {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: transparent;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.level-card.selected .level-check {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: #fff;
+}
+
+/* ── AGE SECTION ── */
+.age-section {
+  margin-top: 20px;
+  text-align: left;
+}
+.age-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-white);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.age-label i { color: var(--teal); }
+
+.age-input {
+  width: 100%;
+  padding: 13px 18px;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-white);
+  font-size: 15px;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.age-input::placeholder { color: var(--text-muted); }
+.age-input:focus { border-color: var(--teal); }
+.age-input.error { border-color: #ff4444; }
+.age-input::-webkit-inner-spin-button,
+.age-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+/* ── FIELD ERROR ── */
+.field-error {
+  display: block;
+  color: #ff6b6b;
+  font-size: 13px;
+  margin-top: 6px;
+  margin-bottom: 20px;
+  min-height: 18px;
+}
+
+/* ── NAV ROW ── */
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* ── BUTTONS ── */
+.btn-primary {
+  background: linear-gradient(135deg, var(--pink), #c0327a);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 26px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary.full-width {
+  width: 100%;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+
+/* ── LOADING OVERLAY ── */
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,14,39,0.88);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  z-index: 999;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+.loading-overlay.hidden { display: none; }
+
+.spinner {
+  width: 42px; height: 42px;
+  border: 3px solid var(--surface);
+  border-top-color: var(--pink);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 500px) {
+  .step-inner { padding: 28px 18px; }
+  h1 { font-size: 1.4rem; }
+  h2 { font-size: 1.2rem; }
+  .avatar-grid { gap: 8px; }
+  .level-card { padding: 14px 14px; }
+}

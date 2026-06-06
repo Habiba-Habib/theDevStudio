@@ -21,43 +21,9 @@ const templates = {
 
 };`,
 
-  python: `# Input format:
-# - Arrays: first line = length, second line = space-separated elements
-# - Numbers: one per line
+  python:  `def solution():\n    # Write your solution here\n    pass`,
 
-n = int(input())
-nums = list(map(int, input().split()))
-target = int(input())
-
-# Your solution here
-
-# Print result (e.g. print(result))
-`,
-
-  cpp: `#include <iostream>
-#include <vector>
-using namespace std;
-
-// Input format:
-// - Arrays: first line = length, second line = space-separated elements
-// - Numbers: one per line
-
-int main() {
-    int n;
-    cin >> n;
-    vector<int> nums(n);
-    for (int i = 0; i < n; i++) cin >> nums[i];
-    int target;
-    cin >> target;
-
-    // Your solution here
-    // vector<int> result = twoSum(nums, target);
-
-    // Print result
-    // cout << "[" << result[0] << "," << result[1] << "]" << endl;
-
-    return 0;
-}`,
+  cpp: `#include <iostream>\nusing namespace std;\n\nint main() {\n    // Write your solution here\n\n    return 0;\n}`,
 };
 
 function changeLang() {

@@ -131,7 +131,7 @@
         setTimeout(() => btn.style.transform = 'translateX(0)', 200);
         return;
       }
-      function showSignupPopup(type, title, message, redirect = true) {
+      function showSignupPopup(type, title, message, redirect = false) {
   const popup = document.getElementById('signup-popup');
   const icon = document.getElementById('signup-popup-icon');
   const titleEl = document.getElementById('signup-popup-title');
@@ -149,7 +149,7 @@
 
   if (redirect) {
     setTimeout(() => {
-      window.location.href = '/auth/login';
+      window.location.href = redirect;
     }, 1800);
   }
 }
@@ -173,7 +173,8 @@
     showSignupPopup(
       'error',
       'Account Already Exists',
-      'This email is already registered. Please log in instead.'
+      'This email is already registered. Please log in instead.',
+      false
     );
     return;
   }
@@ -181,7 +182,8 @@
   showSignupPopup(
     'success',
     'Account Created',
-    'Your account was created successfully. Please log in to continue.'
+    "Welcome! Let's set up your profile.",
+    data.redirectUrl
   );
 })
 .catch(() => {
