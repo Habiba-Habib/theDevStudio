@@ -103,15 +103,13 @@ router.post('/edit-profile', updateProfile);
 
 router.get('/create/step1',  getCreateStep1);
 router.post('/create/step1', uploadCourseThumbnail, postCreateStep1);
+
 router.get('/create/step2',  getCreateStep2);
 router.post('/create/step2', postCreateStep2);
+
 router.get('/create/step3',  getCreateStep3);
 router.post('/create/step3', postCreateStep3);
-router.get('/create/step1',  getCreateStep1);
-router.get('/create/step2',  getCreateStep2);
-router.post('/create/step2', postCreateStep2);
-router.get('/create/step3',  getCreateStep3);
-router.post('/create/step3', postCreateStep3);
+
 router.post('/delete-draft/:id', deleteDraft);
 
 

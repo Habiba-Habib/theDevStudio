@@ -40,6 +40,23 @@ body {
     margin-bottom: 32px;
 }
 
+.back-to-admin {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.back-to-admin:hover {
+    color: var(--pink);
+    transform: translateX(-3px);
+}
+
 .page-title {
     font-size: 28px;
     font-weight: 700;

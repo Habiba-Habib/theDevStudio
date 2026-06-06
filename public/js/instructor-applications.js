@@ -1,4 +1,9 @@
 // Modal functionality
+const applicationsData = document.getElementById("applications-data");
+
+const applications = applicationsData
+  ? JSON.parse(applicationsData.textContent || "[]")
+  : [];
 function openModal(appId) {
   const app = applications.find(a => a._id === appId);
   if (!app) return;
@@ -8,7 +13,7 @@ function openModal(appId) {
     <div class="modal-section">
       <div class="modal-section-title">Instructor Information</div>
       <div class="instructor-info">
-        <img src="/images/avatars/${app.avatar}" alt="${app.name}" />
+        <img src="${app.avatar}" alt="${app.name}" />
         <div class="instructor-info-details">
           <h3>${app.name}</h3>
           <p><i class="fa-regular fa-envelope"></i> ${app.email}</p>

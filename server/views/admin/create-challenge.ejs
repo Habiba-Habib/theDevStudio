@@ -13,6 +13,10 @@
 <%- include('../partials/navbar') %> 
 
     <div class="page-wrapper">
+        <a href="/admin/manage-challenges" class="back-to-manage">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Manage Challenges
+    </a>
 
         <div class="page-header">
             <h1 class="page-title"><%= mode === "edit" ? "Edit Challenge" : "Create Challenge" %></h1>

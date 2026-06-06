@@ -214,7 +214,7 @@ exports.getUsers = async (req, res) => {
       email:    u.email,
       role:     u.role.charAt(0).toUpperCase() + u.role.slice(1),
       status:   (u.status || "active").charAt(0).toUpperCase() + (u.status || "active").slice(1),
-      avatar:   u.avatar || "avatar1g.png",
+      avatar: "/images/avatars/" + (u.avatar || "avatar1g.png").replace(/^.*\//, ""),
       joinDate: u.createdAt
         ? u.createdAt.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
         : "N/A",
@@ -427,7 +427,7 @@ exports.getInstructorApplications = async (req, res) => {
       _id: u._id,
       name: u.name,
       email: u.email,
-      avatar: u.avatar || "avatar1g.png",
+      avatar: "/images/avatars/" + (u.avatar || "avatar1g.png").replace(/^.*\//, ""),
       experience: u.instructorVerification?.experience || "N/A",
       expertise: u.instructorVerification?.expertise?.split(",").map(e => e.trim()) || [],
       applicationDate: u.instructorVerification?.submittedAt || u.createdAt,

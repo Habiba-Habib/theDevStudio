@@ -13,7 +13,7 @@
   <%- include('../partials/navbar') %>
 
   <div class="page-wrapper">
-
+    
     <!-- ── HEADER ── -->
     <div class="page-header">
       <h1>Instructor Applications</h1>
@@ -157,9 +157,10 @@
   </div>
 </div>
   <!-- ── APPLICATION DATA FOR JS ── -->
-  <script>
-  const applications = <%- JSON.stringify(applications || []) %>;
+  <script id="applications-data" type="application/json">
+  <%- JSON.stringify(typeof applications !== "undefined" ? applications : []).replace(/</g, "\\u003c") %>
 </script>
+<script src="/js/instructor-applications.js"></script>
 <script src="/js/instructor-applications.js"></script>
 </body>
 </html>
