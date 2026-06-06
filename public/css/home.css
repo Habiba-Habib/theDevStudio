@@ -22,9 +22,12 @@ body{
   justify-content: center;
   text-align: center;
   padding: 4rem 2rem 6rem;
-  background-color: var(--bg);
+  background:
+    radial-gradient(ellipse 65% 55% at 15% 0%,   rgba(255, 64, 160, 0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 55% 45% at 85% 100%,  rgba(96, 163, 166, 0.16) 0%, transparent 70%),
+    var(--bg);
   margin: 0;
-  font-family: 'Inter' , sans-serif;     
+  font-family: 'Inter' , sans-serif;
 }
    
 .hero-tagline{
@@ -467,14 +470,18 @@ body{
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
+.challenges-card-link {
+  text-decoration: none;
+  display: block;
+}
 .challenges-card {
   background: var(--surface);
   border-radius: 16px;
   padding: 1.5rem 1.8rem;
   border: 1px solid transparent;
-   display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
   transition: border-color 0.2s;
   cursor: pointer;
 }
@@ -506,8 +513,28 @@ body{
   font-size: 0.72rem;
   font-weight: 600;
 }
-.easy { background: rgba(0,200,100,0.15); color: #00c864; border: 1px solid #00c864; }
-.hard { background: rgba(255,60,60,0.15);  color: #ff4444; border: 1px solid #ff4444; }
+.easy   { background: rgba(0,200,100,0.15);  color: #00c864; border: 1px solid #00c864; }
+.medium { background: rgba(255,165,0,0.15); color: #ffa500; border: 1px solid #ffa500; }
+.hard   { background: rgba(255,60,60,0.15); color: #ff4444; border: 1px solid #ff4444; }
+
+/* Challenge card link wrapper */
+.challenges-card-link {
+  text-decoration: none;
+  display: block;
+}
+
+/* Difficulty accent dot at top of card */
+.challenge-card-top {
+  margin-bottom: 8px;
+}
+.challenge-category-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.diff-easy   { background: #00c864; box-shadow: 0 0 6px rgba(0,200,100,0.6); }
+.diff-medium { background: #ffa500; box-shadow: 0 0 6px rgba(255,165,0,0.6); }
+.diff-hard   { background: #ff4444; box-shadow: 0 0 6px rgba(255,60,60,0.6); }
   .challenge-btn{
     background-color: var(--yellow);
     border-radius: 8px;
