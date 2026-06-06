@@ -4,6 +4,7 @@ const cloudinary = require("../config/cloudinary");
 const fs = require("fs");
 const Course = require('../models/Course');
 const User = require('../models/User');
+const Challenge = require('../models/challenges');
 const multer = require("multer");
 const { requireLoginPage } = require("../middleware/authMiddleware");
 const upload = multer({ dest: "uploads/instructor-verification/" });
@@ -44,14 +45,44 @@ function validateStep1(body) {
 // Public pages
 router.get('/', async (req, res, next) => {
   try {
-    const courses = await Course.find({
-  isPublished: true,
-  approvalStatus: "approved"
-})
-  .populate("instructor", "name")
-  .limit(3);
+    const [courses, challenges, studentCount, courseCount, certifiedCount, enrolledCount, completedCount] = await Promise.all([
+      Course.find({ isPublished: true, approvalStatus: "approved" })
+        .populate("instructor", "name")
+        .limit(3),
+      Challenge.find({ isPublished: true, deletedAt: null })
+        .sort({ points: -1 })
+        .limit(4)
+        .select("title difficulty points"),
+      User.countDocuments({ role: "student" }),
+      Course.countDocuments({ isPublished: true, approvalStatus: "approved" }),
+      // Students who earned at least one certificate
+      User.countDocuments({ role: "student", "certificates.0": { $exists: true } }),
+      // Students enrolled in at least one course
+      User.countDocuments({ role: "student", "enrolledCourses.0": { $exists: true } }),
+      // Students who completed at least one course
+      User.countDocuments({ role: "student", "completedCourses.0": { $exists: true } })
+    ]);
 
-    res.render('public/index', { courses });
+    // Format a number into a compact display string  e.g. 1500 → "1.5K+"
+    function fmtStat(n) {
+      if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M+';
+      if (n >= 1000)    return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'K+';
+      return n + '+';
+    }
+
+    // Success rate = % of enrolled students who completed at least one course
+    const successRate = enrolledCount > 0
+      ? Math.round((completedCount / enrolledCount) * 100)
+      : 0;
+
+    const stats = {
+      learners:    fmtStat(studentCount),
+      courses:     fmtStat(courseCount),
+      certified:   fmtStat(certifiedCount),
+      successRate: successRate + '%'
+    };
+
+    res.render('public/index', { courses, challenges, stats });
   } catch (err) {
     next(err);
   }
