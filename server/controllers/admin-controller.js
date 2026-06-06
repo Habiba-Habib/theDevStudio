@@ -10,13 +10,17 @@ exports.getDashboard = async (req, res) => {
 
     const recentUsers = await User.find().sort({ createdAt: -1 }).limit(5);
 
-    const recentActivity = recentUsers.map(u => ({
-      avatar:         u.avatar || "avatar1g.png",
-      userName:       u.name,
-      action:         "joined the platform",
-      highlight:      u.role.charAt(0).toUpperCase() + u.role.slice(1),
-      highlightColor: u.role === "student" ? "teal" : u.role === "instructor" ? "yellow" : "pink"
-    }));
+    const recentActivity = recentUsers.map(u => {
+  const avatarFile = (u.avatar || "avatar1g.png").replace(/^.*\//, "");
+
+  return {
+    avatar: "/images/avatars/" + avatarFile,
+    userName: u.name,
+    action: "joined the platform",
+    highlight: u.role.charAt(0).toUpperCase() + u.role.slice(1),
+    highlightColor: u.role === "student" ? "teal" : u.role === "instructor" ? "yellow" : "pink"
+  };
+});
 
     const totalCourses = await Course.countDocuments({ deletedAt: null });
 
