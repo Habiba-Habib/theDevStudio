@@ -141,6 +141,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentPage < totalPages) { currentPage++; renderPage(); scrollToGrid(); }
   });
 
-  // ── 5. INITIAL RENDER ────────────────────────────────────────
+  // ── 5. PRE-SELECT CATEGORY FROM URL PARAM (?category=Web Development) ──
+  const urlParams   = new URLSearchParams(window.location.search);
+  const preCategory = urlParams.get('category');
+  if (preCategory) {
+    const matchBtn = [...categoryBtns].find(b => b.dataset.category === preCategory);
+    if (matchBtn) {
+      categoryBtns.forEach(b => b.classList.remove('active'));
+      matchBtn.classList.add('active');
+      activeCategory = preCategory;
+    }
+  }
+
+  // ── 6. INITIAL RENDER ────────────────────────────────────────
   applyFilters();
 });

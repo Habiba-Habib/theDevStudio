@@ -197,26 +197,39 @@ function filterApplications(searchTerm, statusFilter) {
   countElement.textContent = `Showing ${visibleCount} application${visibleCount !== 1 ? 's' : ''}`;
 }
 
+// ── Toast helper ──────────────────────────────────────────────
+let _toastTimer = null;
+function showToast(msg, type = 'success') {
+  const toast = document.getElementById('admin-toast');
+  const icon  = document.getElementById('admin-toast-icon');
+  const text  = document.getElementById('admin-toast-msg');
+  toast.className = `admin-toast ${type}`;
+  icon.className  = type === 'success'
+    ? 'fa-solid fa-circle-check'
+    : 'fa-solid fa-circle-xmark';
+  text.textContent = msg;
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => toast.classList.add('hidden'), 3000);
+}
+
 // Approve/Reject functionality
 async function approveApplication(userId) {
   try {
     const response = await fetch(`/admin/instructor-applications/${userId}/approve`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' }
     });
 
     if (response.ok) {
-      alert('Application approved successfully!');
       closeModal();
-      location.reload();
+      showToast('Application approved successfully!', 'success');
+      setTimeout(() => location.reload(), 1200);
     } else {
-      alert('Failed to approve application');
+      showToast('Failed to approve application', 'error');
     }
   } catch (error) {
     console.error('Error approving application:', error);
-    alert('Error approving application');
+    showToast('Error approving application', 'error');
   }
 }
 
@@ -224,21 +237,19 @@ async function rejectApplication(userId) {
   try {
     const response = await fetch(`/admin/instructor-applications/${userId}/reject`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' }
     });
 
     if (response.ok) {
-      alert('Application rejected successfully!');
       closeModal();
-      location.reload();
+      showToast('Application rejected successfully!', 'success');
+      setTimeout(() => location.reload(), 1200);
     } else {
-      alert('Failed to reject application');
+      showToast('Failed to reject application', 'error');
     }
   } catch (error) {
     console.error('Error rejecting application:', error);
-    alert('Error rejecting application');
+    showToast('Error rejecting application', 'error');
   }
 }
 let rejectUserId = null;

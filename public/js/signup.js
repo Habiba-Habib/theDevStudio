@@ -173,8 +173,8 @@
     showSignupPopup(
       'error',
       'Account Already Exists',
-      'This email is already registered. Please log in instead.',
-      false
+      'This email is already registered. Taking you to the login page…',
+      '/auth/login'
     );
     return;
   }
