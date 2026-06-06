@@ -5,11 +5,7 @@
 
 module.exports = function isAdmin(req, res, next) {
   if (!req.session.user) {
-    return res.status(401).render("public/error-page", {
-      statusCode: 401,
-      errorTitle: "Unauthorized",
-      message: "You need to log in before accessing this page."
-    });
+    return res.redirect("/auth/login");
   }
   if (req.session.user.role !== "admin") {
     return res.status(403).render("public/error-page", {

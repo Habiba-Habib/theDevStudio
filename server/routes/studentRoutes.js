@@ -24,12 +24,7 @@ function requireStudentSession(req, res, next) {
     if (req.method === "GET") {
       req.session.returnTo = req.originalUrl;
     }
-
-    return res.status(401).render("public/error-page", {
-      statusCode: 401,
-      errorTitle: "Unauthorized",
-      message: "You need to log in before accessing this page."
-    });
+    return res.redirect("/auth/login");
   }
 
   if (req.session.role !== "student" && req.session.role !== "instructor") {

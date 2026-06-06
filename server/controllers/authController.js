@@ -286,28 +286,36 @@ exports.getOnboarding = (req, res) => {
 exports.postOnboarding = async (req, res) => {
   if (!req.session.userId) return res.status(401).json({ message: "Not logged in" });
 
-  const { avatar, experienceLevel, age } = req.body;
+  const { avatar, experienceLevel, intendedRole } = req.body;
   const validLevels = ["beginner", "intermediate", "advanced"];
-  const parsedAge = parseInt(age, 10);
 
   if (!avatar) return res.status(400).json({ message: "Please choose an avatar" });
-  if (!experienceLevel || !validLevels.includes(experienceLevel)) {
-    return res.status(400).json({ message: "Please choose your experience level" });
-  }
-  if (!parsedAge || parsedAge < 5 || parsedAge > 120) {
-    return res.status(400).json({ message: "Please enter a valid age (5–120)" });
+
+  // Experience level is required for students, optional for instructors
+  if (intendedRole !== "instructor") {
+    if (!experienceLevel || !validLevels.includes(experienceLevel))
+      return res.status(400).json({ message: "Please choose your experience level" });
   }
 
-  await User.findByIdAndUpdate(req.session.userId, {
-    avatar,
-    age: parsedAge,
-    experienceLevel,
-    onboardingComplete: true
-  });
+  const updateData = { avatar, onboardingComplete: true };
+  if (experienceLevel && validLevels.includes(experienceLevel)) {
+    updateData.experienceLevel = experienceLevel;
+  }
 
-  const role = req.session.role || "student";
-  const dashboards = { student: "/student/dashboard", instructor: "/instructor/dashboard" };
-  return res.status(200).json({ redirectUrl: dashboards[role] || "/student/dashboard" });
+  await User.findByIdAndUpdate(req.session.userId, updateData);
+
+  // If user wants to teach → send them to the instructor application
+  // (role stays "student" in DB until admin approves the application)
+  let redirectUrl;
+  if (intendedRole === "instructor") {
+    redirectUrl = "/become-instructor";
+  } else {
+    const role = req.session.role || "student";
+    const dashboards = { student: "/student/dashboard", instructor: "/instructor/dashboard" };
+    redirectUrl = dashboards[role] || "/student/dashboard";
+  }
+
+  return res.status(200).json({ redirectUrl });
 };
 
 /* =========================

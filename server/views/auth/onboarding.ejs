@@ -11,11 +11,12 @@
 
   <div class="onboarding-page">
 
-    <!-- Progress dots -->
+    <!-- Progress dots (4 steps) -->
     <div class="progress-dots">
       <span class="dot active" id="dot-1"></span>
       <span class="dot" id="dot-2"></span>
       <span class="dot" id="dot-3"></span>
+      <span class="dot" id="dot-4"></span>
     </div>
 
     <div class="steps-wrapper">
@@ -23,19 +24,61 @@
       <!-- STEP 1: Welcome -->
       <div class="step active" id="step-1">
         <div class="step-inner">
-          <div class="welcome-icon"></div>
-          <h1> 🚀 Welcome to <span class="gradient">TheDevStudio</span>,<br/><%= user.name %>!</h1>
-          <p class="subtitle">Let's personalise your experience in two quick steps.</p>
-          <button class="btn-primary full-width" id="btn-start">
+          <h1>🚀 Welcome to <span class="gradient">TheDevStudio</span>,<br/><%= user.name %>!</h1>
+          <p class="subtitle">Let's personalise your experience in three quick steps.</p>
+          <button type="button" class="btn-primary full-width" id="btn-start">
             Get Started <i class="fa-solid fa-arrow-right"></i>
           </button>
         </div>
       </div>
 
-      <!-- STEP 2: Choose Avatar -->
+      <!-- STEP 2: Role Selection (NEW) -->
       <div class="step" id="step-2">
         <div class="step-inner">
-          <p class="step-label">Step 1 of 2</p>
+          <p class="step-label">Step 1 of 3</p>
+          <h2>What brings you here?</h2>
+          <p class="subtitle">Tell us your goal and we'll set up the right experience for you.</p>
+
+          <div class="role-cards">
+
+            <div class="role-card" data-role="student">
+              <div class="level-icon">🎓</div>
+              <div class="level-text">
+                <strong>I want to Learn</strong>
+                <span>Enroll in courses, tackle challenges, earn certificates</span>
+              </div>
+              <div class="level-check"><i class="fa-solid fa-check"></i></div>
+            </div>
+
+            <div class="role-card" data-role="instructor">
+              <div class="level-icon">👨‍🏫</div>
+              <div class="level-text">
+                <strong>I want to Teach</strong>
+                <span>Create courses and share your expertise with learners</span>
+              </div>
+              <div class="level-check"><i class="fa-solid fa-check"></i></div>
+            </div>
+
+          </div>
+
+          <input type="hidden" id="selected-role" value="" />
+          <span id="role-error" class="field-error"></span>
+
+          <div class="nav-row">
+            <button type="button" class="btn-ghost" id="btn-back-2">
+              <i class="fa-solid fa-arrow-left"></i> Back
+            </button>
+            <button type="button" class="btn-primary" id="btn-next-2">
+              Continue <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: Choose Avatar -->
+      <div class="step" id="step-3">
+        <div class="step-inner">
+          <p class="step-label">Step 2 of 3</p>
           <h2>Pick your avatar</h2>
           <p class="subtitle">This is how others will see you on the platform.</p>
 
@@ -63,20 +106,22 @@
           </div>
 
           <div class="nav-row">
-            <button class="btn-ghost" id="btn-back-2">
+            <button type="button" class="btn-ghost" id="btn-back-3">
               <i class="fa-solid fa-arrow-left"></i> Back
             </button>
-            <button class="btn-primary" id="btn-next-2">
+            <button type="button" class="btn-primary" id="btn-next-3">
               Continue <i class="fa-solid fa-arrow-right"></i>
             </button>
           </div>
+          <!-- Error shown here when instructor submits from this step -->
+          <span id="step3-error" class="field-error"></span>
         </div>
       </div>
 
-      <!-- STEP 3: Experience Level -->
-      <div class="step" id="step-3">
+      <!-- STEP 4: Experience Level + Age -->
+      <div class="step" id="step-4">
         <div class="step-inner">
-          <p class="step-label">Step 2 of 2</p>
+          <p class="step-label">Step 3 of 3</p>
           <h2>What's your experience level?</h2>
           <p class="subtitle">We'll tailor your learning path to match where you are right now.</p>
 
@@ -114,26 +159,13 @@
           <input type="hidden" id="selected-level" value="" />
           <span id="level-error" class="field-error"></span>
 
-          <div class="age-section">
-            <label class="age-label" for="age-input">
-              <i class="fa-solid fa-cake-candles"></i> How old are you?
-            </label>
-            <input
-              type="number"
-              id="age-input"
-              class="age-input"
-              placeholder="Enter your age"
-              min="5"
-              max="120"
-            />
-            <span id="age-error" class="field-error"></span>
-          </div>
+          
 
           <div class="nav-row">
-            <button class="btn-ghost" id="btn-back-3">
+            <button type="button" class="btn-ghost" id="btn-back-4">
               <i class="fa-solid fa-arrow-left"></i> Back
             </button>
-            <button class="btn-primary" id="btn-finish">
+            <button type="button" class="btn-primary" id="btn-finish">
               Start Exploring <i class="fa-solid fa-rocket"></i>
             </button>
           </div>

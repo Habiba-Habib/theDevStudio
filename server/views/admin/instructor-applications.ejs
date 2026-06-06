@@ -156,11 +156,16 @@
     </div>
   </div>
 </div>
+<!-- Toast notification -->
+<div id="admin-toast" class="admin-toast hidden">
+  <i id="admin-toast-icon" class="fa-solid fa-circle-check"></i>
+  <span id="admin-toast-msg"></span>
+</div>
+
   <!-- ── APPLICATION DATA FOR JS ── -->
   <script id="applications-data" type="application/json">
   <%- JSON.stringify(typeof applications !== "undefined" ? applications : []).replace(/</g, "\\u003c") %>
 </script>
-<script src="/js/instructor-applications.js"></script>
 <script src="/js/instructor-applications.js"></script>
 </body>
 </html>

@@ -220,6 +220,7 @@
     name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_resourceFile"
     accept=".pdf,.doc,.docx,.ppt,.pptx"
   />
+  <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, PPT, PPTX</p>
   <% if (lesson.resourceFile) { %>
     <p class="saved-file">
       <i class="fa-solid fa-file"></i>
@@ -232,13 +233,14 @@
   />
 </div>
 <div class="lesson-subsection">
-  <h4><i class="fa-solid fa-clipboard-list"></i> Assignment </h4>
+  <h4><i class="fa-solid fa-clipboard-list"></i> Assignment</h4>
   <input
     type="file"
     class="form-input"
     name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_assignmentFile"
     accept=".pdf,.doc,.docx,.ppt,.pptx"
   />
+  <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, PPT, PPTX</p>
   <% if (lesson.assignmentFile) { %>
     <p class="saved-file">
       <i class="fa-solid fa-file-circle-check"></i>
@@ -276,6 +278,7 @@
         accept="video/*"
         onchange="extractVideoDuration(this)"
       />
+      <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: MP4, MOV, AVI, MKV, WebM</p>
       <% if (lesson.videoFile) { %>
         <p class="saved-file">
           <i class="fa-solid fa-file-video"></i>
