@@ -654,22 +654,24 @@ exports.updateCourse = async (req, res) => {
     updateData.learningOutcomes = outcomesArray.map(o => o.trim()).filter(o => o);
 
 
-    // 1. Process all uploaded files first to build a map of lesson videos
-    const uploadedVideos = {};
+    // 1. Process all uploaded files first to build a map of lesson videos/resources/assignments
+    const uploadedVideos      = {};
+    const uploadedResources   = {};
+    const uploadedAssignments = {};
+
     (req.files || []).forEach(file => {
       if (file.fieldname === 'thumbnail') {
-        updateData.thumbnail = file.path; // Remote Cloudinary path
+        updateData.thumbnail = file.path;
       }
+
       const rMatch = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_resourceFile$/);
-if (rMatch) uploadedResources[`${rMatch[1]}_${rMatch[2]}`] = file.path;
+      if (rMatch) uploadedResources[`${rMatch[1]}_${rMatch[2]}`] = file.path;
 
-      const uploadedResources = {};
-
+      const aMatch = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_assignmentFile$/);
+      if (aMatch) uploadedAssignments[`${aMatch[1]}_${aMatch[2]}`] = file.path;
 
       const match = file.fieldname.match(/^sections_(\d+)_lessons_(\d+)_videoFile$/);
-      if (match) {
-        uploadedVideos[`${match[1]}_${match[2]}`] = file.path; // Remote Cloudinary path
-      }
+      if (match) uploadedVideos[`${match[1]}_${match[2]}`] = file.path;
     });
 
     // 2. Handle sections, mapping lessons robustly whether they are arrays or sparse objects
@@ -685,16 +687,15 @@ if (rMatch) uploadedResources[`${rMatch[1]}_${rMatch[2]}`] = file.path;
           const fileKey = `${i}_${j}`;
           const videoFile = uploadedVideos[fileKey] || l.existingVideoFile || '';
           return {
-            title: (l.title || '').trim(),
-            type: 'video',
-            videoSource: l.videoSource || 'url',
-            videoUrl: (l.videoUrl || '').trim(),
-            videoFile: videoFile,
-            resourceFile: uploadedResources[fileKey] || l.existingResourceFile || '',
-
-            duration: (l.duration || '').trim(),
-            content: ''
-            
+            title:          (l.title || '').trim(),
+            type:           'video',
+            videoSource:    l.videoSource || 'url',
+            videoUrl:       (l.videoUrl || '').trim(),
+            videoFile:      videoFile,
+            resourceFile:   uploadedResources[fileKey]   || l.existingResourceFile   || '',
+            assignmentFile: uploadedAssignments[fileKey] || l.existingAssignmentFile || '',
+            duration:       (l.duration || '').trim(),
+            content:        ''
           };
         });
       } else {
@@ -704,14 +705,15 @@ if (rMatch) uploadedResources[`${rMatch[1]}_${rMatch[2]}`] = file.path;
           const fileKey = `${i}_${j}`;
           const videoFile = uploadedVideos[fileKey] || l.existingVideoFile || '';
           return {
-            title: (l.title || '').trim(),
-            type: 'video',
-            videoSource: l.videoSource || 'url',
-            videoUrl: (l.videoUrl || '').trim(),
-            videoFile: videoFile,
-            resourceFile: uploadedResources[fileKey] || l.existingResourceFile || '',
-            duration: (l.duration || '').trim(),
-            content: ''
+            title:          (l.title || '').trim(),
+            type:           'video',
+            videoSource:    l.videoSource || 'url',
+            videoUrl:       (l.videoUrl || '').trim(),
+            videoFile:      videoFile,
+            resourceFile:   uploadedResources[fileKey]   || l.existingResourceFile   || '',
+            assignmentFile: uploadedAssignments[fileKey] || l.existingAssignmentFile || '',
+            duration:       (l.duration || '').trim(),
+            content:        ''
           };
         });
       }

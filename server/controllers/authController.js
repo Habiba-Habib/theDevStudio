@@ -46,7 +46,7 @@ exports.signup = async (req, res) => {
 
     return res.status(201).json({
       message: "Signup successful",
-      user: { id: newUser._id, name, email, role }
+      redirectUrl: "/auth/onboarding"
     });
   } catch (error) {
     console.error("Signup database error:", error);
@@ -275,6 +275,41 @@ exports.postResetPassword = async (req, res) => {
     successMessage: "Password reset successful. You can now log in."
   });
 };
+/* =========================
+   ONBOARDING
+   ========================= */
+exports.getOnboarding = (req, res) => {
+  if (!req.session.userId) return res.redirect("/auth/login");
+  res.render("auth/onboarding", { user: req.session.user });
+};
+
+exports.postOnboarding = async (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ message: "Not logged in" });
+
+  const { avatar, experienceLevel, age } = req.body;
+  const validLevels = ["beginner", "intermediate", "advanced"];
+  const parsedAge = parseInt(age, 10);
+
+  if (!avatar) return res.status(400).json({ message: "Please choose an avatar" });
+  if (!experienceLevel || !validLevels.includes(experienceLevel)) {
+    return res.status(400).json({ message: "Please choose your experience level" });
+  }
+  if (!parsedAge || parsedAge < 5 || parsedAge > 120) {
+    return res.status(400).json({ message: "Please enter a valid age (5–120)" });
+  }
+
+  await User.findByIdAndUpdate(req.session.userId, {
+    avatar,
+    age: parsedAge,
+    experienceLevel,
+    onboardingComplete: true
+  });
+
+  const role = req.session.role || "student";
+  const dashboards = { student: "/student/dashboard", instructor: "/instructor/dashboard" };
+  return res.status(200).json({ redirectUrl: dashboards[role] || "/student/dashboard" });
+};
+
 /* =========================
    LOGOUT (Clear Session)
    ========================= */

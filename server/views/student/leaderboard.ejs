@@ -69,7 +69,7 @@
   <div class="ranking-list">
 
   <% players.forEach((player, index) => { %>
-    <div class="rank-row <%= player._id.equals(currentUser._id) ? 'highlight' : '' %>">
+    <div class="rank-row <%= player._id && player._id.equals(currentUser._id) ? 'highlight' : '' %>">
 
       <div class="rank-number <%= index < 3 ? 'top' : '' %>"><%= index + 1 %></div>
 
@@ -78,12 +78,12 @@
       <div class="rank-info">
         <div class="rank-name">
           <%= player.name %>
-          <% if (player._id.equals(currentUser._id)) { %>
+          <% if (player._id && player._id.equals(currentUser._id)) { %>
             <span class="you-tag">You</span>
           <% } %>
         </div>
         <div class="rank-stats">
-          🏆 <%= player.points %> points &nbsp;&nbsp; 🎖 <%= player.badges %> badges
+          🏆 <%= player.points %> points &nbsp;&nbsp; 🎖 <%= (player.badges || []).length %> badges
         </div>
       </div>
 

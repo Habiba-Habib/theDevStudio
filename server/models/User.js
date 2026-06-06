@@ -19,7 +19,9 @@ authProvider: {
 },
 
 avatar: { type: String, default: "" },
-
+age: { type: Number, default: null },
+experienceLevel: { type: String, enum: ["beginner", "intermediate", "advanced"], default: null },
+onboardingComplete: { type: Boolean, default: false },
 
     bio: { type: String, default: "" },
     location: { type: String, default: "" },

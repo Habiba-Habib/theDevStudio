@@ -202,7 +202,7 @@ const courses = currentCourses.slice(0, 3);
     const currentUserRank =
       allUsersByPoints.findIndex(u => u._id.toString() === user._id.toString()) + 1;
 
-    const topUsers = await User.find()
+    const topUsers = await User.find({ role: "student" })
       .sort({ points: -1 })
       .limit(5)
       .select("name avatar points");
@@ -335,9 +335,16 @@ exports.getLeaderboard = async (req, res) => {
       return res.redirect("/auth/login");
     }
 
+    const placeholder = { name: "—", avatar: "", points: 0, badges: [], _id: null };
+    const topPlayers = [
+      players[0] || placeholder,
+      players[1] || placeholder,
+      players[2] || placeholder
+    ];
+
     res.render("student/leaderboard", {
       players,
-      topPlayers: players.slice(0, 3),
+      topPlayers,
       currentUser
     });
   } catch (error) {

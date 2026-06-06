@@ -28,7 +28,7 @@
         <div class="problem-meta">
           <span class="badge-<%= challenge.difficulty.toLowerCase() %>"><%= challenge.difficulty %></span>
           <span class="points">
-          <span class="points-icon">⚡</span>
+          <span class="points-icon"><i class="fa-solid fa-bolt icon-yellow "></i></span>
             <%= challenge.points %> points
           </span>
         </div>
@@ -68,18 +68,8 @@
 <% }) %>
       </div>
 
-      <!-- Constraints -->
-      <div class="card">
-        <h2 class="section-title">Constraints</h2>
-        <div class="constraints-list">
-        <% challenge.constraints.forEach(constraint => { %>
-        <div class="constraint-item">
-          <div class="constraint-bullet"></div>
-            <%- constraint %>
-          </div>
-          <% }) %>
-        </div>
-      </div>
+      
+      
 
     </div>
 

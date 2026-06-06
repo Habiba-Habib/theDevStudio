@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TheDevStudio - Set Up Your Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/css/onboarding.css" />
+</head>
+<body>
+
+  <div class="onboarding-page">
+
+    <!-- Progress dots -->
+    <div class="progress-dots">
+      <span class="dot active" id="dot-1"></span>
+      <span class="dot" id="dot-2"></span>
+      <span class="dot" id="dot-3"></span>
+    </div>
+
+    <div class="steps-wrapper">
+
+      <!-- STEP 1: Welcome -->
+      <div class="step active" id="step-1">
+        <div class="step-inner">
+          <div class="welcome-icon"></div>
+          <h1> 🚀 Welcome to <span class="gradient">TheDevStudio</span>,<br/><%= user.name %>!</h1>
+          <p class="subtitle">Let's personalise your experience in two quick steps.</p>
+          <button class="btn-primary full-width" id="btn-start">
+            Get Started <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Choose Avatar -->
+      <div class="step" id="step-2">
+        <div class="step-inner">
+          <p class="step-label">Step 1 of 2</p>
+          <h2>Pick your avatar</h2>
+          <p class="subtitle">This is how others will see you on the platform.</p>
+
+          <div class="avatar-grid">
+            <% const avatars = [
+              'avatar1g.png','avatar2g.png','avatar3g.png','avatar4b.png','avatar5g.png',
+              'avatar6g.png','avatar7b.png','avatar8g.png','avatar9b.png','avatar10b.png'
+            ]; %>
+            <% avatars.forEach((av, i) => { %>
+              <div class="avatar-item <%= i === 0 ? 'selected' : '' %>" data-avatar="<%= av %>">
+                <img src="/images/avatars/<%= av %>" alt="Avatar <%= i + 1 %>" />
+                <div class="avatar-check"><i class="fa-solid fa-check"></i></div>
+              </div>
+            <% }); %>
+          </div>
+
+          <input type="hidden" id="selected-avatar" value="avatar1g.png" />
+
+          <div class="selected-preview">
+            <img id="avatar-preview" src="/images/avatars/avatar1g.png" alt="Selected avatar" />
+            <div>
+              <p class="preview-name">Selected Avatar</p>
+              <p class="preview-sub" id="avatar-preview-label">avatar1g.png</p>
+            </div>
+          </div>
+
+          <div class="nav-row">
+            <button class="btn-ghost" id="btn-back-2">
+              <i class="fa-solid fa-arrow-left"></i> Back
+            </button>
+            <button class="btn-primary" id="btn-next-2">
+              Continue <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3: Experience Level -->
+      <div class="step" id="step-3">
+        <div class="step-inner">
+          <p class="step-label">Step 2 of 2</p>
+          <h2>What's your experience level?</h2>
+          <p class="subtitle">We'll tailor your learning path to match where you are right now.</p>
+
+          <div class="level-cards">
+
+            <div class="level-card" data-level="beginner">
+              <div class="level-icon">🌱</div>
+              <div class="level-text">
+                <strong>Beginner</strong>
+                <span>I'm just getting started with coding</span>
+              </div>
+              <div class="level-check"><i class="fa-solid fa-check"></i></div>
+            </div>
+
+            <div class="level-card" data-level="intermediate">
+              <div class="level-icon">⚡</div>
+              <div class="level-text">
+                <strong>Intermediate</strong>
+                <span>I know the basics and want to level up</span>
+              </div>
+              <div class="level-check"><i class="fa-solid fa-check"></i></div>
+            </div>
+
+            <div class="level-card" data-level="advanced">
+              <div class="level-icon">🔥</div>
+              <div class="level-text">
+                <strong>Advanced</strong>
+                <span>I'm experienced and here to go deeper</span>
+              </div>
+              <div class="level-check"><i class="fa-solid fa-check"></i></div>
+            </div>
+
+          </div>
+
+          <input type="hidden" id="selected-level" value="" />
+          <span id="level-error" class="field-error"></span>
+
+          <div class="age-section">
+            <label class="age-label" for="age-input">
+              <i class="fa-solid fa-cake-candles"></i> How old are you?
+            </label>
+            <input
+              type="number"
+              id="age-input"
+              class="age-input"
+              placeholder="Enter your age"
+              min="5"
+              max="120"
+            />
+            <span id="age-error" class="field-error"></span>
+          </div>
+
+          <div class="nav-row">
+            <button class="btn-ghost" id="btn-back-3">
+              <i class="fa-solid fa-arrow-left"></i> Back
+            </button>
+            <button class="btn-primary" id="btn-finish">
+              Start Exploring <i class="fa-solid fa-rocket"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay hidden" id="loading-overlay">
+      <div class="spinner"></div>
+      <p>Setting up your workspace…</p>
+    </div>
+
+  </div>
+
+  <script src="/js/onboarding.js"></script>
+</body>
+</html>

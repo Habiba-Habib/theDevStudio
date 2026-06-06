@@ -28,6 +28,10 @@ router.post("/login", authController.login);
 /* LOGOUT */
 router.post("/logout", authController.logout);
 
+/* ONBOARDING */
+router.get("/onboarding", authController.getOnboarding);
+router.post("/onboarding", authController.postOnboarding);
+
 //Terms and conditions 
 router.get("/terms-of-services", (req, res) => {
   res.render("auth/terms-of-services");
@@ -61,7 +65,6 @@ router.get(
       email: req.user.email,
       role: req.user.role
     };
-
     req.session.userId = req.user._id;
     req.session.role = req.user.role;
 
@@ -86,7 +89,6 @@ router.get(
       email: req.user.email,
       role: req.user.role
     };
-
     req.session.userId = req.user._id;
     req.session.role = req.user.role;
 
