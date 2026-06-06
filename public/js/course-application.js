@@ -1,3 +1,20 @@
+function countLessonFiles(lesson = {}) {
+  const countArray = value => Array.isArray(value) ? value.filter(Boolean).length : 0;
+  const countString = value => typeof value === "string" && value.trim() ? 1 : 0;
+  const countResources = value => Array.isArray(value)
+    ? value.filter(item => item && (item.url || item.name || typeof item === "string")).length
+    : 0;
+
+  return (
+    countString(lesson.videoFile) +
+    countArray(lesson.videoFiles) +
+    countString(lesson.resourceFile) +
+    countArray(lesson.resourceFiles) +
+    countString(lesson.assignmentFile) +
+    countResources(lesson.resources)
+  );
+}
+
 function openCourseModal(courseId) {
   const course = courses.find(c => c._id === courseId);
   if (!course) return;
@@ -89,7 +106,7 @@ function openCourseModal(courseId) {
                     <span class="lesson-dot pink-dot"></span>
                     <span class="lesson-dot yellow-dot"></span>
                     <span class="lesson-dot teal-dot"></span>
-                    <span>${(lesson.resourceFiles?.length || 0) + (lesson.resources?.length || 0)} files</span>
+                    <span>${countLessonFiles(lesson)} files</span>
                 </span>
                 </a>
                 `).join("")

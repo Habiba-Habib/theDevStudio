@@ -9,10 +9,17 @@
 }
 body {
     background-color: var(--bg);
-    padding: 2rem;
+    padding: 0;
+    margin: 0;
     font-family: 'Inter', sans-serif;
 }
 
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
 .container {
     width: 90%;
     max-width: 1100px;
@@ -264,13 +271,11 @@ body {
 
 
 @media (max-width: 768px) {
-    body { padding: 1rem; }
-    .container { width: 100%; }
-    .challenge-layout { grid-template-columns: 1fr; }
-    .challenge-sidebar { position: static; }
-    .challenge-card { padding: 16px; }
-    .points-badge { margin-left: 0; }
-    #code-editor { height: 120px; }
+    body { padding: 0; }
+    .container {
+        width: calc(100% - 2rem);
+        padding: 1rem 0;
+    }
 }
 
 @media (max-width: 480px) {

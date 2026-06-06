@@ -159,7 +159,7 @@ function addLesson(section) {
       </div>
       
       <div class="file-upload-box doc-file-box">
-        <input type="file" class="doc-file-input" name="sections[${sectionIndex}][lessons][${lessonIndex}][document]" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt">
+        <input type="file" class="doc-file-input" name="sections[${sectionIndex}][lessons][${lessonIndex}][resourceFile]" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt">
         <div class="file-display">
           <i class="fa-solid fa-file-pdf"></i>
           <span class="file-name">Add Document (Optional)</span>
@@ -232,7 +232,7 @@ document.getElementById('add-section').addEventListener('click', () => {
           </div>
           
           <div class="file-upload-box doc-file-box">
-            <input type="file" class="doc-file-input" name="sections[${sectionIndex}][lessons][0][document]" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt">
+            <input type="file" class="doc-file-input" name="sections[${sectionIndex}][lessons][0][resourceFile]" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt">
             <div class="file-display">
               <i class="fa-solid fa-file-pdf"></i>
               <span class="file-name">Add Document (Optional)</span>

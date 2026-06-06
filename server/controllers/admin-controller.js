@@ -798,7 +798,11 @@ exports.getCourseApplications = async (req, res) => {
           _id: lesson._id ? lesson._id.toString() : "",
           title: lesson.title || "",
           duration: lesson.duration || "",
+          videoFile: lesson.videoFile || "",
+          videoFiles: lesson.videoFiles || [],
+          resourceFile: lesson.resourceFile || "",
           resourceFiles: lesson.resourceFiles || [],
+          assignmentFile: lesson.assignmentFile || "",
           resources: lesson.resources || []
         }))
       })),

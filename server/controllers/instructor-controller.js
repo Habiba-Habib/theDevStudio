@@ -379,6 +379,17 @@ exports.postCreateStep2 = async (req, res) => {
     if (!Array.isArray(outcomesArray)) outcomesArray = [outcomesArray];
     outcomesArray = outcomesArray.map(o => o.trim()).filter(o => o);
 
+    const uploadedVideos = {};
+    const uploadedDocuments = {};
+
+    (req.files || []).forEach(file => {
+      const videoMatch = file.fieldname.match(/^sections\[(\d+)\]\[lessons\]\[(\d+)\]\[videoFile\]$/);
+      if (videoMatch) uploadedVideos[`${videoMatch[1]}_${videoMatch[2]}`] = file.path;
+
+      const documentMatch = file.fieldname.match(/^sections\[(\d+)\]\[lessons\]\[(\d+)\]\[resourceFile\]$/);
+      if (documentMatch) uploadedDocuments[`${documentMatch[1]}_${documentMatch[2]}`] = file.path;
+    });
+
     // sections come as sections[0][title], sections[0][lessons][0][title], sections[0][lessons][0][videoUrl] etc.
     const rawSections = req.body.sections || {};
     const sectionsArray = Object.keys(rawSections).map(i => {
@@ -388,12 +399,14 @@ exports.postCreateStep2 = async (req, res) => {
       // Convert lessons object to array
       const lessonsArray = Object.keys(rawLessons).map(j => {
         const lesson = rawLessons[j];
+        const fileKey = `${i}_${j}`;
         return {
           title: (lesson.title || '').trim(),
           type: 'video',
           videoSource: lesson.videoSource || 'url',
           videoUrl: (lesson.videoUrl || '').trim(),
-          videoFile: '', // Will be handled in edit page with file uploads
+          videoFile: uploadedVideos[fileKey] || '',
+          resourceFile: uploadedDocuments[fileKey] || '',
           content: '',
           duration: ''
         };

@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  <form id="courseForm" action="/instructor/create/step2" method="POST">
+<form id="courseForm" action="/instructor/create/step2" method="POST" enctype="multipart/form-data">
 
     <!-- OUTCOMES -->
     <div class="learn-box">
@@ -91,7 +91,7 @@
                 </div>
                 
                 <div class="file-upload-box doc-file-box">
-                  <input type="file" class="doc-file-input" name="sections[0][lessons][0][document]" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt">
+                  <input type="file" class="doc-file-input" name="sections[0][lessons][0][resourceFile]" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt">
                   <div class="file-display">
                     <i class="fa-solid fa-file-pdf"></i>
                     <span class="file-name">Add Document (Optional)</span>

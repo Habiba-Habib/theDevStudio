@@ -31,6 +31,9 @@
   const isActiveDone = activeLesson && completedLessons.includes(activeLesson._id.toString());
   const sidebarPct   = totalLessons > 0 ? Math.round((completedLessons.length / totalLessons) * 100) : 0;
   const canCompleteLessons = user?.role === 'student' && !isInstructorOwner;
+  const lessonBaseUrl = user?.role === 'admin'
+  ? `/admin/courses/${course._id}/content`
+  : `/student/course/${course._id}/learn`;
 %>
 
 <!-- ── COURSE HEADER (below navbar) ── -->
@@ -313,7 +316,7 @@
             const isActive = lesson._id.toString() === activeLessonId;
           %>
             <a class="lesson-row <%= isActive ? 'is-active' : '' %> <%= isDone ? 'is-done' : '' %>"
-               href="/student/course/<%= course._id %>/learn?lesson=<%= lesson._id %>"
+               href="<%= lessonBaseUrl %>?lesson=<%= lesson._id %>"
                data-lesson-id="<%= lesson._id %>">
               <span class="lesson-row-icon">
                 <% if (isDone) { %>
@@ -345,7 +348,7 @@
 <div class="bottom-nav" data-course-id="<%= course._id %>" data-total="<%= totalLessons %>" data-completed="<%= completedLessons.length %>">
 
   <% if (prevLessonId) { %>
-    <a class="btn-prev" href="/student/course/<%= course._id %>/learn?lesson=<%= prevLessonId %>">
+    <a class="btn-prev" href="<%= lessonBaseUrl %>?lesson=<%= prevLessonId %>">
       <i class="fa-solid fa-chevron-left"></i> Previous Lesson
     </a>
   <% } else { %>
@@ -369,7 +372,7 @@
   <% } %>
 
   <% if (nextLessonId) { %>
-    <a class="btn-next" href="/student/course/<%= course._id %>/learn?lesson=<%= nextLessonId %>">
+   <a class="btn-next" href="<%= lessonBaseUrl %>?lesson=<%= nextLessonId %>">
       Next Lesson <i class="fa-solid fa-chevron-right"></i>
     </a>
   <% } else if (user?.role === 'admin') { %>

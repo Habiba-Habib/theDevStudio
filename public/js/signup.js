@@ -166,7 +166,7 @@
   role: 'student'      
 })
       })
-       .then(async (res) => {
+   .then(async (res) => {
   const data = await res.json();
 
   if (!res.ok) {
@@ -179,12 +179,7 @@
     return;
   }
 
-  showSignupPopup(
-    'success',
-    'Account Created',
-    "Welcome! Let's set up your profile.",
-    data.redirectUrl
-  );
+  window.location.href = data.redirectUrl;
 })
 .catch(() => {
   showSignupPopup(
@@ -222,4 +217,3 @@ function setupLegalModal(modalId, openBtnId, closeBtnIds) {
 }
 
 setupLegalModal("terms-modal", "open-terms", ["terms-modal-close", "terms-modal-close-btn"]);
-setupLegalModal("privacy-modal", "open-privacy", ["privacy-modal-close", "privacy-modal-close-btn"]);
