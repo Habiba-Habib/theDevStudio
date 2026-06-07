@@ -160,7 +160,7 @@ router.post('/become-instructor/step2', requireLoginPage, uploadInstructorVerifi
     if (!req.session.instructorApplication?.fullName) {
       return res.redirect('/become-instructor');
     }
-    if (!req.files?.cv?.[0] || !req.files?.certificate?.[0]) {
+    if (!req.files?.cv?.[0] || !req.files?.certificates?.[0]) {
       return res.status(400).render("public/error-page", {
         statusCode: 400,
         errorTitle: "Missing Documents",
@@ -207,7 +207,7 @@ router.get('/become-instructor/step3',requireLoginPage, (req, res, next) => {
       application,
       verification: {
         cvUrl: application.cvUrl,
-        certificateUrl: application.certificateUrl,
+        certificateUrls: application.certificateUrls,
         linkedinUrl: application.linkedinUrl || '',
         portfolioUrl: application.portfolioUrl || '',
         websiteUrl: application.websiteUrl || ''

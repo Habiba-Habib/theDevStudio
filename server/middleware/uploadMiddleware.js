@@ -30,7 +30,7 @@ function getUploadCategory(file) {
     return "document";
   }
 
-  if (field === "certificate") {
+  if (field === "certificates") {
     if (
       allowedTypes.document.includes(file.mimetype) ||
       allowedTypes.image.includes(file.mimetype)
@@ -121,7 +121,7 @@ const storage = new CloudinaryStorage({
       resource_type = "image";
     }
 
-    if (file.fieldname === "cv" || file.fieldname === "certificate") {
+    if (file.fieldname === "cv" || file.fieldname === "certificates") {
       folder = "thedevstudio/instructor-verification";
       resource_type = "raw";
     }
