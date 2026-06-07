@@ -208,6 +208,16 @@
   "privacyItem2": "تقدم الدورات وتسليمات التحديات",
   "privacyItem3": "مستندات التحقق من المدرب إذا قمت بالتقديم",
   "privacyNoSell": "نحن لا نبيع بياناتك الشخصية.",
-  "readFullPrivacy": "قراءة سياسة الخصوصية كاملة"
+  "readFullPrivacy": "قراءة سياسة الخصوصية كاملة",
+  "successTitle": "تم الدفع بنجاح",
+  "successSubtitle": "تم إكمال تسجيلك بنجاح.",
+  "successDescription": "أصبح لديك الآن وصول مدى الحياة إلى هذه الدورة. يمكنك البدء بالتعلم مباشرة من لوحة التحكم.",
+  "course": "الدورة",
+  "instructor": "المدرب",
+  "amountPaid": "المبلغ المدفوع",
+  "status": "الحالة",
+  "enrollmentConfirmed": "تم تأكيد التسجيل",
+  "browseMoreCourses": "تصفح المزيد من الدورات",
+  "goToMyCourses": "اذهب إلى دوراتي"
 }
 }

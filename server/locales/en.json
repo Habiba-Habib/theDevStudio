@@ -209,6 +209,16 @@
   "privacyItem2": "Course progress and challenge submissions",
   "privacyItem3": "Instructor verification documents if you apply",
   "privacyNoSell": "We do not sell your personal data.",
-  "readFullPrivacy": "Read full Privacy Policy"
+  "readFullPrivacy": "Read full Privacy Policy",
+  "successTitle": "Payment Successful",
+  "successSubtitle": "Your enrollment has been completed successfully.",
+  "successDescription": "You now have lifetime access to this course. You can start learning immediately from your dashboard.",
+  "course": "Course",
+  "instructor": "Instructor",
+  "amountPaid": "Amount Paid",
+  "status": "Status",
+  "enrollmentConfirmed": "Enrollment Confirmed",
+  "browseMoreCourses": "Browse more courses",
+  "goToMyCourses": "Go to my courses"
 }
 }

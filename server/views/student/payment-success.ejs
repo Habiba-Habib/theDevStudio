@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= locale || 'en' %>" dir="<%= isRTL ? 'rtl' : 'ltr' %>">
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/png" href="/images/favicon.png?v=2" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>TheDevStudio | Payment Successful</title>
+  <title>TheDevStudio | <%= __("payment.successTitle") %></title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
@@ -25,29 +25,29 @@
             <i class="fa-solid fa-circle-check"></i>
           </div>
           <div>
-            <h2>Payment Successful</h2>
-            <p>Your enrollment has been completed successfully.</p>
+            <h2><%= __("payment.successTitle") %></h2>
+<p><%= __("payment.successSubtitle") %></p>
           </div>
         </div>
 
         <p class="description">
-          You now have lifetime access to this course. You can start learning immediately from your dashboard.
+          <%= __("payment.successDescription") %>
         </p>
 
         <% if (typeof course !== "undefined" && course) { %>
           <div class="summary-box">
             <div class="summary-row">
-              <span>Course</span>
-              <span><%= course.title || "Course" %></span>
+              <span><%= __("payment.course") %></span>
+              <span><%= course.title || __("payment.course") %></span>
             </div>
 
             <div class="summary-row">
-              <span>Instructor</span>
-              <span><%= course.instructorName || course.author || "Instructor" %></span>
+              <span><%= __("payment.instructor") %></span>
+              <span><%= course.instructorName || course.author || __("payment.instructor") %></span>
             </div>
 
             <div class="summary-row total">
-              <span>Amount Paid</span>
+              <span><%= __("payment.amountPaid") %></span>
               <span>
                 $<%= payment && payment.amount != null ? Number(payment.amount).toFixed(2) : "0.00" %>
               </span>
@@ -56,18 +56,18 @@
         <% } else { %>
           <div class="summary-box">
             <div class="summary-row total">
-              <span>Status</span>
-              <span>Enrollment Confirmed</span>
+              <span><%= __("payment.status") %></span>
+              <span><%= __("payment.enrollmentConfirmed") %></span>
             </div>
           </div>
         <% } %>
 
         <div class="result-actions">
           <a href="/courses/all-courses" class="confirm-btn">
-            Browse more courses
+            <%= __("payment.browseMoreCourses") %>
           </a>
           <a href="/student/my-courses" class="back-link">
-            Go to my courses →
+            <%= __("payment.goToMyCourses") %> →
           </a>
         </div>
 
