@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= locale || 'en' %>" dir="<%= isRTL ? 'rtl' : 'ltr' %>">
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/png" href="/images/favicon.png?v=2" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <title><%= course.title %> – Course Description</title>
+  <title><%= course.title %> - <%= __("courseDetails.pageTitle") %></title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
@@ -18,7 +18,7 @@
 <div class="course-back-wrap">
   <a href="/courses/all-courses" class="course-back-btn">
     <i class="fa-solid fa-arrow-left"></i>
-    Back to Courses
+    <%= __("courseDetails.backToCourses") %>
   </a>
 </div>
 
@@ -31,15 +31,15 @@
    <!-- Status Badge (Owner/Enrolled/Certificate) -->
 <% if (isOwner) { %>
   <span class="cd-status-badge cd-owner-badge">
-    <i class="fa-solid fa-crown"></i> Owner
+    <i class="fa-solid fa-crown"></i> <%= __("status.owner") %>
   </span>
 <% } else if (isEnrolled) { %>
   <span class="cd-status-badge cd-enrolled-badge">
-    <i class="fa-solid fa-check-circle"></i> Enrolled
+    <i class="fa-solid fa-check-circle"></i> <%= __("status.enrolled") %>
   </span>
 <% } else if (course.offersCertificate) { %>
   <span class="cd-status-badge cd-certificate-badge">
-    <i class="fa-solid fa-certificate"></i> Certificate Included
+    <i class="fa-solid fa-certificate"></i> <%= __("status.certificateIncluded") %>
   </span>
 <% } %>
 
@@ -55,7 +55,7 @@
       <span class="rating">
         <i class="fa-solid fa-star" style="color: rgb(255, 212, 59);"></i>
         <%= course.rating || 4.8 %>
-        <span class="rating-count">(<%= course.students?.length || 0 %> students)</span>
+        <span class="rating-count">(<%= course.students?.length || 0 %> <%= __("labels.students") %>)</span>
       </span>
 
       <span class="meta-item">
@@ -64,7 +64,7 @@
 
       <span class="meta-item">
         <i class="fa-solid fa-people-group"></i>
-        <%= course.students?.length || 0 %> enrolled
+        <%= course.students?.length || 0 %> <%= __("labels.enrolled") %>
       </span>
     </div>
 
@@ -74,9 +74,9 @@
         <img src="<%= course.instructor?.avatar ? '/images/avatars/' + course.instructor.avatar : '/images/avatars/avatar1g.png' %>" alt="Instructor">
       </div>
       <div>
-        <div class="title">Instructor</div>
+        <div class="title"><%= __("courseDetails.instructor") %></div>
         <div class="Instrutor-Name">
-          <%= course.instructor?.name || "Unknown Instructor" %>
+          <%= course.instructor?.name || __("courseDetails.unknownInstructor") %>
         </div>
       </div>
     </div>
@@ -88,7 +88,7 @@
 
     <!-- WHAT YOU'LL LEARN -->
     <div class="learn-box">
-      <h3 class="learn-title">What you'll learn</h3>
+      <h3 class="learn-title"><%= __("courseDetails.whatYouWillLearn") %></h3>
 
       <div class="learn-grid">
         <% course.learningOutcomes.forEach(outcome => { %>
@@ -101,14 +101,14 @@
     </div>
 
     <!-- CURRICULUM -->
-    <h3 class="learn-title" id="curriculum">Course Curriculum</h3>
+    <h3 class="learn-title" id="curriculum"><%= __("courseDetails.curriculum") %></h3>
 
     <% course.sections.forEach(section => { %>
       <div class="learn-box">
 
         <div class="learn-box-line1">
           <span class="course-c-title"><%= section.title %></span>
-          <span class="lessons"><%= section.lessons.length %> lessons</span>
+          <span class="lessons"><%= section.lessons.length %> <%= __("labels.lessons") %></span>
         </div>
 
         <div class="learn-list">
@@ -129,15 +129,15 @@
       <i class="fa-solid fa-award"></i>
     </div>
     <div class="cd-cert-info">
-      <h3>Certificate of Completion</h3>
-      <p>Earn an official certificate when you complete this course. Share it on LinkedIn, add it to your resume, or display it in your professional portfolio.</p>
+      <h3><%= __("courseDetails.certificateTitle") %></h3>
+<p><%= __("courseDetails.certificateDesc") %></p>
     </div>
   </div>
 <% } %>
 
 
 
-<h3 class="learn-title">Student Reviews</h3>
+<h3 class="learn-title"><%= __("courseDetails.studentReviews") %></h3>
 <% if (course.reviews && course.reviews.length > 0) { %>
   <% course.reviews.forEach(function(review) { %>
     <div class="learn-box" style="display:flex; gap:14px; align-items:flex-start; padding: 20px 24px;">
@@ -167,7 +167,7 @@
 <% } else { %>
   <div class="learn-box" style="text-align: center; padding: 32px; color: var(--text-muted);">
     <i class="fa-regular fa-star" style="font-size: 1.5rem; margin-bottom: 8px; display: block;"></i>
-    No reviews yet. Be the first to review this course.
+    <%= __("courseDetails.noReviews") %>
   </div>
 <% } %>
 
@@ -185,14 +185,14 @@
     <div class="owner-icon">
       <i class="fa-solid fa-graduation-cap"></i>
     </div>
-    <h3 class="owner-title">Your Course</h3>
-    <p class="owner-desc">Edit content, manage students, and track performance.</p>
+    <h3 class="owner-title"><%= __("status.yourCourse") %></h3>
+<p class="owner-desc"><%= __("courseDetails.ownerDesc") %></p>
   </div>
   <a href="/instructor/courses/<%= course._id %>/edit" class="btn-enroll">
-    <i class="fa-solid fa-pen-to-square"></i> Edit Course
+    <i class="fa-solid fa-pen-to-square"></i> <%= __("courseDetails.editCourse") %>
   </a>
   <a href="/student/course/<%= course._id %>/learn" class="btn-enroll" style="margin-top: 10px; background: transparent; border: 2px solid var(--pink, #FF40A0); color: var(--pink, #FF40A0);">
-    <i class="fa-solid fa-circle-play"></i> View Course Player
+    <i class="fa-solid fa-circle-play"></i> <%= __("courseDetails.viewCoursePlayer") %>
   </a>
 
 
@@ -202,23 +202,23 @@
 
 <% }else if (!isEnrolled) { %>
           <div class="price">$<%= course.price %></div>
-          <div class="price-note">One-time payment • Full lifetime access</div>
+          <div class="price-note"><%= __("courseDetails.oneTimePayment") %></div>
           <a href="/student/payment/<%= course._id %>" class="btn-enroll">
-            Enroll
+            <%= __("buttons.enroll") %>
           </a>
         <% } else { %>
           <div class="enrolled-badge">Enrolled</div>
-          <div class="price-note">You have lifetime access to this course</div>
+          <div class="price-note"><%= __("courseDetails.lifetimeAccess") %></div>
           <div class="enroll-progress-wrap">
             <div class="enroll-progress-label">
-              <span>Your progress</span>
+              <span><%= __("courseDetails.yourProgress") %></span>
               <span><%= progress %>%</span>
             </div>
             <div class="enroll-progress-bar">
               <div class="enroll-progress-fill" data-progress="<%= progress %>"></div>
             </div>
           </div>
-          <a href="/student/course/<%= course._id %>/learn" class="btn-enroll">Continue Learning</a>
+          <a href="/student/course/<%= course._id %>/learn" class="btn-enroll"><%= __("courseDetails.continueLearning") %></a>
         <% } %>
       </div>
 
@@ -230,23 +230,23 @@
           <div class="feature-icon"><i class="fa-regular fa-clock"></i></div>
           <div>
             <div class="feature-title"><%= course.duration || "40 hours" %></div>
-            <div class="feature-sub">Total duration</div>
+            <div class="feature-sub"><%= __("courseDetails.totalDuration") %></div>
           </div>
         </div>
 
         <div class="feature-item">
           <div class="feature-icon"><i class="fa-solid fa-signal"></i></div>
           <div>
-            <div class="feature-title"><%= course.level %></div>
-            <div class="feature-sub">Skill level</div>
+            <div class="feature-title"><%= __("levels." + (course.level || "").toLowerCase()) %></div>
+            <div class="feature-sub"><%= __("courseDetails.skillLevel") %></div>
           </div>
         </div>
 
         <div class="feature-item">
           <div class="feature-icon"><i class="fa-solid fa-book-open"></i></div>
           <div>
-            <div class="feature-title"><%= course.sections.length %> Sections</div>
-            <div class="feature-sub">Course modules</div>
+            <div class="feature-title"><%= course.sections.length %> <%= __("labels.sections") %></div>
+            <div class="feature-sub"><%= __("courseDetails.courseModules") %></div>
           </div>
         </div>
 

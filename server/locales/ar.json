@@ -71,16 +71,25 @@
   "buttons": {
   "viewDetails": "عرض التفاصيل",
   "continue": "متابعة",
-  "viewChallenge": "عرض التحدي"
+  "viewChallenge": "عرض التحدي",
+  "back": "رجوع",
+  "edit": "تعديل",
+  "enroll": "التسجيل"
 },
 "labels": {
   "by": "بواسطة",
-  "all": "الكل"
+  "all": "الكل",
+  "students": "طلاب",
+"enrolled": "مسجل",
+"lessons": "دروس",
+"sections": "أقسام"
 },
 "status": {
   "yourCourse": "دورتك",
   "enrolled": "مسجل",
-  "certificateEarned": "تم الحصول على الشهادة"
+  "certificateEarned": "تم الحصول على الشهادة",
+  "owner": "المالك",
+"certificateIncluded": "الشهادة متضمنة"
 },
 "categories": {
   "webDevelopment": "تطوير الويب",
@@ -122,5 +131,29 @@
 "showingCount": "عرض {{count}} تحديات",
 "showingCountSingle": "عرض {{count}} تحدي",
 "points": "نقطة"
+},
+"courseDetails": {
+  "pageTitle": "وصف الدورة",
+  "backToCourses": "العودة إلى الدورات",
+  "instructor": "المدرب",
+  "unknownInstructor": "مدرب غير معروف",
+  "coursePreview": "معاينة الدورة",
+  "whatYouWillLearn": "ماذا ستتعلم",
+  "curriculum": "منهج الدورة",
+  "certificateTitle": "شهادة إتمام",
+  "certificateDesc": "احصل على شهادة رسمية عند إكمال هذه الدورة. يمكنك مشاركتها على LinkedIn أو إضافتها إلى سيرتك الذاتية أو عرضها في ملفك المهني.",
+  "studentReviews": "تقييمات الطلاب",
+  "student": "طالب",
+  "noReviews": "لا توجد تقييمات بعد. كن أول من يقيّم هذه الدورة.",
+  "ownerDesc": "عدّل المحتوى، وأدر الطلاب، وتابع الأداء.",
+  "editCourse": "تعديل الدورة",
+  "viewCoursePlayer": "عرض مشغل الدورة",
+  "oneTimePayment": "دفعة واحدة • وصول كامل مدى الحياة",
+  "lifetimeAccess": "لديك وصول مدى الحياة إلى هذه الدورة",
+  "yourProgress": "تقدمك",
+  "continueLearning": "متابعة التعلم",
+  "totalDuration": "المدة الإجمالية",
+  "skillLevel": "مستوى المهارة",
+  "courseModules": "وحدات الدورة"
 }
 }
