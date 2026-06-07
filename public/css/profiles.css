@@ -305,3 +305,55 @@ textarea {
   border-color:var(--pink);
   box-shadow:0 0 10px rgba(255,77,166,0.4);
 }
+
+@media (max-width: 900px) {
+  .page-title {
+    margin-left: 0;
+    padding: 0 24px;
+    text-align: center;
+  }
+
+  .profile-container {
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+  }
+
+  .sidebar {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .right-content {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .profile-container {
+    padding: 18px 16px 48px;
+  }
+
+  .content,
+  .certificates,
+  .completed-courses {
+    padding: 22px;
+  }
+
+  .profile-grid,
+  .certificate-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .course-card {
+    flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .certificate-card,
+  .profile-group,
+  .course-card {
+    min-width: 0;
+  }
+}

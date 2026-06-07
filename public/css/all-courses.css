@@ -401,11 +401,57 @@ body {
 
 
 @media (max-width: 1024px) {
-  .course-grid { grid-template-columns: repeat(2, 1fr); }
+  .course-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 640px) {
-  .main-content { padding: 24px 20px 60px; }
+  .main-content {
+    padding: 24px 20px 60px;
+  }
+
+  .hero-section {
+    padding: 28px 0 24px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .search-filter-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .course-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .card-image-wrapper {
+    height: 180px;
+  }
+
+  .card-footer {
+    gap: 12px;
+  }
+
+  .pagination-wrap {
+    flex-wrap: wrap;
+    padding: 24px 0 36px;
+  }
 }
 
+@media (max-width: 420px) {
+  .card-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-view-details {
+    text-align: center;
+    width: 100%;
+  }
+}
 

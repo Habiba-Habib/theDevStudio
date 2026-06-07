@@ -219,3 +219,32 @@ body {
   align-items: center;
   justify-content: center;
 }
+@media (max-width: 560px) {
+  .top-navbar {
+    height: auto;
+    min-height: 64px;
+    max-height: none;
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    gap: 10px;
+  }
+
+  .top-navbar .nav-left,
+  .top-navbar .nav-center,
+  .top-navbar .nav-actions {
+    height: auto;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .top-navbar .nav-center {
+    order: 3;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .top-navbar .nav-actions {
+    order: 2;
+    flex-wrap: wrap;
+  }
+}

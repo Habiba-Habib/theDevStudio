@@ -276,6 +276,14 @@ body {
         width: calc(100% - 2rem);
         padding: 1rem 0;
     }
+    .challenge-layout {
+  grid-template-columns: 1fr;
+}
+
+.challenge-sidebar {
+  position: static;
+  width: 100%;
+}
 }
 
 @media (max-width: 480px) {

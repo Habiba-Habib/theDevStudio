@@ -539,12 +539,42 @@ body {
 }
 
 @media (max-width: 768px) {
-  .page-body    { flex-direction: column; padding: 16px 14px calc(var(--bottom-h) + 16px); }
-  .sidebar-col  { width: 100%; position: relative; top: 0; max-height: none; }
-  .bottom-nav   { padding: 0 14px; gap: 8px; }
-  .btn-prev, .btn-next, .btn-mark { font-size: 13px; padding: 10px 12px; }
-  .tab-btn      { font-size: 12px; padding: 13px 8px; }
-  .ch-prog-pct  { font-size: 20px; }
+  .page-body {
+    flex-direction: column;
+    padding: 16px 14px calc(var(--bottom-h) + 32px);
+  }
+
+  .sidebar-col {
+    width: 100%;
+    position: relative;
+    top: 0;
+    max-height: none;
+  }
+
+  .bottom-nav {
+    height: auto;
+    min-height: var(--bottom-h);
+    flex-wrap: wrap;
+    padding: 10px 14px;
+    gap: 8px;
+  }
+
+  .btn-prev,
+  .btn-next,
+  .btn-mark {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .tab-btn {
+    font-size: 12px;
+    padding: 13px 8px;
+  }
+
+  .ch-prog-pct {
+    font-size: 20px;
+
+  }
 }
 
 
@@ -757,7 +787,9 @@ body {
   .completion-modal { padding: 28px 20px 24px; }
   .cm-title  { font-size: 20px; }
   .cm-star   { font-size: 28px; }
+  
 }
+
 
 /* ════════════════════════════════
    NOTES TAB

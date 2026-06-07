@@ -515,8 +515,11 @@ input:-webkit-autofill:active {
 }
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
-  body { grid-template-columns: 1fr; }
+  .signup-layout { grid-template-columns: 1fr; }
   .left-panel { display: none; }
   .right-panel { padding: 40px 20px; }
   .form-card { padding: 24px 20px; }
+  .social-row {
+    grid-template-columns: 1fr;
+  }
 }

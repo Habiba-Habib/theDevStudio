@@ -622,3 +622,9 @@
 .terms-modal-close-btn {
   margin-top: 18px;
 }
+
+@media (max-width: 600px) {
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+}

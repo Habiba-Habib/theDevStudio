@@ -95,3 +95,29 @@
   transition: opacity 0.2s;
 }
 .btn-signup:hover { opacity: 0.85; }
+
+@media (max-width: 768px) {
+  .navbar {
+    height: auto;
+    min-height: 64px;
+    flex-wrap: wrap;
+    padding: 12px 20px;
+    gap: 12px;
+  }
+
+  .nav-logo,
+  .nav-links,
+  .nav-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+
+  .nav-actions {
+    flex-wrap: wrap;
+  }
+}

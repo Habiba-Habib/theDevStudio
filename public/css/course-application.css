@@ -1164,3 +1164,27 @@ body {
 .curriculum-lesson-row:hover {
   background: rgba(255, 255, 255, 0.08);
 }
+
+.courses-table {
+  scrollbar-width: thin;
+  scrollbar-color: var(--pink) rgba(255, 255, 255, 0.08);
+}
+
+.courses-table::-webkit-scrollbar {
+  height: 10px;
+}
+
+.courses-table::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+}
+
+.courses-table::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, var(--pink), var(--pink-light));
+  border-radius: 999px;
+  border: 2px solid var(--surface);
+}
+
+.courses-table::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, var(--pink-light), var(--pink));
+}

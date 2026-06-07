@@ -264,3 +264,34 @@ label {
 .medal.yellow{
   color:#effb6d;
 }
+
+@media (max-width: 640px) {
+  .leaderboard-page {
+    padding: 32px 16px;
+  }
+
+  .leaderboard-title {
+    font-size: 34px;
+  }
+
+  .top-players,
+  .podium-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  .podium {
+    width: 100%;
+  }
+
+  .rank-row {
+    flex-wrap: wrap;
+    padding: 16px;
+    margin: 8px 0;
+  }
+
+  .rank-info {
+    min-width: 0;
+  }
+}

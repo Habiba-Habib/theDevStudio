@@ -700,3 +700,10 @@ body{
         padding-bottom: 1.5rem;
     }
 }
+
+@media (max-width: 520px) {
+  .challenges-grid,
+  .learning-grid {
+    grid-template-columns: 1fr;
+  }
+}

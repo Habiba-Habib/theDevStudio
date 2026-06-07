@@ -350,4 +350,7 @@ input:-webkit-autofill:active {
   .left-panel   { display: none; }
   .right-panel  { padding: 40px 20px; min-height: 100vh; }
   .form-card    { padding: 24px 20px; }
+  .social-row {
+  grid-template-columns: 1fr;
+}
 }
