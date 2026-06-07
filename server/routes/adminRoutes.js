@@ -28,6 +28,8 @@ router.post("/manage-challenges/:id/permanent-delete", controller.permanentlyDel
 router.get("/instructor-applications", controller.getInstructorApplications);
 router.post("/instructor-applications/:userId/approve", controller.approveInstructor);
 router.post("/instructor-applications/:userId/reject", controller.rejectInstructor);
+router.get("/download-cv/:userId", controller.downloadCV);
+router.get("/download-certificate/:userId", controller.downloadCertificate);
 router.get("/create-challenge",              controller.getCreateChallenge);
 router.post("/create-challenge", controller.postCreateChallenge);
 router.get("/challenges/:id/edit", controller.getEditChallenge);

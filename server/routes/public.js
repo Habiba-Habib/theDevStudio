@@ -174,6 +174,7 @@ const cvUrl = req.files.cv[0].path;
 const certificateUrls = req.files.certificates 
   ? req.files.certificates.map(file => file.path) 
   : [];
+
 req.session.instructorApplication = {
   ...req.session.instructorApplication,
   linkedinUrl: linkedinUrl || '',

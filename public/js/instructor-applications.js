@@ -34,30 +34,47 @@ function openModal(appId) {
     </div>
 
     <div class="modal-section">
-      <div class="modal-section-title">Documents</div>
-      <div class="docs-grid">
-        <div class="doc-card">
-          <div class="doc-card-header">
-            <i class="fa-solid fa-file-pdf doc-icon"></i>
-            <span class="doc-title">CV/Resume</span>
-          </div>
-          <div class="doc-filename">${app.cvUrl ? 'Document uploaded' : 'Not provided'}</div>
-          ${app.cvUrl ? `<button class="btn-download" onclick="window.open('${app.cvUrl}', '_blank')">
-            <i class="fa-solid fa-download"></i> Download
-          </button>` : ''}
-        </div>
-        <div class="doc-card">
-          <div class="doc-card-header">
-            <i class="fa-solid fa-certificate doc-cert-icon"></i>
-            <span class="doc-title">Certificate</span>
-          </div>
-          <div class="doc-filename">${app.certificateUrl ? 'Document uploaded' : 'Not provided'}</div>
-          ${app.certificateUrl ? `<button class="btn-download" onclick="window.open('${app.certificateUrl}', '_blank')">
-            <i class="fa-solid fa-download"></i> Download
-          </button>` : ''}
-        </div>
+  <div class="modal-section-title">Documents</div>
+  <div class="docs-grid">
+    <div class="doc-card">
+      <div class="doc-card-header">
+        <i class="fa-solid fa-file-pdf doc-icon"></i>
+        <span class="doc-title">CV/Resume</span>
       </div>
+      <div class="doc-filename">${app.cvUrl ? 'Document uploaded' : 'Not provided'}</div>
+      ${app.cvUrl ? `
+        <a href="/admin/download-cv/${app._id}" target="_blank" class="btn-download">
+          <i class="fa-solid fa-download"></i> Download CV
+        </a>
+      ` : ''}
     </div>
+   ${(app.certificateUrls && app.certificateUrls.length > 0) 
+  ? app.certificateUrls.map((certUrl, index) => `
+    <div class="doc-card">
+      <div class="doc-card-header">
+        <i class="fa-solid fa-certificate doc-cert-icon"></i>
+        <span class="doc-title">Certificate ${app.certificateUrls.length > 1 ? (index + 1) : ''}</span>
+      </div>
+      <div class="doc-filename">Document uploaded</div>
+      <a href="/admin/download-certificate/${app._id}?index=${index}" target="_blank" class="btn-download">
+        <i class="fa-solid fa-download"></i> Download
+      </a>
+    </div>
+  `).join('')
+  : `
+    <div class="doc-card">
+      <div class="doc-card-header">
+        <i class="fa-solid fa-certificate doc-cert-icon"></i>
+        <span class="doc-title">Certificate</span>
+      </div>
+      <div class="doc-filename">Not provided</div>
+    </div>
+  `
+}
+
+  </div>
+</div>
+
 
     <div class="modal-section professional-links">
       <div class="link-label">Professional Links</div>

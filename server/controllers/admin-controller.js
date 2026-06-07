@@ -435,7 +435,7 @@ exports.getInstructorApplications = async (req, res) => {
       bio: u.bio || "",
       jobTitle: u.instructorVerification?.jobTitle || "",
       cvUrl: u.instructorVerification?.cvUrl || "",
-      certificateUrl: u.instructorVerification?.certificateUrl || "",
+      certificateUrls: u.instructorVerification?.certificateUrls || [],
       linkedinUrl: u.instructorVerification?.linkedinUrl || "",
       portfolioUrl: u.instructorVerification?.portfolioUrl || ""
     }));
@@ -478,6 +478,39 @@ exports.rejectInstructor = async (req, res) => {
     res.status(500).json({ success: false });
   }
 };
+exports.downloadCV = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    
+    if (!user || !user.instructorVerification?.cvUrl) {
+      return res.status(404).send('CV not found');
+    }
+    
+    // Redirect to Cloudinary URL
+    res.redirect(user.instructorVerification.cvUrl);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error downloading CV');
+  }
+};
+
+exports.downloadCertificate = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const index = parseInt(req.query.index) || 0; 
+    
+    if (!user || !user.instructorVerification?.certificateUrls || !user.instructorVerification.certificateUrls[index]) {
+      return res.status(404).send('Certificate not found');
+    }
+    
+    res.redirect(user.instructorVerification.certificateUrls[index]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error downloading certificate');
+  }
+};
+
+
 
 const users = []; // temporary memory DB (later MongoDB)
 

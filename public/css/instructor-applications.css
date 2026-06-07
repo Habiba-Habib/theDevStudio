@@ -521,22 +521,31 @@ body {
 }
 
 .btn-download {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: transparent;
-  border: 1px solid var(--pink);
-  color: var(--pink);
-  font-size: 12px;
-  font-weight: 600;
-  font-family: var(--font);
-  padding: 7px 14px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--pink), var(--pink-light));
+  border: none;
   border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white !important;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  justify-content: center;
 }
 
-.btn-download:hover { background: rgba(255,64,160,0.1); }
+.btn-download:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-download i {
+  font-size: 14px;
+}
+
 
 /* Links */
 .professional-links { margin-bottom: 0; }
