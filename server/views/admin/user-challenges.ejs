@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= user.name %>'s Challenges</title>
+  <link rel="stylesheet" href="/css/manage-challenges.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="page-wrapper">
+    <a href="/admin/users" class="back-to-admin">
+      <i class="fa-solid fa-arrow-left"></i>
+      Back to Manage Users
+    </a>
+
+    <div class="page-header">
+      <div class="header-left">
+        <h1 class="page-title"><%= user.name %>'s Challenges</h1>
+        <p class="page-subtitle">Solved coding challenges</p>
+      </div>
+    </div>
+
+    <p class="results-count">
+      Showing <%= challenges.length %> challenge<%= challenges.length !== 1 ? "s" : "" %>
+    </p>
+
+    <div class="table-wrapper">
+      <table class="challenges-table">
+        <thead>
+          <tr>
+            <th>Challenge</th>
+            <th>Category</th>
+            <th>Difficulty</th>
+            <th>Points</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% if (challenges.length > 0) { %>
+            <% challenges.forEach(challenge => { %>
+              <tr>
+                <td>
+                  <div class="challenge-name"><%= challenge.title %></div>
+                  <div class="challenge-desc"><%= challenge.description %></div>
+                </td>
+                <td><span class="badge badge-category"><%= challenge.category %></span></td>
+                <td><span class="badge badge-<%= challenge.difficulty.toLowerCase() %>"><%= challenge.difficulty %></span></td>
+                <td><span class="points-value"><%= challenge.points %></span></td>
+                <td>
+                  <a class="action-btn" title="View Challenge" href="/challenges/<%= challenge._id %>">
+                    <i class="fa-regular fa-eye"></i>
+                  </a>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="5">No solved challenges yet.</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

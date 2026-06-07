@@ -16,6 +16,7 @@ router.get("/users",                         controller.getUsers);
 router.post("/users/change-role",            controller.changeRole);
 router.get("/users/:userId/profile",         controller.getUserProfile);
 router.get("/users/:userId/courses", controller.getUserCourses);
+router.get("/users/:userId/challenges", controller.getUserChallenges);
 router.post("/users/toggle-suspend/:userId", controller.toggleSuspend);
 router.post("/users/delete/:userId", controller.deleteUser);
 router.post("/users/:userId/block", controller.blockInstructor);

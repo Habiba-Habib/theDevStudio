@@ -770,6 +770,41 @@ exports.getUserCourses = async (req, res) => {
 }
 };
 
+exports.getUserChallenges = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+
+    if (!user) {
+      return res.status(404).render("public/error-page", {
+        statusCode: 404,
+        errorTitle: "User Not Found",
+        message: "This user does not exist or was removed."
+      });
+    }
+
+    const solvedChallengeIds = (user.badges || [])
+      .map(badge => badge.name || "")
+      .filter(name => name.startsWith("solved:"))
+      .map(name => name.replace("solved:", ""));
+
+    const challenges = await Challenge.find({
+      _id: { $in: solvedChallengeIds }
+    }).sort({ createdAt: -1 });
+
+    res.render("admin/user-challenges", {
+      user,
+      challenges
+    });
+  } catch (err) {
+    console.error("getUserChallenges error:", err);
+    res.status(500).render("public/error-page", {
+      statusCode: 500,
+      errorTitle: "Internal Server Error",
+      message: "Something went wrong on our side."
+    });
+  }
+};
+
 exports.getCourseApplications = async (req, res) => {
   try {
     const courses = await Course.find({ deletedAt: null })
