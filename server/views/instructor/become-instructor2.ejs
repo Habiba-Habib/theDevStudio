@@ -89,7 +89,7 @@
         <button type="button" class="remove-file" data-cert-id="1" title="Remove">
           <i class="fa-solid fa-xmark"></i>
         </button>
-        <% if (verification.certificateUrl) { %>
+        <% if (verification.certificateUrls && verification.certificateUrls.length > 0) { %>
   <p class="saved-file">
     <i class="fa-solid fa-circle-check"></i>
     Previously uploaded: Certificate on file

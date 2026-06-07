@@ -424,7 +424,7 @@ exports.getInstructorApplications = async (req, res) => {
     }).sort({ "instructorVerification.submittedAt": -1 });
 
     const applications = users.map(u => ({
-      _id: u._id,
+      _id: u._id.toString(),
       name: u.name,
       email: u.email,
       avatar: "/images/avatars/" + (u.avatar || "avatar1g.png").replace(/^.*\//, ""),
@@ -435,7 +435,11 @@ exports.getInstructorApplications = async (req, res) => {
       bio: u.bio || "",
       jobTitle: u.instructorVerification?.jobTitle || "",
       cvUrl: u.instructorVerification?.cvUrl || "",
-      certificateUrls: u.instructorVerification?.certificateUrls || [],
+      certificateUrls: Array.isArray(u.instructorVerification?.certificateUrls)
+      ? u.instructorVerification.certificateUrls
+      : u.instructorVerification?.certificateUrls
+        ? [u.instructorVerification.certificateUrls]
+        : [],
       linkedinUrl: u.instructorVerification?.linkedinUrl || "",
       portfolioUrl: u.instructorVerification?.portfolioUrl || ""
     }));

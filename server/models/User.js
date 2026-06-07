@@ -59,7 +59,7 @@ onboardingComplete: { type: Boolean, default: false },
 
       instructorVerification: {
       cvUrl: String,
-      certificateUrl: String,
+      certificateUrls: [String],
       linkedinUrl: String,
       portfolioUrl: String,
       websiteUrl: String,

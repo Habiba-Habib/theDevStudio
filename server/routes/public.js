@@ -243,7 +243,7 @@ router.post('/become-instructor/step3', requireLoginPage, async (req, res) => {
         experience: app.experience,
         categories: app.categories,
         cvUrl: app.cvUrl,
-        certificateUrl: app.certificateUrl,
+        certificateUrls: app.certificateUrls || [],
         linkedinUrl: app.linkedinUrl,
         portfolioUrl: app.portfolioUrl,
         websiteUrl: app.websiteUrl,
@@ -264,8 +264,9 @@ router.post('/become-instructor/step3', requireLoginPage, async (req, res) => {
 });
   }
 });
+
 router.get('/instructor-terms', (req, res) => {
-  res.render('public/instructor-terms', {
+  res.render('instructor/instructor-terms', {
     user: req.session.user || null
   });
 });
