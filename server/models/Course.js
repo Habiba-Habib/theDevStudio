@@ -42,7 +42,15 @@ const courseSchema = new mongoose.Schema({
   fullDescription:  { type: String },
   category: {
     type: String,
-    enum: ["Web Development", "Data Science", "Design", "Business", "Mobile Development", "Machine Learning"],
+    enum: [
+  "Web Development",
+  "Data Science",
+  "Machine Learning",
+  "Mobile Development",
+  "Cybersecurity",
+  "Cloud Computing",
+  "Design"
+],
     required: true
   },
   level: {
