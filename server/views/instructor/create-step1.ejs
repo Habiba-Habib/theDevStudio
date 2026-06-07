@@ -71,9 +71,11 @@
             <select class="form-input" name="category" required>
               <option value="Web Development" <%= (formData.category || category) === 'Web Development' ? 'selected' : '' %>>Web Development</option>
               <option value="Data Science" <%= (formData.category || category) === 'Data Science' ? 'selected' : '' %>>Data Science</option>
+              <option value="Machine Learning" <%= (formData.category || category) === 'Machine Learning' ? 'selected' : '' %>>Machine Learning</option>
+              <option value="Mobile Development" <%= (formData.category || category) === 'Mobile Development' ? 'selected' : '' %>>Mobile Development</option>
+              <option value="Cybersecurity" <%= (formData.category || category) === 'Cybersecurity' ? 'selected' : '' %>>Cybersecurity</option>
+              <option value="Cloud Computing" <%= (formData.category || category) === 'Cloud Computing' ? 'selected' : '' %>>Cloud Computing</option>
               <option value="Design" <%= (formData.category || category) === 'Design' ? 'selected' : '' %>>Design</option>
-              <option value="Business" <%= (formData.category || category) === 'Business' ? 'selected' : '' %>>Business</option>
-
             </select>
           </div>
           <div class="form-group">
