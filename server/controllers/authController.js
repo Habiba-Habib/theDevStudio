@@ -43,6 +43,12 @@ exports.signup = async (req, res) => {
     };
     req.session.userId = newUser._id;
     req.session.role = newUser.role;
+    if (req.body.rememberMe) {
+      req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000;
+    } else {
+      req.session.cookie.maxAge = null;
+      req.session.cookie.expires = false;
+    }
 
     return res.status(201).json({
       message: "Signup successful",

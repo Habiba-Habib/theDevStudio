@@ -2,14 +2,14 @@ const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 const express = require("express");
 const session = require("express-session");
-const MongoStore = require("connect-mongo");
+const {MongoStore} = require("connect-mongo");
 const connectDB = require("./config/db");
 const localization = require("./middleware/localization");
 const languageRoutes = require("./routes/languageRoutes");
 
 const app = express();
 
-
+//test
 const passport = require("passport");
 const { configurePassport } = require("./config/passport");
 
@@ -19,6 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
 
+app.set("trust proxy", 1);
+
 app.use(session({
   secret: process.env.SESSION_SECRET || "devstudiosecret",
   resave: false,
@@ -27,13 +29,12 @@ app.use(session({
     mongoUrl: process.env.MONGO_URI,
     dbName: "test",
     collectionName: "sessions",
-    ttl: 30 * 24 * 60 * 60   // max session lifetime in seconds (30 days)
+    ttl: 30 * 24 * 60 * 60
   }),
   cookie: {
-    httpOnly: true,           // JS cannot access the cookie (security)
-    secure: false,            // set to true if using HTTPS in production
-    sameSite: 'lax'
-    // no maxAge here — set dynamically per login based on Remember Me
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax"
   }
 }));
 

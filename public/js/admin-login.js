@@ -3,7 +3,7 @@ const adminEmail = document.getElementById("adminEmail");
 const adminPassword = document.getElementById("adminPassword");
 const adminLoginMessage = document.getElementById("adminLoginMessage");
 const toggleAdminPassword = document.getElementById("toggleAdminPassword");
-
+const rememberMe = document.querySelector('input[name="rememberMe"]').checked;
 
 
 [adminEmail, adminPassword].forEach((input) => {
@@ -55,7 +55,7 @@ if (!email || !password) {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, rememberMe })
       });
 
       const data = await res.json();
