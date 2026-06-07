@@ -11,16 +11,23 @@ exports.getDashboard = async (req, res) => {
     const instructor = await User.findById(req.session.user._id);
     
     // Get published courses
-    const publishedCourses = await Course.find({ 
-      instructor: req.session.user._id,
-      isPublished: true 
-    });
-    
-    // Get draft courses
-    const draftCourses = await Course.find({ 
-      instructor: req.session.user._id,
-      isPublished: false 
-    });
+    const publishedCourses = await Course.find({
+  instructor: req.session.user._id,
+  isPublished: true,
+  approvalStatus: "approved"
+});
+
+const pendingCourses = await Course.find({
+  instructor: req.session.user._id,
+  isPublished: false,
+  approvalStatus: "pending"
+});
+
+const draftCourses = await Course.find({
+  instructor: req.session.user._id,
+  isPublished: false,
+  approvalStatus: "draft"
+});
 
     const courseIds = publishedCourses.map(course => course._id);
 
@@ -57,8 +64,9 @@ exports.getDashboard = async (req, res) => {
 
     res.render('instructor/dashboard', {
       instructor,
-      publishedCourses,     // ← Make sure this is here
-      draftCourses,         // ← Make sure this is here
+      publishedCourses,     
+       pendingCourses,
+      draftCourses,         
       stats: {
         totalCourses,
         totalStudents,
@@ -562,7 +570,7 @@ exports.postCreateStep3 = async (req, res) => {
         price: Number(price) || 0,
         duration: duration,
         isPublished: false, // Stays false until admin approves
-        approvalStatus: "pending",
+        approvalStatus: action === "publish" ? "pending" : "draft",
         submittedAt: action === "publish" ? new Date() : draft.submittedAt
       },
       { returnDocument: 'after' }

@@ -684,13 +684,14 @@ document.addEventListener('DOMContentLoaded', () => {
       // Check filter match
       let filterMatch = false;
       if (currentFilter === 'all') {
-        filterMatch = true;
-      } else if (currentFilter === 'published' && status === 'published') {
-        filterMatch = true;
-      } else if (currentFilter === 'drafts' && status === 'draft') {
-        filterMatch = true;
-      }
-      
+  filterMatch = true;
+  } else if (currentFilter === 'published' && status === 'published') {
+    filterMatch = true;
+  } else if (currentFilter === 'pending' && status === 'pending') {
+    filterMatch = true;
+  } else if (currentFilter === 'drafts' && status === 'draft') {
+    filterMatch = true;
+  }
       // Check search match
       const searchMatch = !searchTerm || title.includes(searchTerm);
       

@@ -1377,6 +1377,31 @@ body {
   }
 }
 
+.pending-course-card {
+  border: 2px dashed rgba(240, 254, 114, 0.35) !important;
+  background: rgba(240, 254, 114, 0.05) !important;
+  position: relative;
+}
+
+.pending-ribbon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #f0fe72, #cbd84d);
+  color: #0a0e27;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pending-status {
+  color: #f0fe72 !important;
+  font-weight: 600;
+}
 /* ========================================
    Responsive
    ======================================== */

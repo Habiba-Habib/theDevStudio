@@ -217,3 +217,4 @@ function setupLegalModal(modalId, openBtnId, closeBtnIds) {
 }
 
 setupLegalModal("terms-modal", "open-terms", ["terms-modal-close", "terms-modal-close-btn"]);
+setupLegalModal("privacy-modal", "open-privacy", ["privacy-modal-close", "privacy-modal-close-btn"]);

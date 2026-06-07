@@ -106,13 +106,18 @@
     <button class="filter-tab active" data-filter="all">
       <i class="fa-solid fa-book"></i>
       All Courses
-      <span class="filter-count"><%= publishedCourses.length + draftCourses.length %></span>
+      <span class="filter-count"><%= publishedCourses.length + pendingCourses.length + draftCourses.length %></span>
     </button>
     <button class="filter-tab" data-filter="published">
       <i class="fa-solid fa-check-circle"></i>
       Published
       <span class="filter-count"><%= publishedCourses.length %></span>
     </button>
+    <button class="filter-tab" data-filter="pending">
+  <i class="fa-solid fa-hourglass-half"></i>
+  Pending
+  <span class="filter-count"><%= pendingCourses.length %></span>
+</button>
     <button class="filter-tab" data-filter="drafts">
       <i class="fa-solid fa-file-lines"></i>
       Drafts
@@ -122,7 +127,7 @@
 
   <!-- Courses Container -->
   <div id="courses-container">
-    <% if (publishedCourses.length === 0 && draftCourses.length === 0) { %>
+    <% if (publishedCourses.length === 0 && pendingCourses.length === 0 && draftCourses.length === 0) { %>
       <div class="id-empty-courses">
         <div class="id-empty-icon">
           <i class="fa-solid fa-book-open"></i>
@@ -160,6 +165,32 @@
           </form>
         </div>
       <% }); %>
+      
+
+      <!-- Pending Courses -->
+      <% pendingCourses.forEach(function(course) { %>
+        <div class="course-item id-course-card pending-course-card"
+             data-status="pending"
+             data-course-title="<%= course.title.toLowerCase() %>">
+
+          <div class="pending-ribbon">
+            <i class="fa-solid fa-hourglass-half"></i>
+            PENDING
+          </div>
+
+          <img src="<%= course.thumbnail || '/images/default-thumbnail.jpg' %>"
+               alt="<%= course.title %>"
+               class="course-thumb" />
+
+          <div class="id-course-info">
+            <h3 class="course-progress-title"><%= course.title %></h3>
+            <div class="id-course-meta">
+              <span class="pending-status"><i class="fa-solid fa-clock"></i> Waiting for admin approval</span>
+              <span><i class="fa-solid fa-calendar"></i> Submitted</span>
+            </div>
+          </div>
+        </div>
+      <% }); %>
 
       <!-- Draft Courses -->
       <% draftCourses.forEach(function(course) { %>
@@ -189,7 +220,7 @@
               <i class="fa-solid fa-trash"></i>
             </button>
           </form>
-        </div>
+        </div>    
       <% }); %>
 
       <!-- No Results Message (hidden by default) -->
