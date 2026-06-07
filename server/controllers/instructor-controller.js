@@ -360,10 +360,10 @@ exports.getCreateStep1 = async (req, res) => {
  try {
     // Check for existing draft
     const draft = await Course.findOne({
-      instructor: req.session.user._id,
-      isPublished: false,
-      approvalStatus: { $in: ['draft', 'pending'] }
-    }).sort({ updatedAt: -1 });
+  instructor: req.session.user._id,
+  isPublished: false,
+  approvalStatus: "draft"
+}).sort({ updatedAt: -1 });
 
    res.render('instructor/create-step1', {
      user: req.session.user,
@@ -398,9 +398,10 @@ exports.postCreateStep1 = async (req, res) => {
     
     // Check if a draft already exists — update it, don't create a new one
     let course = await Course.findOne({
-      instructor: req.session.user._id,
-      isPublished: false
-    });
+  instructor: req.session.user._id,
+  isPublished: false,
+  approvalStatus: "draft"
+});
 
     const thumbnailUrl = req.file
       ? req.file.path // Streams remote Cloudinary URL!
@@ -420,16 +421,17 @@ exports.postCreateStep1 = async (req, res) => {
     } else {
       // Create new draft
       course = await Course.create({
-        title,
-        shortDescription,
-        fullDescription,
-        category,
-        level,
-        thumbnail: thumbnailUrl,
-        instructor: req.session.user._id,
-        isPublished: false,
-      offersCertificate: true
-      });
+  title,
+  shortDescription,
+  fullDescription,
+  category,
+  level,
+  thumbnail: thumbnailUrl,
+  instructor: req.session.user._id,
+  isPublished: false,
+  approvalStatus: "draft",
+  offersCertificate: true
+});
     }
 
     // Move to step 2
@@ -450,9 +452,10 @@ exports.postCreateStep1 = async (req, res) => {
 exports.getCreateStep2 = async (req, res) => {
   try {
     const draft = await Course.findOne({
-      instructor: req.session.user._id,
-      isPublished: false
-    });
+  instructor: req.session.user._id,
+  isPublished: false,
+  approvalStatus: "draft"
+});
 
     // If no draft exists, send back to step 1
     if (!draft) return res.redirect('/instructor/create/step1');
@@ -477,9 +480,10 @@ res.render('instructor/create-step2', {
 exports.postCreateStep2 = async (req, res) => {
   try {
     const draft = await Course.findOne({
-      instructor: req.session.user._id,
-      isPublished: false
-    });
+  instructor: req.session.user._id,
+  isPublished: false,
+  approvalStatus: "draft"
+});
 
     if (!draft) return res.redirect('/instructor/create/step1');
 
@@ -573,16 +577,18 @@ exports.getCreateStep3 = async (req, res) => {
     if (courseId) {
       // Load specific draft by ID
       draft = await Course.findOne({
-        _id: courseId,
-        instructor: req.session.user._id,
-        isPublished: false
-      });
+  _id: courseId,
+  instructor: req.session.user._id,
+  isPublished: false,
+  approvalStatus: "draft"
+});
     } else {
       // Find any draft for this instructor
       draft = await Course.findOne({
-        instructor: req.session.user._id,
-        isPublished: false
-      });
+  instructor: req.session.user._id,
+  isPublished: false,
+  approvalStatus: "draft"
+});
     }
 
     if (!draft) return res.redirect('/instructor/create/step1');
@@ -621,16 +627,18 @@ exports.postCreateStep3 = async (req, res) => {
     if (courseId) {
       console.log('Looking for draft with specific courseId:', courseId);
       draft = await Course.findOne({
-        _id: courseId,
-        instructor: req.session.user._id,
-        isPublished: false
-      });
+  _id: courseId,
+  instructor: req.session.user._id,
+  isPublished: false,
+  approvalStatus: "draft"
+});
     } else {
       console.log('Looking for ANY draft for this instructor');
       draft = await Course.findOne({
-        instructor: req.session.user._id,
-        isPublished: false
-      });
+  instructor: req.session.user._id,
+  isPublished: false,
+  approvalStatus: "draft"
+});
     }
 
     console.log('Draft found?', draft ? 'YES' : 'NO');
