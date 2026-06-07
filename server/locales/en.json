@@ -75,7 +75,9 @@
   "viewChallenge": "View Challenge",
   "back": "Back",
 "edit": "Edit",
-"enroll": "Enroll"
+"enroll": "Enroll",
+"close": "Close",
+"confirmPayment": "Confirm Payment"
 },
 "labels": {
   "by": "By",
@@ -83,7 +85,10 @@
   "students": "students",
 "enrolled": "enrolled",
 "lessons": "lessons",
-"sections": "Sections"
+"sections": "Sections",
+"subtotal": "Subtotal",
+"tax": "Tax",
+"total": "Total"
 },
 "status": {
   "yourCourse": "Your Course",
@@ -156,5 +161,54 @@
   "totalDuration": "Total duration",
   "skillLevel": "Skill level",
   "courseModules": "Course modules"
+},
+"payment": {
+  "pageTitle": "Complete Your Enrollment",
+  "courseSummary": "Course Summary",
+  "defaultInstructor": "Instructor",
+  "oneTimeLifetime": "One-time payment • Lifetime access",
+  "moneyBack": "30-day money-back guarantee",
+
+  "paymentInfo": "Payment Information",
+  "secureEncrypted": "All transactions are secure and encrypted",
+
+  "cardholderName": "Cardholder Name",
+  "cardholderPlaceholder": "John Doe",
+  "cardNumber": "Card Number",
+  "cardNumberPlaceholder": "1234 5678 9012 3456",
+  "expiryDate": "Expiry Date",
+  "expiryPlaceholder": "MM/YY",
+  "cvv": "CVV",
+  "cvvPlaceholder": "123",
+  "promoCode": "Promo Code (Optional)",
+  "promoPlaceholder": "Enter promo code",
+
+  "cardHolder": "Card Holder",
+  "yourName": "YOUR NAME",
+  "expires": "Expires",
+
+  "termsAgree": "I agree to the",
+  "termsOfService": "Terms of Service",
+  "and": "and",
+  "privacyPolicy": "Privacy Policy",
+
+  "secureNote": "Your payment information is secure and encrypted",
+  "backToCourses": "Back to courses",
+
+  "termsTitle": "Terms of Service",
+  "termsIntro": "By using TheDevStudio you agree to:",
+  "termsItem1": "Provide accurate account information",
+  "termsItem2": "Use courses and challenges honestly",
+  "termsItem3": "Follow instructor verification rules if applying to teach",
+  "termsItem4": "Not upload harmful, illegal, or infringing content",
+  "readFullTerms": "Read full Terms of Service",
+
+  "privacyTitle": "Privacy Policy",
+  "privacyIntro": "We collect data needed to run the platform, including:",
+  "privacyItem1": "Name, email, and account details",
+  "privacyItem2": "Course progress and challenge submissions",
+  "privacyItem3": "Instructor verification documents if you apply",
+  "privacyNoSell": "We do not sell your personal data.",
+  "readFullPrivacy": "Read full Privacy Policy"
 }
 }

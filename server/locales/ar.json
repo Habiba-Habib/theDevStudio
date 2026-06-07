@@ -74,7 +74,9 @@
   "viewChallenge": "عرض التحدي",
   "back": "رجوع",
   "edit": "تعديل",
-  "enroll": "التسجيل"
+  "enroll": "التسجيل",
+  "close": "إغلاق",
+"confirmPayment": "تأكيد الدفع"
 },
 "labels": {
   "by": "بواسطة",
@@ -82,7 +84,10 @@
   "students": "طلاب",
 "enrolled": "مسجل",
 "lessons": "دروس",
-"sections": "أقسام"
+"sections": "أقسام",
+"subtotal": "المجموع الفرعي",
+"tax": "الضريبة",
+"total": "الإجمالي"
 },
 "status": {
   "yourCourse": "دورتك",
@@ -155,5 +160,54 @@
   "totalDuration": "المدة الإجمالية",
   "skillLevel": "مستوى المهارة",
   "courseModules": "وحدات الدورة"
+},
+"payment": {
+  "pageTitle": "إكمال التسجيل",
+  "courseSummary": "ملخص الدورة",
+  "defaultInstructor": "المدرب",
+  "oneTimeLifetime": "دفعة واحدة • وصول مدى الحياة",
+  "moneyBack": "ضمان استرداد الأموال خلال 30 يوماً",
+
+  "paymentInfo": "معلومات الدفع",
+  "secureEncrypted": "جميع المعاملات آمنة ومشفرة",
+
+  "cardholderName": "اسم حامل البطاقة",
+  "cardholderPlaceholder": "John Doe",
+  "cardNumber": "رقم البطاقة",
+  "cardNumberPlaceholder": "1234 5678 9012 3456",
+  "expiryDate": "تاريخ الانتهاء",
+  "expiryPlaceholder": "MM/YY",
+  "cvv": "CVV",
+  "cvvPlaceholder": "123",
+  "promoCode": "رمز الخصم (اختياري)",
+  "promoPlaceholder": "أدخل رمز الخصم",
+
+  "cardHolder": "حامل البطاقة",
+  "yourName": "اسمك",
+  "expires": "تنتهي",
+
+  "termsAgree": "أوافق على",
+  "termsOfService": "شروط الخدمة",
+  "and": "و",
+  "privacyPolicy": "سياسة الخصوصية",
+
+  "secureNote": "معلومات الدفع الخاصة بك آمنة ومشفرة",
+  "backToCourses": "العودة إلى الدورات",
+
+  "termsTitle": "شروط الخدمة",
+  "termsIntro": "باستخدامك TheDevStudio فإنك توافق على:",
+  "termsItem1": "تقديم معلومات حساب دقيقة",
+  "termsItem2": "استخدام الدورات والتحديات بأمانة",
+  "termsItem3": "اتباع قواعد التحقق من المدربين عند التقديم للتدريس",
+  "termsItem4": "عدم رفع محتوى ضار أو غير قانوني أو مخالف للحقوق",
+  "readFullTerms": "قراءة شروط الخدمة كاملة",
+
+  "privacyTitle": "سياسة الخصوصية",
+  "privacyIntro": "نحن نجمع البيانات اللازمة لتشغيل المنصة، وتشمل:",
+  "privacyItem1": "الاسم والبريد الإلكتروني وتفاصيل الحساب",
+  "privacyItem2": "تقدم الدورات وتسليمات التحديات",
+  "privacyItem3": "مستندات التحقق من المدرب إذا قمت بالتقديم",
+  "privacyNoSell": "نحن لا نبيع بياناتك الشخصية.",
+  "readFullPrivacy": "قراءة سياسة الخصوصية كاملة"
 }
 }

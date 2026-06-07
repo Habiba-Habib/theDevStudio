@@ -329,20 +329,45 @@
 
 
 /* card number row with brand badges */
+/* card number row with brand badges */
 .input-row {
   position: relative;
+  width: 100%;
+  display: block;
 }
 
-.input-row input { padding-right: 100px; }
+.input-row input {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 100px;
+}
 
 .card-brands {
   position: absolute;
   right: 12px;
+  left: auto;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
+  align-items: center;
   gap: 6px;
+  z-index: 2;
+  pointer-events: none;
 }
+
+/* RTL: keep card number readable, move VISA/MC inside input to the left */
+html[dir="rtl"] .input-row input {
+  padding-right: 16px;
+  padding-left: 100px;
+  direction: ltr;
+  text-align: left;
+}
+
+html[dir="rtl"] .card-brands {
+  right: auto;
+  left: 12px;
+}
+
 
 .brand {
   font-size: 11px;
