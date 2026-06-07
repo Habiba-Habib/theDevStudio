@@ -23,6 +23,12 @@ const pendingCourses = await Course.find({
   approvalStatus: "pending"
 });
 
+const rejectedCourses = await Course.find({
+  instructor: req.session.user._id,
+  isPublished: false,
+  approvalStatus: "rejected"
+});
+
 const draftCourses = await Course.find({
   instructor: req.session.user._id,
   isPublished: false,
@@ -66,6 +72,7 @@ const draftCourses = await Course.find({
       instructor,
       publishedCourses,     
        pendingCourses,
+        rejectedCourses,
       draftCourses,         
       stats: {
         totalCourses,

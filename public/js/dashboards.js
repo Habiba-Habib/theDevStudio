@@ -620,7 +620,7 @@ function confirmActivate() {
 
 
 function showRejectionReason(btn) {
-  const card = btn.closest('.instructor-status-card');
+  const card = btn.closest('[data-reason]');
   const reason = card.dataset.reason;
   document.getElementById('rejectionReasonText').textContent = reason;
   document.getElementById('reasonModal').style.display = 'flex';
@@ -689,6 +689,8 @@ document.addEventListener('DOMContentLoaded', () => {
     filterMatch = true;
   } else if (currentFilter === 'pending' && status === 'pending') {
     filterMatch = true;
+    } else if (currentFilter === 'rejected' && status === 'rejected') {
+  filterMatch = true;
   } else if (currentFilter === 'drafts' && status === 'draft') {
     filterMatch = true;
   }

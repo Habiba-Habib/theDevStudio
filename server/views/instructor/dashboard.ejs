@@ -106,7 +106,7 @@
     <button class="filter-tab active" data-filter="all">
       <i class="fa-solid fa-book"></i>
       All Courses
-      <span class="filter-count"><%= publishedCourses.length + pendingCourses.length + draftCourses.length %></span>
+      <span class="filter-count"><%= publishedCourses.length + pendingCourses.length + rejectedCourses.length + draftCourses.length %></span>
     </button>
     <button class="filter-tab" data-filter="published">
       <i class="fa-solid fa-check-circle"></i>
@@ -118,6 +118,11 @@
   Pending
   <span class="filter-count"><%= pendingCourses.length %></span>
 </button>
+    <button class="filter-tab" data-filter="rejected">
+  <i class="fa-solid fa-times-circle"></i>
+  Rejected
+  <span class="filter-count"><%= rejectedCourses.length %></span>
+</button>
     <button class="filter-tab" data-filter="drafts">
       <i class="fa-solid fa-file-lines"></i>
       Drafts
@@ -127,7 +132,7 @@
 
   <!-- Courses Container -->
   <div id="courses-container">
-    <% if (publishedCourses.length === 0 && pendingCourses.length === 0 && draftCourses.length === 0) { %>
+   <% if (publishedCourses.length === 0 && pendingCourses.length === 0 && rejectedCourses.length === 0 && draftCourses.length === 0) { %>
       <div class="id-empty-courses">
         <div class="id-empty-icon">
           <i class="fa-solid fa-book-open"></i>
@@ -192,6 +197,35 @@
         </div>
       <% }); %>
 
+      <!-- Rejected Courses -->
+<% rejectedCourses.forEach(function(course) { %>
+  <div class="course-item id-course-card rejected-course-card"
+       data-status="rejected"
+       data-course-title="<%= course.title.toLowerCase() %>"
+       data-reason="<%= course.rejectionReason || 'No reason provided.' %>">
+
+  
+
+    <img src="<%= course.thumbnail || '/images/default-thumbnail.jpg' %>"
+         alt="<%= course.title %>"
+         class="course-thumb" />
+
+    <div class="id-course-info">
+      <h3 class="course-progress-title"><%= course.title %></h3>
+      <div class="id-course-meta">
+        <span class="rejected-status">
+          <i class="fa-solid fa-circle-xmark"></i>
+          Application rejected
+        </span>
+      </div>
+    </div>
+
+    <button type="button" class="id-btn-view" onclick="showRejectionReason(this)">
+      View Reason
+    </button>
+  </div>
+<% }); %>
+
       <!-- Draft Courses -->
       <% draftCourses.forEach(function(course) { %>
         <div class="course-item id-course-card draft-course-card" 
@@ -244,6 +278,13 @@
   <script id="instructorChartData" type="application/json">
   <%- JSON.stringify(chartData || {}) %>
 </script>
+<div id="reasonModal" class="reason-modal" style="display: none;">
+  <div class="reason-modal-content">
+    <h3>Rejection Reason</h3>
+    <p id="rejectionReasonText"></p>
+    <button type="button" class="btn-close" onclick="closeReasonModal()">Close</button>
+  </div>
+</div>
 <script src="/js/dashboards.js"></script>
  
 </body>
