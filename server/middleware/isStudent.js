@@ -4,11 +4,11 @@ module.exports = function isStudent(req, res, next) {
     return res.redirect("/auth/login");
   }
 
-  if (req.session.role !== "student" && req.session.role !== "instructor") {
+  if (req.session.role !== "student") {
     return res.status(403).render("public/error-page", {
       statusCode: 403,
       errorTitle: "Access Denied",
-      message: "Students and instructors only."
+      message: "Students only."
     });
   }
 
