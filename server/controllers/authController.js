@@ -87,20 +87,35 @@ exports.login = async (req, res) => {
     req.session.userId = user._id;
     req.session.role = user.role;
 
-     const dashboards = {
-  student: "/student/dashboard",
-  instructor: "/instructor/dashboard",
-  admin: "/admin/dashboard"
-};
+    // 4. Remember Me — extend session to 30 days, otherwise expires on browser close
+    if (req.body.rememberMe) {
+      req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
+    } else {
+      req.session.cookie.maxAge = null;    // clear any maxAge
+      req.session.cookie.expires = false;  // session cookie — dies when browser closes
+    }
 
-const redirectUrl = req.session.returnTo || dashboards[user.role] || "/student/dashboard";
-delete req.session.returnTo;
+    const dashboards = {
+      student: "/student/dashboard",
+      instructor: "/instructor/dashboard",
+      admin: "/admin/dashboard"
+    };
 
-return res.status(200).json({
-  message: "Login successful",
-  user: req.session.user,
-  redirectUrl
-});
+    const redirectUrl = req.session.returnTo || dashboards[user.role] || "/student/dashboard";
+    delete req.session.returnTo;
+
+    // Force-save the session so the cookie maxAge is written before we respond
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).json({ message: "Session error, please try again" });
+      }
+      return res.status(200).json({
+        message: "Login successful",
+        user: req.session.user,
+        redirectUrl
+      });
+    });
     
   } catch (error) {
     console.error("Login database error:", error);
@@ -284,7 +299,7 @@ exports.getOnboarding = (req, res) => {
 };
 
 exports.postOnboarding = async (req, res) => {
-  if (!req.session.userId) return res.status(401).json({ message: "Not logged in" });
+  if (!req.session.userId) return res.status(401).json({ message: "Not logged in", redirectUrl: "/auth/login" });
 
   const { avatar, experienceLevel, intendedRole } = req.body;
   const validLevels = ["beginner", "intermediate", "advanced"];
@@ -325,4 +340,20 @@ exports.logout = (req, res) => {
   req.session.destroy(() => {
     res.json({ message: "Logged out" });
   });
+};
+
+/* =========================
+   OAUTH CALLBACKS
+   ========================= */
+exports.handleOAuthCallback = (req, res) => {
+  req.session.user = {
+    _id:   req.user._id,
+    name:  req.user.name,
+    email: req.user.email,
+    role:  req.user.role
+  };
+  req.session.userId = req.user._id;
+  req.session.role   = req.user.role;
+
+  res.redirect(`/${req.user.role}/dashboard`);
 };

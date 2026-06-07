@@ -1,35 +1,32 @@
-const express  = require("express");
-const router   = express.Router();
-const bcrypt   = require("bcryptjs");
-const multer   = require("multer");
-const User     = require("../models/User");
-const Course   = require("../models/Course");
+const express    = require("express");
+const router     = express.Router();
+const bcrypt     = require("bcryptjs");
+const multer     = require("multer");
+const User       = require("../models/User");
 const studentController = require("../controllers/studentController");
+const courseController  = require("../controllers/courseController");
 
-// In-memory multer for student assignment submissions (uploaded to Cloudinary manually)
+/* ── MULTER  (assignment submission upload) ── */
 const submissionUpload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 50 * 1024 * 1024 },
+  limits:  { fileSize: 50 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const allowed = ['application/pdf','application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/vnd.ms-powerpoint',
-      'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
-    cb(null, allowed.includes(file.mimetype) ? true : new Error('File type not allowed'));
+    const allowed = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/vnd.ms-powerpoint",
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    ];
+    cb(null, allowed.includes(file.mimetype) ? true : new Error("File type not allowed"));
   }
 });
 
+/* ── AUTH MIDDLEWARE ── */
 function requireStudentSession(req, res, next) {
   if (!req.session || !req.session.userId) {
-    if (req.method === "GET") {
-      req.session.returnTo = req.originalUrl;
-    }
-
-    return res.status(401).render("public/error-page", {
-      statusCode: 401,
-      errorTitle: "Unauthorized",
-      message: "You need to log in before accessing this page."
-    });
+    if (req.method === "GET") req.session.returnTo = req.originalUrl;
+    return res.redirect("/auth/login");
   }
 
   if (req.session.role !== "student" && req.session.role !== "instructor") {
@@ -45,317 +42,52 @@ function requireStudentSession(req, res, next) {
 
 router.use(requireStudentSession);
 
-function buildCertificateId(userId, courseId) {
-  return `TDS-${courseId.toString().slice(-6).toUpperCase()}-${userId.toString().slice(-6).toUpperCase()}`;
-}
+/* ══════════════════════════════════════════
+   STUDENT PAGES
+   ══════════════════════════════════════════ */
+router.get("/dashboard",                    studentController.getDashboard);
+router.get("/leaderboard",                  studentController.getLeaderboard);
+router.get("/my-courses",                   studentController.getMyCourses);
+router.get("/payment/:courseId",            studentController.getPaymentPage);
+router.get("/start-challenge/:id",          studentController.getStartChallenge);
+router.get("/challenge/:id/review",         studentController.getChallengeReview);
 
-function ensureCertificate(user, courseId) {
-  const existing = user.certificates.find(
-    (cert) => cert.course?.toString() === courseId.toString()
-  );
+router.post("/payment/:courseId",           studentController.processPayment);
+router.post("/activate-instructor",         studentController.activateInstructorAccount);
+router.post("/challenge/:id/run",           studentController.runCode);
+router.post("/challenge/:id/submit",        studentController.submitChallenge);
 
-  if (existing) {
-    if (!existing.certificateId) {
-      existing.certificateId = buildCertificateId(user._id, courseId);
-    }
-    return existing;
-  }
+/* ══════════════════════════════════════════
+   COURSE PLAYER
+   ══════════════════════════════════════════ */
+router.get("/course/:courseId/learn",       courseController.getCourseContent);
 
-  const certificate = {
-    course: courseId,
-    certificateId: buildCertificateId(user._id, courseId),
-    issuedAt: new Date()
-  };
+/* ══════════════════════════════════════════
+   LESSON INTERACTIONS
+   ══════════════════════════════════════════ */
+router.post("/course/:courseId/lesson/:lessonId/complete",           courseController.markLessonComplete);
+router.post("/course/:courseId/lesson/:lessonId/note",               courseController.saveLessonNote);
+router.post("/course/:courseId/lesson/:lessonId/submit-assignment",
+  submissionUpload.single("submissionFile"),
+  courseController.submitAssignment
+);
 
-  user.certificates.push(certificate);
-  return certificate;
-}
+/* ══════════════════════════════════════════
+   FILE DOWNLOADS
+   ══════════════════════════════════════════ */
+router.get("/course/:courseId/lesson/:lessonId/download-resource",   courseController.downloadResource);
+router.get("/course/:courseId/lesson/:lessonId/download-assignment",  courseController.downloadAssignment);
 
-// ── RESOURCE DOWNLOAD PROXY ──
-// Streams file from Cloudinary through server using authenticated API endpoint
-router.get("/course/:courseId/lesson/:lessonId/download-resource", async (req, res) => {
-  try {
-    const userId   = req.session.userId;
-    const { courseId, lessonId } = req.params;
+/* ══════════════════════════════════════════
+   COURSE REVIEW & CERTIFICATE
+   ══════════════════════════════════════════ */
+router.post("/course/:courseId/review",     courseController.submitReview);
+router.get("/certificate/:courseId",        courseController.getCertificate);
 
-    const course = await Course.findById(courseId);
-    if (!course) {
-  return res.status(404).render("public/error-page", {
-    statusCode: 404,
-    errorTitle: "Course Not Found",
-    message: "This course does not exist or was removed."
-  });
-}
-
-    // verify the user is enrolled or is the instructor owner
-    const user = await User.findById(userId);
-    const isEnrolled        = user.enrolledCourses.some(e => e.course.toString() === courseId);
-    const isInstructorOwner = course.instructor?.toString() === userId.toString();
-    if (!isEnrolled && !isInstructorOwner) {
-  return res.status(403).render("public/error-page", {
-    statusCode: 403,
-    errorTitle: "Access Denied",
-    message: "You do not have permission to access this file."
-  });
-}
-
-    const lesson = course.sections.flatMap(s => s.lessons).find(l => l._id.toString() === lessonId);
-   if (!lesson || !lesson.resourceFile) {
-  return res.status(404).render("public/error-page", {
-    statusCode: 404,
-    errorTitle: "Resource Not Found",
-    message: "This resource does not exist or was removed."
-  });
-}
-
-    const fileUrl  = lesson.resourceFile;
-
-    // Extract and decode the public_id from the stored Cloudinary URL
-    const urlMatch = fileUrl.match(/\/raw\/upload\/(?:v\d+\/)?(.+)$/);
-   if (!urlMatch) {
-  return res.status(500).render("public/error-page", {
-    statusCode: 500,
-    errorTitle: "Invalid Resource",
-    message: "The resource file URL is invalid."
-  });
-}
-
-    const publicId   = decodeURIComponent(urlMatch[1]);
-    const cloudinary = require('../config/cloudinary');
-    const unzipper   = require('unzipper');
-    const https      = require('https');
-
-    // The only authenticated endpoint that works with restricted delivery accounts
-    const downloadUrl = cloudinary.utils.download_zip_url({
-      public_ids: [publicId],
-      resource_type: 'raw'
-    });
-
-    const originalName = publicId.split('/').pop();
-
-    // Fetch the zip into memory
-    https.get(downloadUrl, (fileRes) => {
-      if (fileRes.statusCode !== 200) {
-        console.error('Cloudinary archive fetch failed:', fileRes.statusCode);
-        return res.status(502).render("public/error-page", {
-          statusCode: 502,
-          errorTitle: "Download Failed",
-          message: "Failed to fetch resource from storage"
-        });
-      }
-
-      const chunks = [];
-      fileRes.on('data', chunk => chunks.push(chunk));
-      fileRes.on('error', err => {
-        console.error('Fetch stream error:', err);
-        if (!res.headersSent) res.status(500).render("public/error-page", {
-          statusCode: 500,
-          errorTitle: "Download Failed",
-          message: "Something went wrong while downloading this file."
-        });
-      });
-      fileRes.on('end', async () => {
-        try {
-          const buf = Buffer.concat(chunks);
-          const dir = await unzipper.Open.buffer(buf);
-
-          if (!dir.files.length) return res.status(500).render("public/error-page", {
-            statusCode: 500,
-            errorTitle: "Download Failed",
-            message: "Something went wrong while downloading this file."
-          });
-
-          const fileContent = await dir.files[0].buffer();
-
-          const ext         = originalName.split('.').pop().toLowerCase();
-          const mimeMap     = {
-            pdf:  'application/pdf',
-            doc:  'application/msword',
-            docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            ppt:  'application/vnd.ms-powerpoint',
-            pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-            xls:  'application/vnd.ms-excel',
-            xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          };
-          const contentType = mimeMap[ext] || 'application/octet-stream';
-
-          res.setHeader('Content-Type', contentType);
-          res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(originalName)}"`);
-          res.setHeader('Content-Length', fileContent.length);
-          res.send(fileContent);
-
-        } catch (err) {
-          console.error('Unzip error:', err);
-          if (!res.headersSent) res.status(500).render("public/error-page", {
-        statusCode: 500,
-        errorTitle: "Download Failed",
-        message: "Something went wrong while downloading this file."
-      });
-        }
-      });
-
-    }).on('error', (err) => {
-      console.error('HTTPS request error:', err);
-      if (!res.headersSent) res.status(500).render("public/error-page", {
-        statusCode: 500,
-        errorTitle: "Download Failed",
-        message: "Something went wrong while downloading this file."
-      });
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).render("public/error-page", {
-      statusCode: 500,
-      errorTitle: "Internal Server Error",
-      message: "Something went wrong on our side."
-    });
-  }
-});
-
-router.get("/dashboard", studentController.getDashboard);
-router.get("/leaderboard", studentController.getLeaderboard);
-router.get("/payment/:courseId", studentController.getPaymentPage);
-router.get("/my-courses", studentController.getMyCourses);
-router.get("/start-challenge/:id", studentController.getStartChallenge);
-router.post("/payment/:courseId", studentController.processPayment);
-router.post("/activate-instructor", studentController.activateInstructorAccount);
-router.post("/challenge/:id/run",    studentController.runCode);
-router.post("/challenge/:id/submit", studentController.submitChallenge);
-router.get("/challenge/:id/review",  studentController.getChallengeReview);
-
-// ── COURSE PLAYER (INSTRUCTOR PREVIEW BYPASS) ──
-router.get("/course/:courseId/learn", async (req, res) => {
-  try {
-    const userId = req.session.userId;
-    const course = await Course.findById(req.params.courseId).populate("instructor", "name avatar email");
-
-    if (!course) return res.status(404).render("public/error-page", {
-      statusCode: 404,
-      errorTitle: "Not Found",
-      message: "The item you are looking for does not exist."
-    });
-
-    const user = await User.findById(userId);
-    let enrollment = user.enrolledCourses.find(
-      (e) => e.course.toString() === course._id.toString()
-    );
-
-    const isInstructorOwner = course.instructor?._id?.toString() === userId.toString();
-
-    // Block access only if they are not enrolled AND not the instructor who owns the course
-    if (!enrollment && !isInstructorOwner) {
-      return res.redirect(`/courses/${course._id}`);
-    }
-
-    // Mock enrollment for the course instructor owner so they can preview the portal
-    if (!enrollment && isInstructorOwner) {
-      enrollment = {
-        progress: 100,
-        completedLessons: []
-      };
-    }
-
-    const completedLessons = (enrollment.completedLessons || []).map((id) => id.toString());
-
-    // flatten all lessons to find which to open
-    const allLessons = course.sections.flatMap((s) => s.lessons);
-    const totalLessons = allLessons.length;
-
-    // open the requested lesson or the first incomplete one or the first lesson
-    let activeLessonId = req.query.lesson || null;
-    if (!activeLessonId) {
-      const firstIncomplete = allLessons.find((l) => !completedLessons.includes(l._id.toString()));
-      activeLessonId = (firstIncomplete || allLessons[0])?._id?.toString() || null;
-    }
-
-    res.render("student/course-content", {
-      course,
-      enrollment,
-      completedLessons,
-      activeLessonId,
-      totalLessons,
-      user,
-      isInstructorOwner,
-      activeNote: (() => {
-        if (!activeLessonId) return '';
-        const note = (enrollment.notes || []).find(n => n.lesson.toString() === activeLessonId);
-        return note ? note.content : '';
-      })(),
-      activeSubmission: (() => {
-        if (!activeLessonId) return null;
-        const lesson = course.sections.flatMap(s => s.lessons).find(l => l._id.toString() === activeLessonId);
-        if (!lesson) return null;
-        return (lesson.assignmentSubmissions || []).find(s => s.student.toString() === userId.toString()) || null;
-      })()
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).render("public/error-page", {
-  statusCode: 500,
-  errorTitle: "Internal Server Error",
-  message: "Something went wrong on our side."
-});
-  }
-});
-
-// ── MARK LESSON COMPLETE ──
-router.post("/course/:courseId/lesson/:lessonId/complete", async (req, res) => {
-  try {
-    const userId = req.session.userId;
-    const { courseId, lessonId } = req.params;
-
-    const user = await User.findById(userId);
-    const enrollment = user.enrolledCourses.find(
-      (e) => e.course.toString() === courseId
-    );
-
-    if (!enrollment) return res.status(403).json({ error: "Not enrolled" });
-
-    // add lesson if not already completed
-    const alreadyDone = enrollment.completedLessons.some(
-      (id) => id.toString() === lessonId
-    );
-
-    if (!alreadyDone) {
-      enrollment.completedLessons.push(lessonId);
-    }
-
-    // recalculate progress
-    const course = await Course.findById(courseId);
-    const totalLessons = course.sections.flatMap((s) => s.lessons).length;
-    enrollment.progress = totalLessons > 0
-      ? Math.round((enrollment.completedLessons.length / totalLessons) * 100)
-      : 0;
-
-    // if 100% move to completedCourses
-    if (enrollment.progress === 100) {
-      const alreadyCompleted = user.completedCourses.some(
-        (c) => c.course.toString() === courseId
-      );
-      if (!alreadyCompleted) {
-        user.completedCourses.push({ course: courseId });
-      }
-      ensureCertificate(user, courseId);
-    }
-
-    await user.save();
-
-    res.json({
-      success: true,
-      progress: enrollment.progress,
-      completedCount: enrollment.completedLessons.length,
-      totalLessons,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
+/* ══════════════════════════════════════════
+   PROFILE  (shared with instructor)
+   ══════════════════════════════════════════ */
 router.get("/profile", async (req, res) => {
-  if (!req.session.userId) return res.redirect("/auth/login");
-
   const user = await User.findById(req.session.userId)
     .populate("completedCourses.course")
     .populate("certificates.course");
@@ -363,85 +95,16 @@ router.get("/profile", async (req, res) => {
   res.render("shared/profile", {
     user,
     completedCourses: user.completedCourses || [],
-    certificates: user.certificates || [],
+    certificates:     user.certificates     || []
   });
 });
 
-router.get("/certificate/:courseId", async (req, res) => {
-  try {
-    if (!req.session.userId) return res.redirect("/auth/login");
-
-    const user = await User.findById(req.session.userId)
-      .populate({
-        path: "completedCourses.course",
-        populate: { path: "instructor", select: "name" }
-      })
-      .populate({
-        path: "certificates.course",
-        populate: { path: "instructor", select: "name" }
-      });
-
-    if (!user || user.role !== "student") {
-      return res.status(403).render("public/error-page", {
-        statusCode: 403,
-        errorTitle: "Forbidden",
-        message: "You are not authorized to view this content."
-      });
-    }
-
-    const completedItem = user.completedCourses.find(
-      (item) => item.course?._id?.toString() === req.params.courseId
-    );
-
-    if (!completedItem?.course) {
-      return res.status(404).render("public/error-page", {
-        statusCode: 404,
-        errorTitle: "Not Found",
-        message: "The item you are looking for does not exist."
-      });
-    }
-
-    let certificate = user.certificates.find(
-      (cert) => cert.course?._id?.toString() === req.params.courseId
-    );
-
-    if (!certificate) {
-      ensureCertificate(user, completedItem.course._id);
-      await user.save();
-      certificate = user.certificates.find(
-        (cert) => cert.course?.toString() === req.params.courseId
-      );
-      certificate.course = completedItem.course;
-    } else if (!certificate.certificateId) {
-      certificate.certificateId = buildCertificateId(user._id, completedItem.course._id);
-      await user.save();
-    }
-
-    res.render("student/certificate", {
-      user,
-      course: completedItem.course,
-      certificate,
-      completedAt: completedItem.completedAt
-    });
-  } catch (err) {
-    console.error("certificate error:", err);
-    res.status(500).render("public/error-page", {
-      statusCode: 500,
-      errorTitle: "Internal Server Error",
-      message: "Something went wrong on our side."
-    });
-  }
-});
-
 router.get("/edit-profile", async (req, res) => {
-  if (!req.session.userId) return res.redirect("/auth/login");
   const user = await User.findById(req.session.userId);
   res.render("shared/edit-profile", { user, errors: [] });
 });
 
 router.post("/edit-profile", async (req, res) => {
-  if (!req.session.userId) return res.redirect("/auth/login");
-
   const { name, username, email, bio, location, avatar,
           currentPassword, newPassword, confirmPassword } = req.body;
 
@@ -449,17 +112,16 @@ router.post("/edit-profile", async (req, res) => {
   if (!user) return res.redirect("/auth/login");
 
   const updateData = {
-    name:       name || user.name,
+    name:       name     || user.name,
     username:   username || user.username,
-    email:      email || user.email,
+    email:      email    || user.email,
     bio,
     location,
-    avatar:     (avatar || '').replace(/^.*\//, ''), // keep filename only
-    lastActive: new Date(),
+    avatar:     (avatar || "").replace(/^.*\//, ""),
+    lastActive: new Date()
   };
 
-  // ── password change ──
-   if (newPassword || confirmPassword) {
+  if (newPassword || confirmPassword) {
     if (!currentPassword || !newPassword || !confirmPassword) {
       return res.render("shared/edit-profile", {
         user, errors: ["Please fill all password fields."]
@@ -486,16 +148,15 @@ router.post("/edit-profile", async (req, res) => {
 
   try {
     const updated = await User.findByIdAndUpdate(
-      req.session.userId, updateData, { returnDocument: 'after' }
+      req.session.userId, updateData, { returnDocument: "after" }
     );
 
-    // update session so navbar reflects changes immediately
     req.session.user = {
       ...req.session.user,
       name:   updated.name,
       email:  updated.email,
       avatar: updated.avatar,
-      role:   updated.role,
+      role:   updated.role
     };
 
     res.redirect("/student/profile");
@@ -505,230 +166,6 @@ router.post("/edit-profile", async (req, res) => {
       ? ["Email or username is already taken."]
       : ["Something went wrong. Please try again."];
     res.render("shared/edit-profile", { user, errors });
-  }
-});
-
-// ── ASSIGNMENT DOWNLOAD PROXY ──
-router.get("/course/:courseId/lesson/:lessonId/download-assignment", async (req, res) => {
-  try {
-    const userId   = req.session.userId;
-    const { courseId, lessonId } = req.params;
-
-    const course = await Course.findById(courseId);
-   if (!course) {
-  return res.status(404).render("public/error-page", {
-    statusCode: 404,
-    errorTitle: "Course Not Found",
-    message: "This course does not exist or was removed."
-  });
-}
-
-    const user = await User.findById(userId);
-    const isEnrolled        = user.enrolledCourses.some(e => e.course.toString() === courseId);
-    const isInstructorOwner = course.instructor?.toString() === userId.toString();
-    if (!isEnrolled && !isInstructorOwner) {
-  return res.status(403).render("public/error-page", {
-    statusCode: 403,
-    errorTitle: "Access Denied",
-    message: "You do not have permission to access this assignment."
-  });
-}
-    const lesson = course.sections.flatMap(s => s.lessons).find(l => l._id.toString() === lessonId);
-   if (!lesson || !lesson.assignmentFile) {
-  return res.status(404).render("public/error-page", {
-    statusCode: 404,
-    errorTitle: "Assignment Not Found",
-    message: "This assignment does not exist or was removed."
-  });
-}
-
-    const fileUrl  = lesson.assignmentFile;
-    const urlMatch = fileUrl.match(/\/raw\/upload\/(?:v\d+\/)?(.+)$/);
-    if (!urlMatch) return res.status(500).render("public/error-page", {
-        statusCode: 500,
-        errorTitle: "Internal Server Error",
-        message: "Something went wrong on our side."
-      });
-
-    const publicId   = decodeURIComponent(urlMatch[1]);
-    const cloudinary = require('../config/cloudinary');
-    const unzipper   = require('unzipper');
-    const https      = require('https');
-
-    const downloadUrl  = cloudinary.utils.download_zip_url({ public_ids: [publicId], resource_type: 'raw' });
-    const originalName = publicId.split('/').pop();
-
-    https.get(downloadUrl, (fileRes) => {
-      if (fileRes.statusCode !== 200) return res.status(502).render("public/error-page", {
-      statusCode: 502,
-      errorTitle: "Download Failed",
-      message: "Failed to fetch the file from storage."
-    });
-
-      const chunks = [];
-      fileRes.on('data', chunk => chunks.push(chunk));
-      fileRes.on('error', err => { if (!res.headersSent) res.status(500).render("public/error-page", {
-  statusCode: 500,
-  errorTitle: "Internal Server Error",
-  message: "Something went wrong on our side."
-}); });
-      fileRes.on('end', async () => {
-        try {
-          const buf     = Buffer.concat(chunks);
-          const dir     = await unzipper.Open.buffer(buf);
-          if (!dir.files.length) return res.status(500).render("public/error-page", {
-  statusCode: 500,
-  errorTitle: "Internal Server Error",
-  message: "Something went wrong on our side."
-});
-
-          const fileContent = await dir.files[0].buffer();
-          const ext     = originalName.split('.').pop().toLowerCase();
-          const mimeMap = { pdf: 'application/pdf', doc: 'application/msword', docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', ppt: 'application/vnd.ms-powerpoint', pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' };
-
-          res.setHeader('Content-Type', mimeMap[ext] || 'application/octet-stream');
-          res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(originalName)}"`);
-          res.setHeader('Content-Length', fileContent.length);
-          res.send(fileContent);
-        } catch (err) {
-          console.error('Unzip error:', err);
-          if (!res.headersSent) res.status(500).render("public/error-page", {
-  statusCode: 500,
-  errorTitle: "Internal Server Error",
-  message: "Something went wrong on our side."
-});
-        }
-      });
-    }).on('error', err => { if (!res.headersSent) res.status(500).render("public/error-page", {
-  statusCode: 500,
-  errorTitle: "Internal Server Error",
-  message: "Something went wrong on our side."
-}); });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).render("public/error-page", {
-  statusCode: 500,
-  errorTitle: "Internal Server Error",
-  message: "Something went wrong on our side."
-});
-  }
-});
-
-// ── SUBMIT ASSIGNMENT ──
-router.post("/course/:courseId/lesson/:lessonId/submit-assignment",
-  submissionUpload.single('submissionFile'),
-  async (req, res) => {
-    try {
-      const userId             = req.session.userId;
-      const { courseId, lessonId } = req.params;
-
-      if (!req.file) return res.status(400).json({ error: "No file uploaded" });
-
-      const course = await Course.findById(courseId);
-      if (!course) return res.status(404).json({ error: "Course not found" });
-
-      const user       = await User.findById(userId);
-      const isEnrolled = user.enrolledCourses.some(e => e.course.toString() === courseId);
-      if (!isEnrolled) return res.status(403).json({ error: "Not enrolled" });
-
-      const section = course.sections.find(s => s.lessons.some(l => l._id.toString() === lessonId));
-      const lesson  = section?.lessons.find(l => l._id.toString() === lessonId);
-      if (!lesson) return res.status(404).json({ error: "Lesson not found" });
-
-      // Upload to Cloudinary
-      const cloudinary = require('../config/cloudinary');
-      const fileStr    = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
-      const result     = await cloudinary.uploader.upload(fileStr, {
-        folder:        'thedevstudio/submissions',
-        resource_type: 'raw',
-        public_id:     `${userId}_${lessonId}_${Date.now()}`
-      });
-
-      // Replace existing submission or add new one
-      const existingIdx = lesson.assignmentSubmissions.findIndex(s => s.student.toString() === userId.toString());
-      const submission  = { student: userId, fileUrl: result.secure_url, fileName: req.file.originalname, submittedAt: new Date() };
-
-      if (existingIdx > -1) {
-        lesson.assignmentSubmissions[existingIdx] = submission;
-      } else {
-        lesson.assignmentSubmissions.push(submission);
-      }
-
-      await course.save();
-      res.json({ success: true, fileName: req.file.originalname, submittedAt: submission.submittedAt });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Server error" });
-    }
-  }
-);
-
-// ── SAVE LESSON NOTE ──
-router.post("/course/:courseId/lesson/:lessonId/note", async (req, res) => {
-  try {
-    const userId              = req.session.userId;
-    const { courseId, lessonId } = req.params;
-    const { content }         = req.body;
-
-    const user       = await User.findById(userId);
-    const enrollment = user.enrolledCourses.find(e => e.course.toString() === courseId);
-    if (!enrollment) return res.status(403).json({ error: "Not enrolled" });
-
-    const existing = enrollment.notes.find(n => n.lesson.toString() === lessonId);
-    if (existing) {
-      existing.content   = content || '';
-      existing.updatedAt = new Date();
-    } else {
-      enrollment.notes.push({ lesson: lessonId, content: content || '' });
-    }
-
-    await user.save();
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-// ── SUBMIT COURSE REVIEW ──
-router.post("/course/:courseId/review", async (req, res) => {
-  try {
-    const userId   = req.session.userId;
-    const { courseId } = req.params;
-    const { rating, comment } = req.body;
-
-    const stars = parseInt(rating, 10);
-    if (!stars || stars < 1 || stars > 5) {
-      return res.status(400).json({ error: "Invalid rating" });
-    }
-
-    const course = await Course.findById(courseId);
-    if (!course) return res.status(404).json({ error: "Course not found" });
-
-    const user = await User.findById(userId);
-    const isEnrolled = user.enrolledCourses.some(e => e.course.toString() === courseId);
-    if (!isEnrolled) return res.status(403).json({ error: "Not enrolled" });
-
-    // Replace existing review from the same user or add new one
-    const existingIndex = course.reviews.findIndex(r => r.user.toString() === userId.toString());
-    if (existingIndex > -1) {
-      course.reviews[existingIndex].rating  = stars;
-      course.reviews[existingIndex].comment = comment || '';
-      course.reviews[existingIndex].date    = new Date();
-    } else {
-      course.reviews.push({ user: userId, rating: stars, comment: comment || '' });
-    }
-
-    // Recalculate average rating
-    const total = course.reviews.reduce((sum, r) => sum + r.rating, 0);
-    course.rating = Math.round((total / course.reviews.length) * 10) / 10;
-
-    await course.save();
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
   }
 });
 

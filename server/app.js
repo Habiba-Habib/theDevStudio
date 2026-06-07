@@ -2,6 +2,7 @@ const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 const express = require("express");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const connectDB = require("./config/db");
 const localization = require("./middleware/localization");
 const languageRoutes = require("./routes/languageRoutes");
@@ -21,7 +22,19 @@ app.use(express.json());
 app.use(session({
   secret: process.env.SESSION_SECRET || "devstudiosecret",
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+    dbName: "test",
+    collectionName: "sessions",
+    ttl: 30 * 24 * 60 * 60   // max session lifetime in seconds (30 days)
+  }),
+  cookie: {
+    httpOnly: true,           // JS cannot access the cookie (security)
+    secure: false,            // set to true if using HTTPS in production
+    sameSite: 'lax'
+    // no maxAge here — set dynamically per login based on Remember Me
+  }
 }));
 
 configurePassport();
