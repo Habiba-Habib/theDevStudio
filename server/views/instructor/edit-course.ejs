@@ -212,92 +212,235 @@
 
                           <div class="lesson-content collapsed">
 
-                            <div class="lesson-subsection">
+<div class="lesson-subsection">
   <h4><i class="fa-solid fa-file-lines"></i> Documents</h4>
-  <input
-    type="file"
-    class="form-input"
-    name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_resourceFile"
-    accept=".pdf,.doc,.docx,.ppt,.pptx"
-  />
-  <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, PPT, PPTX</p>
+  
   <% if (lesson.resourceFile) { %>
-    <p class="saved-file">
-      <i class="fa-solid fa-file"></i>
-      Existing document will be kept unless replaced.
-    </p>
+    <!-- Show existing file with options -->
+    <div class="existing-file-card">
+      <div class="existing-file-info">
+        <i class="fa-solid fa-file-pdf"></i>
+        <span class="existing-file-name"><%= lesson.resourceFile.split('/').pop().split('?')[0] %></span>
+      </div>
+      <div class="existing-file-actions">
+        <button type="button" class="btn-replace-file" onclick="replaceFile(this, 'resource', <%= sectionIndex %>, <%= lessonIndex %>)">
+          <i class="fa-solid fa-repeat"></i> Replace
+        </button>
+        <button type="button" class="btn-delete-file" onclick="deleteFile(this, 'resource', <%= sectionIndex %>, <%= lessonIndex %>)">
+          <i class="fa-solid fa-trash"></i> Delete
+        </button>
+      </div>
+    </div>
+    
+    <!-- Hidden input to track deletion -->
+    <input type="hidden" 
+      name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][deleteResourceFile]" 
+      value="false"
+      class="delete-resource-flag"
+    />
+    
+    <!-- File upload (hidden until replace is clicked) -->
+    <div class="replace-file-zone hidden" data-type="resource-<%= sectionIndex %>-<%= lessonIndex %>">
+      <input
+        type="file"
+        class="form-input"
+        name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_resourceFile"
+        accept=".pdf,.doc,.docx,.ppt,.pptx"
+      />
+      <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, PPT, PPTX</p>
+      <button type="button" class="btn-cancel-replace" onclick="cancelReplace(this, 'resource', <%= sectionIndex %>, <%= lessonIndex %>)">
+        <i class="fa-solid fa-xmark"></i> Cancel
+      </button>
+    </div>
+  <% } else { %>
+    <!-- No existing file - show upload input -->
+    <input
+      type="file"
+      class="form-input"
+      name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_resourceFile"
+      accept=".pdf,.doc,.docx,.ppt,.pptx"
+    />
+    <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, PPT, PPTX</p>
   <% } %>
+  
   <input type="hidden"
     name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][existingResourceFile]"
     value="<%= lesson.resourceFile || '' %>"
   />
 </div>
+
 <div class="lesson-subsection">
   <h4><i class="fa-solid fa-clipboard-list"></i> Assignment</h4>
-  <input
-    type="file"
-    class="form-input"
-    name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_assignmentFile"
-    accept=".pdf,.doc,.docx,.ppt,.pptx"
-  />
-  <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, PPT, PPTX</p>
+  
   <% if (lesson.assignmentFile) { %>
-    <p class="saved-file">
-      <i class="fa-solid fa-file-circle-check"></i>
-      Existing assignment will be kept unless replaced.
-    </p>
+    <!-- Show existing file with options -->
+    <div class="existing-file-card">
+      <div class="existing-file-info">
+        <i class="fa-solid fa-file-lines"></i>
+        <span class="existing-file-name"><%= lesson.assignmentFile.split('/').pop().split('?')[0] %></span>
+      </div>
+      <div class="existing-file-actions">
+        <button type="button" class="btn-replace-file" onclick="replaceFile(this, 'assignment', <%= sectionIndex %>, <%= lessonIndex %>)">
+          <i class="fa-solid fa-repeat"></i> Replace
+        </button>
+        <button type="button" class="btn-delete-file" onclick="deleteFile(this, 'assignment', <%= sectionIndex %>, <%= lessonIndex %>)">
+          <i class="fa-solid fa-trash"></i> Delete
+        </button>
+      </div>
+    </div>
+    
+    <!-- Hidden input to track deletion -->
+    <input type="hidden" 
+      name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][deleteAssignmentFile]" 
+      value="false"
+      class="delete-assignment-flag"
+    />
+    
+    <!-- File upload (hidden until replace is clicked) -->
+    <div class="replace-file-zone hidden" data-type="assignment-<%= sectionIndex %>-<%= lessonIndex %>">
+      <input
+        type="file"
+        class="form-input"
+        name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_assignmentFile"
+        accept=".pdf,.doc,.docx,.ppt,.pptx"
+      />
+      <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, PPT, PPTX</p>
+      <button type="button" class="btn-cancel-replace" onclick="cancelReplace(this, 'assignment', <%= sectionIndex %>, <%= lessonIndex %>)">
+        <i class="fa-solid fa-xmark"></i> Cancel
+      </button>
+    </div>
+  <% } else { %>
+    <!-- No existing file - show upload input -->
+    <input
+      type="file"
+      class="form-input"
+      name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_assignmentFile"
+      accept=".pdf,.doc,.docx,.ppt,.pptx"
+    />
+    <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, PPT, PPTX</p>
   <% } %>
+  
   <input type="hidden"
     name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][existingAssignmentFile]"
     value="<%= lesson.assignmentFile || '' %>"
   />
 </div>
+
 <div class="lesson-subsection">
   <h4><i class="fa-solid fa-film"></i> Video</h4>
-  <div class="video-item">
-    <select
-      class="form-input video-source"
-      name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][videoSource]"
-      onchange="toggleVideoSource(this)"
-    >
-      <option value="url" <%= lesson.videoSource !== 'upload' ? 'selected' : '' %>>Type URL</option>
-      <option value="upload" <%= lesson.videoSource === 'upload' ? 'selected' : '' %>>Upload File</option>
-    </select>
-
-    <div class="video-url-input <%= lesson.videoSource === 'upload' ? 'hidden' : '' %>">
-      <input type="url" class="form-input"
-        name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][videoUrl]"
-        value="<%= lesson.videoUrl || '' %>"
-        placeholder="YouTube, Vimeo, or direct video URL"
-      />
-    </div>
-
-    <div class="video-file-input <%= lesson.videoSource === 'upload' ? '' : 'hidden' %>">
-      <input type="file" class="form-input"
-        name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_videoFile"
-        accept="video/*"
-        onchange="extractVideoDuration(this)"
-      />
-      <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: MP4, MOV, AVI, MKV, WebM</p>
-      <% if (lesson.videoFile) { %>
-        <p class="saved-file">
+  
+  <% if (lesson.videoFile || lesson.videoUrl) { %>
+    <!-- Show existing video info -->
+    <div class="existing-file-card">
+      <div class="existing-file-info">
+        <% if (lesson.videoSource === 'upload' && lesson.videoFile) { %>
           <i class="fa-solid fa-file-video"></i>
-          Existing uploaded video will be kept unless replaced.
-        </p>
-      <% } %>
+          <div>
+            <span class="existing-file-name"><%= lesson.videoFile.split('/').pop().split('?')[0] %></span>
+            <span class="existing-file-type">Uploaded Video</span>
+          </div>
+        <% } else if (lesson.videoUrl) { %>
+          <i class="fa-brands fa-youtube"></i>
+          <div>
+            <span class="existing-file-name"><%= lesson.videoUrl.substring(0, 50) %><%= lesson.videoUrl.length > 50 ? '...' : '' %></span>
+            <span class="existing-file-type">External Video URL</span>
+          </div>
+        <% } %>
+      </div>
+      <div class="existing-file-actions">
+        <button type="button" class="btn-replace-file" onclick="replaceVideo(this, <%= sectionIndex %>, <%= lessonIndex %>)">
+          <i class="fa-solid fa-repeat"></i> Replace
+        </button>
+        <button type="button" class="btn-delete-file" onclick="deleteVideo(this, <%= sectionIndex %>, <%= lessonIndex %>)">
+          <i class="fa-solid fa-trash"></i> Delete
+        </button>
+      </div>
     </div>
+    
+    <!-- Hidden input to track deletion -->
+    <input type="hidden" 
+      name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][deleteVideo]" 
+      value="false"
+      class="delete-video-flag"
+    />
+    
+    <!-- Video upload/URL zone (hidden until replace is clicked) -->
+    <div class="replace-file-zone hidden" data-type="video-<%= sectionIndex %>-<%= lessonIndex %>">
+      <div class="video-item">
+        <label class="form-label" style="margin-bottom: 8px;">Video Source</label>
+        <select
+          class="form-input video-source"
+          name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][videoSource]"
+          onchange="toggleVideoSource(this)"
+        >
+          <option value="url">Type URL</option>
+          <option value="upload">Upload File</option>
+        </select>
 
-    <input type="hidden"
-      name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][existingVideoFile]"
-      value="<%= lesson.videoFile || '' %>"
-    />
-    <input type="hidden"
-      class="lesson-duration-hidden"
-      name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][duration]"
-      value="<%= lesson.duration || '' %>"
-    />
-  </div>
+        <div class="video-url-input">
+          <input type="url" class="form-input"
+            name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][videoUrl]"
+            placeholder="YouTube, Vimeo, or direct video URL"
+          />
+        </div>
+
+        <div class="video-file-input hidden">
+          <input type="file" class="form-input"
+            name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_videoFile"
+            accept="video/*"
+            onchange="extractVideoDuration(this)"
+          />
+          <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: MP4, MOV, AVI, MKV, WebM</p>
+        </div>
+      </div>
+      
+      <button type="button" class="btn-cancel-replace" onclick="cancelReplaceVideo(this, <%= sectionIndex %>, <%= lessonIndex %>)">
+        <i class="fa-solid fa-xmark"></i> Cancel
+      </button>
+    </div>
+    
+  <% } else { %>
+    <!-- No existing video - show upload/URL input -->
+    <div class="video-item">
+      <select
+        class="form-input video-source"
+        name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][videoSource]"
+        onchange="toggleVideoSource(this)"
+      >
+        <option value="url" <%= lesson.videoSource !== 'upload' ? 'selected' : '' %>>Type URL</option>
+        <option value="upload" <%= lesson.videoSource === 'upload' ? 'selected' : '' %>>Upload File</option>
+      </select>
+
+      <div class="video-url-input <%= lesson.videoSource === 'upload' ? 'hidden' : '' %>">
+        <input type="url" class="form-input"
+          name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][videoUrl]"
+          value="<%= lesson.videoUrl || '' %>"
+          placeholder="YouTube, Vimeo, or direct video URL"
+        />
+      </div>
+
+      <div class="video-file-input <%= lesson.videoSource === 'upload' ? '' : 'hidden' %>">
+        <input type="file" class="form-input"
+          name="sections_<%= sectionIndex %>_lessons_<%= lessonIndex %>_videoFile"
+          accept="video/*"
+          onchange="extractVideoDuration(this)"
+        />
+        <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: MP4, MOV, AVI, MKV, WebM</p>
+      </div>
+    </div>
+  <% } %>
+
+  <input type="hidden"
+    name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][existingVideoFile]"
+    value="<%= lesson.videoFile || '' %>"
+  />
+  <input type="hidden"
+    class="lesson-duration-hidden"
+    name="sections[<%= sectionIndex %>][lessons][<%= lessonIndex %>][duration]"
+    value="<%= lesson.duration || '' %>"
+  />
 </div>
+
 
 
                           </div>
@@ -330,15 +473,17 @@
 
             <div class="form-group">
               <label class="form-label">Price ($) <span class="required">*</span></label>
-              <input
-                type="number"
-                class="form-input"
-                name="price"
-                value="<%= course.price || 0 %>"
-                min="0"
-                required
-                placeholder="0"
-              />
+         <input
+              type="number"
+              class="form-input"
+              name="price"
+              value="<%= course.price || 0 %>"
+              min="0"
+              step="0.01"
+              required
+              placeholder="0"
+            />
+
             </div>
 
             <div class="form-group">
@@ -353,17 +498,52 @@
             </div>
           </section>
           <!-- Publish Status Card -->
-          <section class="edit-card sidebar-card">
-            <div class="card-header">
-              <h2 class="card-title"><i class="fa-solid fa-square-share-nodes"></i> Publish Status</h2>
-            </div>
-            <div class="form-group" style="margin-top: 12px; margin-bottom: 0;">
-              <select class="form-input" name="isPublished">
-                <option value="true" <%= course.isPublished ? 'selected' : '' %>>Published (Visible to Students)</option>
-                <option value="false" <%= !course.isPublished ? 'selected' : '' %>>Draft (Hidden / Invisible)</option>
-              </select>
-            </div>
-          </section>
+      <section class="edit-card sidebar-card">
+  <div class="card-header">
+    <h2 class="card-title"><i class="fa-solid fa-square-share-nodes"></i> Course Status</h2>
+  </div>
+  <div class="form-group" style="margin-top: 12px; margin-bottom: 0;">
+    <% 
+      let statusText = 'Draft';
+      let statusColor = 'var(--text-muted)';
+      let statusIcon = 'fa-file';
+      
+      if (course.approvalStatus === 'pending') {
+        statusText = 'Pending Admin Approval';
+        statusColor = '#f59e0b';
+        statusIcon = 'fa-clock';
+      } else if (course.approvalStatus === 'rejected') {
+        statusText = 'Rejected';
+        statusColor = 'var(--pink)';
+        statusIcon = 'fa-times-circle';
+      } else if (course.approvalStatus === 'approved' && course.isPublished) {
+        statusText = 'Published & Live';
+        statusColor = '#10b981';
+        statusIcon = 'fa-circle-check';
+      }
+    %>
+    <div style="padding: 16px; background: rgba(255,255,255,0.03); border: 2px solid var(--border); border-radius: 12px; display: flex; align-items: center; gap: 12px;">
+      <i class="fa-solid <%= statusIcon %>" style="font-size: 24px; color: <%= statusColor %>;"></i>
+      <div>
+        <div style="font-size: 14px; color: var(--text-muted);">Current Status</div>
+        <div style="font-size: 16px; font-weight: 700; color: <%= statusColor %>;"><%= statusText %></div>
+      </div>
+    </div>
+    
+    <% if (course.approvalStatus === 'rejected' && course.rejectionReason) { %>
+      <div style="margin-top: 12px; padding: 12px; background: rgba(255,64,160,0.1); border: 1px solid rgba(255,64,160,0.3); border-radius: 8px;">
+        <div style="font-size: 12px; font-weight: 600; color: var(--pink); margin-bottom: 4px;">REJECTION REASON:</div>
+        <div style="font-size: 14px; color: var(--text-body);"><%= course.rejectionReason %></div>
+      </div>
+    <% } %>
+    
+    <p style="margin-top: 12px; font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+      <i class="fa-solid fa-info-circle"></i> 
+      Course status is managed by administrators. Check your dashboard for approval updates.
+    </p>
+  </div>
+</section>
+
 
           <section class="edit-card sidebar-card">
             <div class="card-header">

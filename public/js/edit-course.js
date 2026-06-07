@@ -385,3 +385,121 @@ window.extractVideoDuration = function(input) {
 };
 
 
+// ══════════════════════════════════════════════════════════════
+// FILE MANAGEMENT (DELETE & REPLACE)
+// ══════════════════════════════════════════════════════════════
+
+function deleteFile(button, type, sectionIdx, lessonIdx) {
+  if (!confirm('Are you sure you want to delete this file? This cannot be undone.')) {
+    return;
+  }
+  
+  const card = button.closest('.existing-file-card');
+  const lessonContent = button.closest('.lesson-content');
+  
+  // Mark as deleted visually
+  card.classList.add('file-deleted');
+  
+  // Set delete flag to true
+  const deleteFlag = lessonContent.querySelector(`.delete-${type}-flag`);
+  if (deleteFlag) {
+    deleteFlag.value = 'true';
+  }
+  
+  // Disable buttons
+  button.disabled = true;
+  const replaceBtn = card.querySelector('.btn-replace-file');
+  if (replaceBtn) replaceBtn.disabled = true;
+  
+  // Change button text
+  button.innerHTML = '<i class="fa-solid fa-check"></i> Deleted';
+}
+
+function replaceFile(button, type, sectionIdx, lessonIdx) {
+  const lessonContent = button.closest('.lesson-content');
+  const card = button.closest('.existing-file-card');
+  const replaceZone = lessonContent.querySelector(`[data-type="${type}-${sectionIdx}-${lessonIdx}"]`);
+  
+  if (replaceZone) {
+    // Hide existing file card
+    card.style.display = 'none';
+    // Show replace upload zone
+    replaceZone.classList.remove('hidden');
+  }
+}
+
+function cancelReplace(button, type, sectionIdx, lessonIdx) {
+  const lessonContent = button.closest('.lesson-content');
+  const card = lessonContent.querySelector('.existing-file-card');
+  const replaceZone = button.closest('.replace-file-zone');
+  const fileInput = replaceZone.querySelector('input[type="file"]');
+  
+  // Clear the file input
+  if (fileInput) fileInput.value = '';
+  
+  // Show existing file card
+  if (card) card.style.display = 'flex';
+  
+  // Hide replace zone
+  replaceZone.classList.add('hidden');
+}
+// ══════════════════════════════════════════════════════════════
+// VIDEO MANAGEMENT (DELETE & REPLACE)
+// ══════════════════════════════════════════════════════════════
+
+function deleteVideo(button, sectionIdx, lessonIdx) {
+  if (!confirm('Are you sure you want to delete this video? This cannot be undone.')) {
+    return;
+  }
+  
+  const card = button.closest('.existing-file-card');
+  const lessonContent = button.closest('.lesson-content');
+  
+  // Mark as deleted visually
+  card.classList.add('file-deleted');
+  
+  // Set delete flag to true
+  const deleteFlag = lessonContent.querySelector('.delete-video-flag');
+  if (deleteFlag) {
+    deleteFlag.value = 'true';
+  }
+  
+  // Disable buttons
+  button.disabled = true;
+  const replaceBtn = card.querySelector('.btn-replace-file');
+  if (replaceBtn) replaceBtn.disabled = true;
+  
+  // Change button text
+  button.innerHTML = '<i class="fa-solid fa-check"></i> Deleted';
+}
+
+function replaceVideo(button, sectionIdx, lessonIdx) {
+  const lessonContent = button.closest('.lesson-content');
+  const card = button.closest('.existing-file-card');
+  const replaceZone = lessonContent.querySelector(`[data-type="video-${sectionIdx}-${lessonIdx}"]`);
+  
+  if (replaceZone) {
+    // Hide existing file card
+    card.style.display = 'none';
+    // Show replace upload zone
+    replaceZone.classList.remove('hidden');
+  }
+}
+
+function cancelReplaceVideo(button, sectionIdx, lessonIdx) {
+  const lessonContent = button.closest('.lesson-content');
+  const card = lessonContent.querySelector('.existing-file-card');
+  const replaceZone = button.closest('.replace-file-zone');
+  const fileInput = replaceZone.querySelector('input[type="file"]');
+  const urlInput = replaceZone.querySelector('input[type="url"]');
+  
+  // Clear the inputs
+  if (fileInput) fileInput.value = '';
+  if (urlInput) urlInput.value = '';
+  
+  // Show existing file card
+  if (card) card.style.display = 'flex';
+  
+  // Hide replace zone
+  replaceZone.classList.add('hidden');
+}

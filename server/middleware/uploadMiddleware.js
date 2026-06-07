@@ -198,9 +198,10 @@ const uploadCourseThumbnail = handleUpload(
 const uploadInstructorVerification = handleUpload(
   createUploader(10 * MB).fields([
     { name: "cv", maxCount: 1 },
-    { name: "certificate", maxCount: 1 }
+    { name: "certificates", maxCount: 5 } 
   ])
 );
+
 
 const uploadCourseMaterials = handleUpload(
   createUploader(500 * MB).any()

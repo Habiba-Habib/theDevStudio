@@ -258,14 +258,18 @@ exports.updateProfile = async (req, res) => {
 //           category, level, thumbnail
 
 exports.getCreateStep1 = async (req, res) => {
-  try {
-    // Check if there's an in-progress course to resume
+ try {
+    // Check for existing draft
     const draft = await Course.findOne({
       instructor: req.session.user._id,
-      isPublished: false
-    });
+      isPublished: false,
+      approvalStatus: { $in: ['draft', 'pending'] }
+    }).sort({ updatedAt: -1 });
 
    res.render('instructor/create-step1', {
+     user: req.session.user,
+      formData: draft || {},  // Pass existing draft data
+      courseId: draft?._id || null,
   draft,
   errors: [],
   title: 'Create New Course - EduPlatform',
@@ -312,7 +316,7 @@ exports.postCreateStep1 = async (req, res) => {
         category,
         level,
         thumbnail: thumbnailUrl,
-        offersCertificate: offersCertificate === 'true'
+      offersCertificate: true
       });
     } else {
       // Create new draft
@@ -325,7 +329,7 @@ exports.postCreateStep1 = async (req, res) => {
         thumbnail: thumbnailUrl,
         instructor: req.session.user._id,
         isPublished: false,
-        offersCertificate: offersCertificate === 'true'
+      offersCertificate: true
       });
     }
 
@@ -342,7 +346,7 @@ exports.postCreateStep1 = async (req, res) => {
 };
 
 // ─── CREATE COURSE — STEP 2 ───────────────────────────────────
-// Collects: learning outcomes, sections, lessons
+
 
 exports.getCreateStep2 = async (req, res) => {
   try {
@@ -354,7 +358,13 @@ exports.getCreateStep2 = async (req, res) => {
     // If no draft exists, send back to step 1
     if (!draft) return res.redirect('/instructor/create/step1');
 
-    res.render('instructor/create-step2', { draft, errors: [] });
+res.render('instructor/create-step2', { 
+  draft, 
+  errors: [],
+  user: req.session.user,
+  course: draft  // ADD THIS LINE - create-step2 expects 'course' not 'draft'
+});
+
   } catch (err) {
     console.error(err);
     res.status(500).render("public/error-page", {
@@ -379,39 +389,56 @@ exports.postCreateStep2 = async (req, res) => {
     if (!Array.isArray(outcomesArray)) outcomesArray = [outcomesArray];
     outcomesArray = outcomesArray.map(o => o.trim()).filter(o => o);
 
-    const uploadedVideos = {};
-    const uploadedDocuments = {};
+ const uploadedVideos = {};
+const uploadedDocuments = {};
 
-    (req.files || []).forEach(file => {
-      const videoMatch = file.fieldname.match(/^sections\[(\d+)\]\[lessons\]\[(\d+)\]\[videoFile\]$/);
-      if (videoMatch) uploadedVideos[`${videoMatch[1]}_${videoMatch[2]}`] = file.path;
+(req.files || []).forEach(file => {
+  const videoMatch = file.fieldname.match(/^sections\[(\d+)\]\[lessons\]\[(\d+)\]\[videoFile\]$/);
+  if (videoMatch) uploadedVideos[`${videoMatch[1]}_${videoMatch[2]}`] = file.path;
 
-      const documentMatch = file.fieldname.match(/^sections\[(\d+)\]\[lessons\]\[(\d+)\]\[resourceFile\]$/);
-      if (documentMatch) uploadedDocuments[`${documentMatch[1]}_${documentMatch[2]}`] = file.path;
-    });
+  const documentMatch = file.fieldname.match(/^sections\[(\d+)\]\[lessons\]\[(\d+)\]\[resourceFile\]$/);
+  if (documentMatch) uploadedDocuments[`${documentMatch[1]}_${documentMatch[2]}`] = file.path;
+});
+
+// Get existing file paths from hidden inputs
+const existingVideos = {};
+const existingDocuments = {};
+const rawSections = req.body.sections || {};
+
+Object.keys(rawSections).forEach(i => {
+  const sec = rawSections[i];
+  const rawLessons = sec.lessons || {};
+  Object.keys(rawLessons).forEach(j => {
+    const lesson = rawLessons[j];
+    const fileKey = `${i}_${j}`;
+    if (lesson.existingVideoFile) existingVideos[fileKey] = lesson.existingVideoFile;
+    if (lesson.existingResourceFile) existingDocuments[fileKey] = lesson.existingResourceFile;
+  });
+});
+
 
     // sections come as sections[0][title], sections[0][lessons][0][title], sections[0][lessons][0][videoUrl] etc.
-    const rawSections = req.body.sections || {};
+
     const sectionsArray = Object.keys(rawSections).map(i => {
       const sec = rawSections[i];
       const rawLessons = sec.lessons || {};
       
       // Convert lessons object to array
-      const lessonsArray = Object.keys(rawLessons).map(j => {
-        const lesson = rawLessons[j];
-        const fileKey = `${i}_${j}`;
-        return {
-          title: (lesson.title || '').trim(),
-          type: 'video',
-          videoSource: lesson.videoSource || 'url',
-          videoUrl: (lesson.videoUrl || '').trim(),
-          videoFile: uploadedVideos[fileKey] || '',
-          resourceFile: uploadedDocuments[fileKey] || '',
-          content: '',
-          duration: ''
-        };
-      }).filter(l => l.title); // Only include lessons with titles
-      
+     const lessonsArray = Object.keys(rawLessons).map(j => {
+  const lesson = rawLessons[j];
+  const fileKey = `${i}_${j}`;
+  return {
+    title: (lesson.title || '').trim(),
+    type: 'video',
+    videoSource: lesson.videoSource || 'url',
+    videoUrl: (lesson.videoUrl || '').trim(),
+    videoFile: uploadedVideos[fileKey] || existingVideos[fileKey] || '',
+    resourceFile: uploadedDocuments[fileKey] || existingDocuments[fileKey] || '',
+    content: '',
+    duration: ''
+  };
+}).filter(l => l.title);
+  
       return {
         title: (sec.title || '').trim(),
         lessons: lessonsArray
@@ -437,7 +464,6 @@ exports.postCreateStep2 = async (req, res) => {
 
 
 // ─── CREATE COURSE — STEP 3 ───────────────────────────────────
-// Collects: price, duration — shows preview — final publish
 
 exports.getCreateStep3 = async (req, res) => {
   try {
@@ -554,15 +580,17 @@ exports.postCreateStep3 = async (req, res) => {
       });
     }
 
-    // If publishing, render success page
-    if (action === 'publish') {
-      console.log('Action is PUBLISH - rendering page-created');
-      console.log('Course title:', updatedCourse.title);
-      return res.render('instructor/page-created', {
-        courseTitle: updatedCourse.title
-      });
-    }
 
+   // If publishing, return JSON response
+if (action === 'publish') {
+  console.log('Action is PUBLISH - returning JSON');
+  return res.json({
+    success: true,
+    message: 'Course submitted for admin approval',
+    status: 'pending',
+    redirectUrl: '/instructor/dashboard'
+  });
+}
     // Default fallback
     console.log('No specific action - redirecting to dashboard');
     res.redirect('/instructor/dashboard');
@@ -728,14 +756,30 @@ exports.updateCourse = async (req, res) => {
             duration:       (l.duration || '').trim(),
             content:        ''
           };
-        });
-      }
-
+              if (l.deleteVideo === 'true') {
+                    lessonObj.videoFile = '';
+                    lessonObj.videoUrl = '';
+                    lessonObj.videoSource = 'url';
+                  }
+                  
+                  if (l.deleteResourceFile === 'true') {
+                    lessonObj.resourceFile = '';
+                  }
+                  
+                  if (l.deleteAssignmentFile === 'true') {
+                    lessonObj.assignmentFile = '';
+                  }
+                  
+                  return lessonObj;
+                });
+              }
+    
       return {
         title: (sec.title || '').trim(),
         lessons: lessonsList.filter(l => l.title)
       };
     }).filter(s => s.title);
+    
 
     // 3. Save updates to database
     await Course.findOneAndUpdate(

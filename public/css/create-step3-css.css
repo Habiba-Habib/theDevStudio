@@ -575,38 +575,105 @@ body {
    POPUP NOTIFICATION
    ══════════════════════════════════════════════════════════════ */
 
-.popup-notification {
+/* Modal Overlay */
+.modal-overlay {
   position: fixed;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%) translateY(-20px);
-  background: linear-gradient(135deg, #4caf50, #45a049);
-  color: white;
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 600;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
-  gap: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  justify-content: center;
   z-index: 10000;
   opacity: 0;
-  transition: all 0.3s ease;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
-.popup-notification.show {
+.modal-overlay.show {
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  pointer-events: all;
 }
 
-.popup-notification i {
-  font-size: 20px;
+/* Modal Card */
+.modal-card {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+  text-align: center;
 }
 
-.popup-info {
-  background: linear-gradient(135deg, var(--teal), #4a8a8d);
+
+.modal-overlay.show .modal-card {
+  transform: scale(1);
 }
+
+/* Modal Icon */
+.modal-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 28px;
+}
+
+.modal-icon.success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.modal-icon.info {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.modal-icon.warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+}
+
+.modal-icon.error {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+/* Modal Text */
+.modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 12px;
+}
+
+.modal-message {
+  font-size: 16px;
+  color: var(--text-body);
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+/* Loading Animation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.modal-icon i.fa-spinner {
+  animation: spin 1s linear infinite;
+}
+
 
 /* ══════════════════════════════════════════════════════════════
    RESPONSIVE

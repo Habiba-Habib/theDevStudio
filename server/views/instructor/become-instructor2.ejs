@@ -52,33 +52,59 @@
         <p class="upload-title">Click to upload or drag and drop</p>
         <p class="upload-hint">PDF, DOC, DOCX (Max 10MB)</p>
       </div>
+      
       <div class="upload-preview hidden" id="cvPreview">
         <i class="fa-solid fa-file-lines file-icon"></i>
         <span class="file-name" id="cvFileName"></span>
         <button type="button" class="remove-file" id="cvRemove" title="Remove">
           <i class="fa-solid fa-xmark"></i>
         </button>
+  <% if (verification.cvUrl) { %>
+  <p class="saved-file">
+    <i class="fa-solid fa-circle-check"></i>
+    Previously uploaded: CV on file
+  </p>
+<% } %>
+
       </div>
     </div>
   </div>
 
-  <div class="form-group">
-    <label class="field-label">Professional Verification Document <span class="required">*</span></label>
-    <p class="field-hint">Degree certificate, teaching certificate, or industry certification</p>
-    <div class="upload-zone" id="certZone" data-input="certInput">
-      <input type="file" id="certInput" name="certificate" class="file-input" accept=".pdf,.jpg,.jpeg,.png" />
-      <div class="upload-content" id="certContent">
+<div class="form-group">
+  <label class="field-label">Professional Verification Documents <span class="required">*</span></label>
+  <p class="field-hint">Upload one or more: Degree certificates, teaching certificates, or industry certifications</p>
+  
+  <div id="certificateContainer">
+    <!-- First certificate upload (required) -->
+    <div class="upload-zone certificate-upload" id="certZone1" data-input="certInput1">
+      <input type="file" id="certInput1" name="certificates" class="file-input" accept=".pdf,.jpg,.jpeg,.png" />
+      <div class="upload-content" id="certContent1">
         <i class="fa-solid fa-award upload-icon"></i>
         <p class="upload-title">Click to upload or drag and drop</p>
         <p class="upload-hint">PDF, JPG, PNG (Max 10MB)</p>
       </div>
-      <div class="upload-preview hidden" id="certPreview">
+      <div class="upload-preview hidden" id="certPreview1">
         <i class="fa-solid fa-file-lines file-icon"></i>
-        <span class="file-name" id="certFileName"></span>
-        <button type="button" class="remove-file" id="certRemove" title="Remove">
+        <span class="file-name" id="certFileName1"></span>
+        <button type="button" class="remove-file" data-cert-id="1" title="Remove">
           <i class="fa-solid fa-xmark"></i>
         </button>
+        <% if (verification.certificateUrl) { %>
+  <p class="saved-file">
+    <i class="fa-solid fa-circle-check"></i>
+    Previously uploaded: Certificate on file
+  </p>
+<% } %>
+
       </div>
+    </div>
+  </div>
+  
+  <button type="button" class="btn-add-certificate" id="addCertBtn">
+    <i class="fa-solid fa-plus"></i> Add Another Certificate
+  </button>
+</div>
+
     </div>
   </div>
 

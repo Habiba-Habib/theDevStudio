@@ -141,3 +141,12 @@ window.addEventListener('beforeunload', (e) => {
     e.returnValue = '';
   }
 });
+// Load existing thumbnail on page load
+window.addEventListener('DOMContentLoaded', () => {
+  const thumbnailUrl = '<%= formData.thumbnail || "" %>';
+  if (thumbnailUrl && thumbnailUrl.trim()) {
+    previewImage.src = thumbnailUrl;
+    uploadPlaceholder.style.display = 'none';
+    thumbnailPreview.style.display = 'block';
+  }
+});

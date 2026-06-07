@@ -5,6 +5,26 @@
 const freeToggle = document.getElementById('free-toggle');
 const priceInput = document.getElementById('price-input');
 const durationInput = document.getElementById('duration-input');
+const publishBtn = document.querySelector('.btn-publish-now');
+
+
+// ADD THIS CODE - Initialize on page load
+window.addEventListener('DOMContentLoaded', () => {
+  // If price is 0 or empty, check the toggle and disable input
+  const currentPrice = parseFloat(priceInput.value);
+  if (currentPrice === 0 || !priceInput.value) {
+    freeToggle.checked = true;
+    priceInput.disabled = true;
+    priceInput.style.opacity = '0.5';
+    document.getElementById('preview-price').textContent = 'FREE';
+  } else {
+    // If there's a price, make sure toggle is unchecked
+    freeToggle.checked = false;
+    priceInput.disabled = false;
+    priceInput.style.opacity = '1';
+    updatePricePreview();
+  }
+});
 
 freeToggle.addEventListener('change', function() {
   if (this.checked) {
@@ -13,12 +33,16 @@ freeToggle.addEventListener('change', function() {
     priceInput.style.opacity = '0.5';
     document.getElementById('preview-price').textContent = 'FREE';
     document.getElementById('preview-price').style.fontSize = '24px';
-  } else {
-    priceInput.disabled = false;
-    priceInput.style.opacity = '1';
+} else {
+  priceInput.disabled = false;
+  priceInput.style.opacity = '1';
+  // Don't clear value - keep existing price if any
+  if (!priceInput.value || priceInput.value === '0') {
     priceInput.value = '';
-    updatePricePreview();
   }
+  updatePricePreview();
+}
+
 });
 
 // ══════════════════════════════════════════════════════════════
@@ -124,100 +148,65 @@ function saveDraft() {
 // DELETE DRAFT
 // ══════════════════════════════════════════════════════════════
 
-function deleteDraft() {
-  if (!confirm('Are you sure you want to delete this course draft? This action cannot be undone.')) {
-    return;
-  }
+function showPopup(message, type = 'success') {
+  // Create overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
   
-  // Get the course ID from the hidden input
-  const courseIdInput = document.querySelector('input[name="courseId"]');
-  const courseId = courseIdInput ? courseIdInput.value : null;
-  
-  if (!courseId) {
-    alert('Error: Course ID not found');
-    return;
-  }
-  
-  // Show loading
-  const deleteBtn = document.querySelector('.btn-delete-draft');
-  if (deleteBtn) {
-    deleteBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Deleting...';
-    deleteBtn.disabled = true;
-  }
-  
-  // Send delete request with course ID in URL
-  fetch('/instructor/delete-draft/' + courseId, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  .then(response => {
-    if (response.redirected) {
-      window.location.href = response.url;
-      return;
-    }
-    return response.json();
-  })
-  .then(data => {
-    if (data && data.success) {
-      showPopup('Draft deleted', 'info');
-      setTimeout(() => {
-        window.location.href = '/instructor/dashboard';
-      }, 1000);
-    } else if (data) {
-      alert('Error deleting draft: ' + (data.message || 'Unknown error'));
-      if (deleteBtn) {
-        deleteBtn.innerHTML = '<i class="fa-solid fa-trash"></i> Delete Draft';
-        deleteBtn.disabled = false;
-      }
-    }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Error deleting draft. Please try again.');
-    if (deleteBtn) {
-      deleteBtn.innerHTML = '<i class="fa-solid fa-trash"></i> Delete Draft';
-      deleteBtn.disabled = false;
-    }
-  });
+
+let icon = 'fa-check-circle';   // ✅ success
+let title = 'Success!';
+
+if (type === 'info') {
+  icon = 'fa-info-circle';      // ℹ️ info
+  title = 'Info';
+} else if (type === 'warning') {
+  icon = 'fa-exclamation-triangle'; // ⚠️ warning
+  title = 'Warning';
+} else if (type === 'error') {
+  icon = 'fa-times-circle';    // ❌ error
+  title = 'Error';
 }
 
-// ══════════════════════════════════════════════════════════════
-// SHOW POPUP
-// ══════════════════════════════════════════════════════════════
 
-function showPopup(message, type = 'success') {
-  const popup = document.createElement('div');
-  popup.className = `popup-notification popup-${type}`;
-  popup.innerHTML = `
-    <i class="fa-solid fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
-    <span>${message}</span>
+  
+  // Create modal card
+  overlay.innerHTML = `
+    <div class="modal-card">
+      <div class="modal-icon ${type}">
+        <i class="fa-solid ${icon}"></i>
+      </div>
+      <h3 class="modal-title">${title}</h3>
+      <p class="modal-message">${message}</p>
+    </div>
   `;
   
-  document.body.appendChild(popup);
+  document.body.appendChild(overlay);
   
-  // Animate in
-  setTimeout(() => popup.classList.add('show'), 10);
+  // Show with animation
+  setTimeout(() => overlay.classList.add('show'), 10);
   
-  // Remove after animation
+  // Auto-hide after 2.5 seconds
   setTimeout(() => {
-    popup.classList.remove('show');
-    setTimeout(() => popup.remove(), 300);
-  }, 1500);
+    overlay.classList.remove('show');
+    setTimeout(() => overlay.remove(), 300);
+  }, 2500);
 }
 
 
+
+
+
+
 // ══════════════════════════════════════════════════════════════
-// FORM SUBMIT HANDLER (SINGLE DOMContentLoaded)
+// FORM SUBMIT HANDLER
 // ══════════════════════════════════════════════════════════════
 
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('publish-form');
   const publishBtn = document.querySelector('.btn-publish-now');
   
-  if (form && publishBtn) {
-    // Handle publish button click specifically
+  if (publishBtn) {
     publishBtn.addEventListener('click', function(e) {
       e.preventDefault();
       
@@ -244,19 +233,46 @@ document.addEventListener('DOMContentLoaded', () => {
         return false;
       }
       
-      // Create hidden input for action=publish
-      const actionInput = document.createElement('input');
-      actionInput.type = 'hidden';
-      actionInput.name = 'action';
-      actionInput.value = 'publish';
-      form.appendChild(actionInput);
-      
       // Show loading state
       publishBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Publishing...';
       publishBtn.disabled = true;
       
-      // Submit form
-      form.submit();
+      // Create form data
+      const formData = new URLSearchParams();
+      formData.append('action', 'publish');
+      formData.append('price', priceInput.value);
+      formData.append('duration', duration + ' hours');
+      
+      // Submit via fetch
+      fetch('/instructor/create/step3', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formData.toString()
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Show popup with approval message
+          showPopup('Course submitted for admin approval! You will be notified once it has been reviewed.', 'info');
+          
+          // Redirect after 2.5 seconds
+          setTimeout(() => {
+            window.location.href = data.redirectUrl || '/instructor/dashboard';
+          }, 2500);
+        } else {
+          alert('Error: ' + (data.message || 'Unknown error'));
+          publishBtn.innerHTML = '<i class="fa-solid fa-rocket"></i> Publish Course';
+          publishBtn.disabled = false;
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error submitting course. Please try again.');
+        publishBtn.innerHTML = '<i class="fa-solid fa-rocket"></i> Publish Course';
+        publishBtn.disabled = false;
+      });
     });
   }
   
@@ -264,9 +280,56 @@ document.addEventListener('DOMContentLoaded', () => {
   updatePricePreview();
   const duration = durationInput.value.trim();
   if (duration) {
-    document.getElementById('preview-duration').textContent = duration;
+    document.getElementById('preview-duration').textContent = duration + ' hours';
   }
 });
+function deleteDraft() {
+  // Get courseId from hidden input
+  const courseId = document.querySelector('input[name="courseId"]').value;
+  
+  if (!courseId) {
+    alert('No draft found to delete');
+    return;
+  }
+  
+  // Confirm deletion
+  if (!confirm('Are you sure you want to delete this draft? This action cannot be undone.')) {
+    return;
+  }
+  
+  // Show loading state
+  const deleteBtn = document.querySelector('.btn-delete-draft');
+  const originalHTML = deleteBtn.innerHTML;
+  deleteBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Deleting...';
+  deleteBtn.disabled = true;
+  
+  // Send delete request
+  fetch(`/instructor/delete-draft/${courseId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+  .then(response => {
+    if (response.ok) {
+      // Show success popup
+      showPopup('Draft deleted successfully!', 'success');
+      
+      // Redirect after 1.5 seconds
+      setTimeout(() => {
+        window.location.href = '/instructor/dashboard';
+      }, 1500);
+    } else {
+      throw new Error('Failed to delete draft');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Error deleting draft. Please try again.');
+    deleteBtn.innerHTML = originalHTML;
+    deleteBtn.disabled = false;
+  });
+}
 
 // Clear validation errors on input
 document.querySelectorAll('.form-input').forEach(input => {
@@ -275,6 +338,3 @@ document.querySelectorAll('.form-input').forEach(input => {
     input.style.boxShadow = '';
   });
 });
-
-
-

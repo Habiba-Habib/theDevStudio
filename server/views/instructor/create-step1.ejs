@@ -41,12 +41,13 @@
       <form action="/instructor/create/step1" method="POST" enctype="multipart/form-data">
         <div class="form-group">
           <label class="lessons">Course Title <span>*</span></label>
-          <input type="text" class="form-input" name="title" placeholder="e.g., Complete Web Development Bootcamp" value="<%= courseTitle || '' %>" required />
+          <input type="text" class="form-input" name="title" placeholder="e.g., Complete Web Development Bootcamp" value="<%= formData.title || courseTitle || '' %>" required />
+
         </div>
 
         <div class="form-group">
           <label class="lessons">Short Description <span>*</span></label>
-          <input type="text" class="form-input" name="shortDescription" id="shortDescription" placeholder="Brief one-line description" maxlength="150" value="<%= shortDescription || '' %>" required />
+          <input type="text" class="form-input" name="shortDescription" id="shortDescription" placeholder="Brief one-line description" maxlength="150" value="<%= formData.shortDescription || shortDescription || '' %>" required />
           <div class="char-counter">
             <span id="short-count">0</span> / 150 characters
           </div>
@@ -55,7 +56,7 @@
 
         <div class="form-group">
           <label class="lessons">Full Description <span>*</span></label>
-          <textarea class="form-input" name="fullDescription" id="fullDescription" placeholder="Detailed course description..." maxlength="1000" required><%= fullDescription || '' %></textarea>
+          <textarea class="form-input" name="fullDescription" id="fullDescription" placeholder="Detailed course description..." maxlength="1000" required><%= formData.fullDescription || fullDescription || '' %></textarea>
           <div class="char-counter">
             <span id="desc-count">0</span> / 1000 characters
           </div>
@@ -67,18 +68,20 @@
           <div class="form-group">
             <label class="lessons">Category <span>*</span></label>
             <select class="form-input" name="category" required>
-              <option value="Web Development" <%= category === 'Web Development' ? 'selected' : '' %>>Web Development</option>
-              <option value="Data Science" <%= category === 'Data Science' ? 'selected' : '' %>>Data Science</option>
-              <option value="Design" <%= category === 'Design' ? 'selected' : '' %>>Design</option>
-              <option value="Business" <%= category === 'Business' ? 'selected' : '' %>>Business</option>
+              <option value="Web Development" <%= (formData.category || category) === 'Web Development' ? 'selected' : '' %>>Web Development</option>
+              <option value="Data Science" <%= (formData.category || category) === 'Data Science' ? 'selected' : '' %>>Data Science</option>
+              <option value="Design" <%= (formData.category || category) === 'Design' ? 'selected' : '' %>>Design</option>
+              <option value="Business" <%= (formData.category || category) === 'Business' ? 'selected' : '' %>>Business</option>
+
             </select>
           </div>
           <div class="form-group">
             <label class="lessons">Level <span>*</span></label>
             <select class="form-input" name="level" required>
-              <option value="Beginner" <%= level === 'Beginner' ? 'selected' : '' %>>Beginner</option>
-              <option value="Intermediate" <%= level === 'Intermediate' ? 'selected' : '' %>>Intermediate</option>
-              <option value="Advanced" <%= level === 'Advanced' ? 'selected' : '' %>>Advanced</option>
+              <option value="Beginner" <%= (formData.level || level) === 'Beginner' ? 'selected' : '' %>>Beginner</option>
+              <option value="Intermediate" <%= (formData.level || level) === 'Intermediate' ? 'selected' : '' %>>Intermediate</option>
+              <option value="Advanced" <%= (formData.level || level) === 'Advanced' ? 'selected' : '' %>>Advanced</option>
+
             </select>
           </div>
         </div>
@@ -114,6 +117,23 @@
     </div>
 
   </div>
+  <script>
+  // Load existing thumbnail if it exists
+  window.addEventListener('DOMContentLoaded', () => {
+    const thumbnailUrl = '<%= formData.thumbnail || "" %>';
+    const previewImage = document.getElementById('preview-image');
+    const uploadPlaceholder = document.getElementById('upload-placeholder');
+    const thumbnailPreview = document.getElementById('thumbnail-preview');
+    
+    if (thumbnailUrl && thumbnailUrl.trim() && previewImage && uploadPlaceholder && thumbnailPreview) {
+      previewImage.src = thumbnailUrl;
+      uploadPlaceholder.style.display = 'none';
+      thumbnailPreview.style.display = 'block';
+    }
+  });
+</script>
+<script src="<%= basePath || '../../' %>js/create-step1-js.js" defer></script>
+
   <script src="<%= basePath || '../../' %>js/create-step1-js.js" defer></script>
  
 </body>

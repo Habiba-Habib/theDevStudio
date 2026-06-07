@@ -73,9 +73,9 @@ const courseSchema = new mongoose.Schema({
     date:    { type: Date, default: Date.now }
   }],
   
-  offersCertificate: {
+ offersCertificate: {
   type: Boolean,
-  default: false
+  default: true  
 },
 
 

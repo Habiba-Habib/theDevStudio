@@ -39,11 +39,21 @@
     <div class="learn-box">
       <h3>What will students learn?</h3>
       <div id="outcomes-list">
-        <div class="outcome-item">
-          <input type="text" class="form-input" name="outcomes[]" placeholder="e.g., Build responsive websites"/>
-          <button type="button" class="btn-remove-outcome"><i class="fa-solid fa-xmark"></i></button>
-        </div>
+  <% if (draft && draft.learningOutcomes && draft.learningOutcomes.length > 0) { %>
+    <% draft.learningOutcomes.forEach(function(outcome) { %>
+      <div class="outcome-item">
+        <input type="text" class="form-input" name="outcomes[]" value="<%= outcome %>" placeholder="e.g., Build responsive websites"/>
+        <button type="button" class="btn-remove-outcome"><i class="fa-solid fa-xmark"></i></button>
       </div>
+    <% }); %>
+  <% } else { %>
+    <div class="outcome-item">
+      <input type="text" class="form-input" name="outcomes[]" placeholder="e.g., Build responsive websites"/>
+      <button type="button" class="btn-remove-outcome"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+  <% } %>
+</div>
+
       <button type="button" id="add-outcome" class="btn-add">
         <i class="fa-solid fa-plus"></i> Add Outcome
       </button>
@@ -52,66 +62,185 @@
     <!-- SECTIONS -->
     <div class="learn-box">
       <h3>Course Sections</h3>
-      <div id="sections-list">
+   <div id="sections-list">
+  <% if (draft && draft.sections && draft.sections.length > 0) { %>
+    <!-- EXISTING SECTIONS FROM DRAFT -->
+    <% draft.sections.forEach(function(section, sectionIdx) { %>
+      <div class="section-card">
+        <div class="section-title-row">
+          <input type="text" class="form-input section-title-input" 
+                 name="sections[<%= sectionIdx %>][title]" 
+                 value="<%= section.title %>" 
+                 placeholder="Section title" required/>
+          <button type="button" class="btn-delete-section" title="Delete Section">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
 
-        <!-- FIRST SECTION -->
-        <div class="section-card">
-          <div class="section-title-row">
-            <input type="text" class="form-input section-title-input" name="sections[0][title]" placeholder="Section title" required/>
-            <button type="button" class="btn-delete-section" title="Delete Section">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-
-          <div class="section-lessons">
+        <div class="section-lessons">
+          <% section.lessons.forEach(function(lesson, lessonIdx) { %>
             <div class="lesson-item">
               <div class="lesson-box">
-                <input type="text" class="form-input" name="sections[0][lessons][0][title]" placeholder="Lesson title" required/>
+                <!-- Lesson Title -->
+                <input type="text" class="form-input" 
+                       name="sections[<%= sectionIdx %>][lessons][<%= lessonIdx %>][title]" 
+                       value="<%= lesson.title %>" 
+                       placeholder="Lesson title" required/>
                 
+                <!-- Video Source Toggle -->
                 <div class="video-source-toggle">
                   <label class="radio-label">
-                    <input type="radio" name="sections[0][lessons][0][videoSource]" value="url" checked>
+                    <input type="radio" 
+                           name="sections[<%= sectionIdx %>][lessons][<%= lessonIdx %>][videoSource]" 
+                           value="url" 
+                           <%= (!lesson.videoSource || lesson.videoSource === 'url') ? 'checked' : '' %>>
                     <span>Video URL</span>
                   </label>
                   <label class="radio-label">
-                    <input type="radio" name="sections[0][lessons][0][videoSource]" value="file">
+                    <input type="radio" 
+                           name="sections[<%= sectionIdx %>][lessons][<%= lessonIdx %>][videoSource]" 
+                           value="file"
+                           <%= lesson.videoSource === 'file' ? 'checked' : '' %>>
                     <span>Upload Video</span>
                   </label>
                 </div>
                 
-                <input type="url" class="form-input video-url-input" name="sections[0][lessons][0][videoUrl]" placeholder="Paste YouTube/Vimeo URL"/>
+                <!-- Video URL Input -->
+                <input type="url" class="form-input video-url-input" 
+                       name="sections[<%= sectionIdx %>][lessons][<%= lessonIdx %>][videoUrl]" 
+                       value="<%= lesson.videoUrl || '' %>"
+                       placeholder="Paste YouTube/Vimeo URL"
+                       style="<%= lesson.videoSource === 'file' ? 'display:none;' : '' %>"/>
                 
-                <div class="file-upload-box video-file-box" style="display:none;">
-                  <input type="file" class="video-file-input" name="sections[0][lessons][0][videoFile]" accept="video/*">
+                <!-- Video File Upload -->
+                <div class="file-upload-box video-file-box" 
+                     style="<%= (!lesson.videoSource || lesson.videoSource === 'url') ? 'display:none;' : '' %>">
+                  <input type="file" class="video-file-input" 
+                         name="sections[<%= sectionIdx %>][lessons][<%= lessonIdx %>][videoFile]" 
+                         accept="video/*">
                   <div class="file-display">
                     <i class="fa-solid fa-video"></i>
-                    <span class="file-name">Choose Video File</span>
-                    <button type="button" class="btn-clear-file" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+                    <span class="file-name">
+                      <% if (lesson.videoFile) { %>
+                        <i class="fa-solid fa-check-circle"></i> <%= lesson.videoFile.split('/').pop() %>
+                      <% } else { %>
+                        Choose Video File
+                      <% } %>
+                    </span>
+                    <button type="button" class="btn-clear-file" 
+                            style="<%= lesson.videoFile ? '' : 'display:none;' %>">
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
                   </div>
                   <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: MP4, MOV, AVI, MKV, WebM</p>
                 </div>
 
+                <!-- Document/Resource File Upload -->
                 <div class="file-upload-box doc-file-box">
-                  <input type="file" class="doc-file-input" name="sections[0][lessons][0][resourceFile]" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt">
+                  <input type="file" class="doc-file-input" 
+                         name="sections[<%= sectionIdx %>][lessons][<%= lessonIdx %>][resourceFile]" 
+                         accept=".pdf,.doc,.docx,.ppt,.pptx,.txt">
                   <div class="file-display">
                     <i class="fa-solid fa-file-pdf"></i>
-                    <span class="file-name">Add Document (Optional)</span>
-                    <button type="button" class="btn-clear-file" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+                    <span class="file-name">
+                      <% if (lesson.resourceFile) { %>
+                        <i class="fa-solid fa-check-circle"></i> <%= lesson.resourceFile.split('/').pop() %>
+                      <% } else { %>
+                        Add Document (Optional)
+                      <% } %>
+                    </span>
+                    <button type="button" class="btn-clear-file" 
+                            style="<%= lesson.resourceFile ? '' : 'display:none;' %>">
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
                   </div>
                   <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, PPT, PPTX, TXT</p>
                 </div>
                 
+                <!-- Hidden fields to preserve existing file paths -->
+                <% if (lesson.videoFile) { %>
+                  <input type="hidden" 
+                         name="sections[<%= sectionIdx %>][lessons][<%= lessonIdx %>][existingVideoFile]" 
+                         value="<%= lesson.videoFile %>">
+                <% } %>
+                <% if (lesson.resourceFile) { %>
+                  <input type="hidden" 
+                         name="sections[<%= sectionIdx %>][lessons][<%= lessonIdx %>][existingResourceFile]" 
+                         value="<%= lesson.resourceFile %>">
+                <% } %>
+                
                 <button type="button" class="btn-remove-lesson"><i class="fa-solid fa-xmark"></i></button>
               </div>
             </div>
-          </div>
-
-          <button type="button" class="btn-add-lesson">
-            <i class="fa-solid fa-plus"></i> Add Lesson
-          </button>
+          <% }); %>
         </div>
 
+        <button type="button" class="btn-add-lesson">
+          <i class="fa-solid fa-plus"></i> Add Lesson
+        </button>
       </div>
+    <% }); %>
+  
+  <% } else { %>
+    <!-- DEFAULT EMPTY SECTION IF NO DRAFT EXISTS -->
+    <div class="section-card">
+      <div class="section-title-row">
+        <input type="text" class="form-input section-title-input" name="sections[0][title]" placeholder="Section title" required/>
+        <button type="button" class="btn-delete-section" title="Delete Section">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+
+      <div class="section-lessons">
+        <div class="lesson-item">
+          <div class="lesson-box">
+            <input type="text" class="form-input" name="sections[0][lessons][0][title]" placeholder="Lesson title" required/>
+            
+            <div class="video-source-toggle">
+              <label class="radio-label">
+                <input type="radio" name="sections[0][lessons][0][videoSource]" value="url" checked>
+                <span>Video URL</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="sections[0][lessons][0][videoSource]" value="file">
+                <span>Upload Video</span>
+              </label>
+            </div>
+            
+            <input type="url" class="form-input video-url-input" name="sections[0][lessons][0][videoUrl]" placeholder="Paste YouTube/Vimeo URL"/>
+            
+            <div class="file-upload-box video-file-box" style="display:none;">
+              <input type="file" class="video-file-input" name="sections[0][lessons][0][videoFile]" accept="video/*">
+              <div class="file-display">
+                <i class="fa-solid fa-video"></i>
+                <span class="file-name">Choose Video File</span>
+                <button type="button" class="btn-clear-file" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+              <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: MP4, MOV, AVI, MKV, WebM</p>
+            </div>
+
+            <div class="file-upload-box doc-file-box">
+              <input type="file" class="doc-file-input" name="sections[0][lessons][0][resourceFile]" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt">
+              <div class="file-display">
+                <i class="fa-solid fa-file-pdf"></i>
+                <span class="file-name">Add Document (Optional)</span>
+                <button type="button" class="btn-clear-file" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+              <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, PPT, PPTX, TXT</p>
+            </div>
+            
+            <button type="button" class="btn-remove-lesson"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn-add-lesson">
+        <i class="fa-solid fa-plus"></i> Add Lesson
+      </button>
+    </div>
+  <% } %>
+</div>
+
 
       <button type="button" id="add-section" class="btn-add-section">
         <i class="fa-solid fa-plus"></i> Add Section

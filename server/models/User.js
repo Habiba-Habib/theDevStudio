@@ -102,7 +102,8 @@ onboardingComplete: { type: Boolean, default: false },
       {
         course: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
         certificateId: String,
-        certificateUrl: String,
+        certificateUrls: [String], 
+
         issuedAt: { type: Date, default: Date.now },
       },
     ],

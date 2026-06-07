@@ -772,7 +772,144 @@ input[type="file"].form-input::file-selector-button:hover {
 .modal-btn-secondary:hover {
   border-color: var(--text-muted);
   background: rgba(255, 255, 255, 0.05);
+}.existing-file-info > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
+
+.existing-file-type {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.existing-file-info .fa-brands.fa-youtube {
+  color: #ff0000;
+}
+
+.existing-file-info .fa-solid.fa-file-video {
+  color: var(--teal);
+}
+/* Existing File Card */
+.existing-file-card {
+  background: rgba(96, 163, 166, 0.1);
+  border: 1px solid rgba(96, 163, 166, 0.3);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.existing-file-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.existing-file-info i {
+  font-size: 20px;
+  color: var(--teal);
+}
+
+.existing-file-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-white);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.existing-file-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-replace-file,
+.btn-delete-file {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-replace-file {
+  background: rgba(96, 163, 166, 0.2);
+  color: var(--teal);
+  border: 1px solid rgba(96, 163, 166, 0.4);
+}
+
+.btn-replace-file:hover {
+  background: rgba(96, 163, 166, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-delete-file {
+  background: rgba(255, 64, 129, 0.15);
+  color: var(--pink);
+  border: 1px solid rgba(255, 64, 129, 0.3);
+}
+
+.btn-delete-file:hover {
+  background: rgba(255, 64, 129, 0.25);
+  transform: translateY(-1px);
+}
+
+.replace-file-zone {
+  padding: 16px;
+  background: rgba(10, 14, 39, 0.5);
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.replace-file-zone.hidden {
+  display: none;
+}
+
+.btn-cancel-replace {
+  margin-top: 8px;
+  padding: 6px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-cancel-replace:hover {
+  border-color: var(--text-muted);
+  color: var(--text-white);
+}
+
+.existing-file-card.file-deleted {
+  background: rgba(255, 64, 129, 0.1);
+  border-color: rgba(255, 64, 129, 0.3);
+  opacity: 0.6;
+}
+
+.existing-file-card.file-deleted .existing-file-name {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
 
 
 /* Responsive */

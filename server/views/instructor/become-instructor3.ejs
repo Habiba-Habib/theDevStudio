@@ -93,15 +93,16 @@
           </span>
         </div>
         <div class="summary-row no-border">
-          <span class="summary-label">Certificate</span>
-              <span class="summary-value" id="sumCert">
-            <% if (verification.certificateUrl) { %>
-              <i class="fa-solid fa-circle-check"></i> Uploaded
-            <% } else { %>
-              <i class="fa-solid fa-circle-exclamation"></i> Not uploaded
-            <% } %>
-          </span>
-        </div>
+  <span class="summary-label">Certificates</span>
+  <span class="summary-value" id="sumCert">
+    <% if (verification.certificateUrls && verification.certificateUrls.length > 0) { %>
+      <i class="fa-solid fa-circle-check"></i> <%= verification.certificateUrls.length %> uploaded
+    <% } else { %>
+      <i class="fa-solid fa-circle-exclamation"></i> Not uploaded
+    <% } %>
+  </span>
+</div>
+
 
       </div>
     </div>
@@ -145,7 +146,7 @@
     </form>
 
   </main>
-  <!-- Instructor Policy Modal -->
+<!-- Instructor Policy Modal -->
 <div class="instr-policy-modal hidden" id="instructor-policy-modal">
   <div class="instr-policy-card">
     <button type="button" class="instr-policy-close" id="instr-policy-close">
@@ -155,29 +156,47 @@
     <div class="instr-policy-body">
       <p><strong>Content Guidelines</strong></p>
       <ul>
-        <li>All course content must be original or properly licensed</li>
-        <li>No harmful, offensive, or misleading material is permitted</li>
-        <li>Courses must meet minimum quality standards before publishing</li>
+        <li>All course content must be original or you must have proper licensing rights</li>
+        <li>No harmful, offensive, discriminatory, or misleading material is permitted</li>
+        <li>Courses must meet TheDevStudio quality standards before publishing</li>
+        <li>All courses require admin approval before becoming visible to students</li>
       </ul>
-      <p><strong>Student Interaction</strong></p>
+      <p><strong>Instructor Responsibilities</strong></p>
       <ul>
-        <li>Respond to student questions within a reasonable timeframe</li>
+        <li>Respond to student questions within 48 hours during business days</li>
         <li>Maintain professional and respectful communication at all times</li>
-        <li>Do not solicit students outside the platform</li>
+        <li>Keep course content up-to-date and accurate</li>
+        <li>Do not solicit students for services outside the platform</li>
       </ul>
-      <p><strong>Payment Terms</strong></p>
+      <p><strong>Revenue & Payment Terms</strong></p>
       <ul>
-        <li>Revenue share is calculated monthly based on enrollments</li>
-        <li>Payouts are processed after a 30-day holding period</li>
-        <li>Refund requests from students may affect your earnings</li>
+        <li>Instructors receive 70% of course sales revenue after platform fees</li>
+        <li>Payments are processed monthly for earnings exceeding $50</li>
+        <li>Student refunds within 30 days may reduce your earnings for that period</li>
+        <li>TheDevStudio handles all payment processing and student billing</li>
       </ul>
-      <a href="/auth/terms-of-services" target="_blank" rel="noopener noreferrer" class="instr-policy-full-link">
-        Read full Terms of Service
+      <p><strong>Course Approval & Publishing</strong></p>
+      <ul>
+        <li>All courses undergo review within 24-72 hours of submission</li>
+        <li>Courses may be rejected if they don't meet quality or content standards</li>
+        <li>You'll receive email notifications about approval or rejection status</li>
+        <li>Approved courses become visible in the course catalog immediately</li>
+      </ul>
+      <p><strong>Account & Conduct</strong></p>
+      <ul>
+        <li>TheDevStudio reserves the right to suspend accounts for policy violations</li>
+        <li>Copyright infringement will result in immediate account termination</li>
+        <li>Fraudulent activity or misleading course information is prohibited</li>
+        <li>You may request account deletion; students retain access to purchased courses</li>
+      </ul>
+      <a href="/instructor-terms" target="_blank" rel="noopener noreferrer" class="instr-policy-full-link">
+        Read full Instructor Terms & Conditions
       </a>
     </div>
     <button type="button" class="instr-policy-close-btn" id="instr-policy-close-btn">Close</button>
   </div>
 </div>
+
 
 
   <script src="/js/become-instructor3.js"></script>

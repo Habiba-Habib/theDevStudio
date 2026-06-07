@@ -144,10 +144,14 @@ router.get('/become-instructor/step2', requireLoginPage, (req, res, next) => {
     if (!req.session.instructorApplication?.fullName) {
       return res.redirect('/become-instructor');
     }
-
-    res.render('instructor/become-instructor2');
+    res.render('instructor/become-instructor2', {
+      user: req.session.user,
+      verification: req.session.instructorApplication || {}
+    });
   } catch (err) {
-    next(err);
+    console.error(err);
+    res.status(500).send('Something went wrong');
+
   }
 });
 
@@ -167,15 +171,16 @@ router.post('/become-instructor/step2', requireLoginPage, uploadInstructorVerifi
     const { linkedinUrl, portfolioUrl, websiteUrl } = req.body;
 
 const cvUrl = req.files.cv[0].path;
-const certificateUrl = req.files.certificate[0].path;
-
+const certificateUrls = req.files.certificates 
+  ? req.files.certificates.map(file => file.path) 
+  : [];
 req.session.instructorApplication = {
   ...req.session.instructorApplication,
   linkedinUrl: linkedinUrl || '',
   portfolioUrl: portfolioUrl || '',
   websiteUrl: websiteUrl || '',
   cvUrl,
-  certificateUrl
+ certificateUrls
 };
 
     res.redirect('/become-instructor/step3');
@@ -257,6 +262,11 @@ router.post('/become-instructor/step3', requireLoginPage, async (req, res) => {
   message: "Something went wrong on our side."
 });
   }
+});
+router.get('/instructor-terms', (req, res) => {
+  res.render('public/instructor-terms', {
+    user: req.session.user || null
+  });
 });
 
 module.exports = router;
