@@ -172,11 +172,13 @@ body {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .challenges-table {
     width: 100%;
+    min-width: 760px;
     border-collapse: collapse;
 }
 
@@ -431,6 +433,10 @@ body {
 }
 
 @media (max-width: 768px) {
+    .page-wrapper {
+        padding: 28px 14px;
+    }
+
     .page-header {
         flex-direction: column;
         gap: 16px;
@@ -439,6 +445,24 @@ body {
     .btn-create {
         width: 100%;
         justify-content: center;
+    }
+
+    .filter-tabs {
+        overflow-x: auto;
+        padding-bottom: 4px;
+    }
+
+    .filter-tab {
+        white-space: nowrap;
+    }
+
+    .challenges-table {
+        min-width: 720px;
+    }
+
+    .challenges-table th,
+    .challenges-table td {
+        padding: 12px 14px;
     }
 
     .challenges-table th:nth-child(5),
