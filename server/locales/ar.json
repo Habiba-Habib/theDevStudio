@@ -67,5 +67,40 @@
   "errors": {
     "pageNotFound": "الصفحة التي تبحث عنها غير موجودة.",
     "serverError": "حدث خطأ ما. يرجى المحاولة مرة أخرى لاحقاً."
-  }
+  },
+  "buttons": {
+  "viewDetails": "عرض التفاصيل",
+  "continue": "متابعة"
+},
+"labels": {
+  "by": "بواسطة",
+  "all": "الكل"
+},
+"status": {
+  "yourCourse": "دورتك",
+  "enrolled": "مسجل",
+  "certificateEarned": "تم الحصول على الشهادة"
+},
+"categories": {
+  "webDevelopment": "تطوير الويب",
+  "dataScience": "علم البيانات",
+  "mobileDevelopment": "تطوير تطبيقات الهاتف",
+  "design": "التصميم",
+  "machineLearning": "تعلم الآلة"
+},
+"levels": {
+  "beginner": "مبتدئ",
+  "intermediate": "متوسط",
+  "advanced": "متقدم"
+},
+"courses": {
+  "pageTitle": "استكشف جميع الدورات",
+  "heroTitle": "استكشف جميع الدورات",
+  "heroSubtitle": "اكتشف {{count}} دورة يقدمها خبراء لتطوير مسارك المهني",
+  "searchPlaceholder": "ابحث عن الدورات...",
+  "showingCount": "عرض {{count}} دورات",
+  "showingCountSingle": "عرض {{count}} دورة",
+  "unknownInstructor": "مدرب غير معروف",
+  "noResults": "لا توجد دورات تطابق معايير البحث."
+}
 }

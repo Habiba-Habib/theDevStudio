@@ -58,7 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
     filteredCards.slice(start, end).forEach(c => c.classList.remove('hidden'));
 
     // Count label
-    showingCount.textContent = `Showing ${total} course${total !== 1 ? 's' : ''}`;
+    const text = window.coursePageText || {};
+const template = total === 1
+  ? text.showingCountSingle || "Showing {{count}} course"
+  : text.showingCount || "Showing {{count}} courses";
+
+showingCount.textContent = template.replace("{{count}}", total);
 
     // No-results message
     noResults.classList.toggle('hidden', total > 0);

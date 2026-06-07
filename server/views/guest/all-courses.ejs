@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= locale || 'en' %>" dir="<%= isRTL ? 'rtl' : 'ltr' %>">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EduPlatform - Explore All Courses</title>
+  <title>TheDevStudio - <%= __("courses.pageTitle") %></title>
 
 <link rel="stylesheet" href="/css/base.css" />
 <link rel="stylesheet" href="/css/all-courses.css" />
@@ -15,8 +15,10 @@
   <main class="main-content">
 
     <section class="hero-section">
-      <h1 class="hero-title">Explore All Courses</h1>
-     <p class="hero-subtitle">Discover <span id="course-count"><%= courses.length %></span> expert-led courses to advance your career</p>
+      <h1 class="hero-title"><%= __("courses.heroTitle") %></h1>
+      <p class="hero-subtitle">
+        <%= __("courses.heroSubtitle", { count: courses.length }) %>
+      </p>
     </section>
 
     <section class="search-filter-section">
@@ -24,24 +26,24 @@
         <span class="search-icon">
           <i class="fa-solid fa-magnifying-glass"></i>
         </span>
-        <input type="text" id="searchInput" class="search-input" placeholder="Search courses..." />
+        <input type="text" id="searchInput" class="search-input" placeholder="<%= __('courses.searchPlaceholder') %>" />
       </div>
     </section>
 
     <section class="filter-section">
       <div class="filter-row" id="categoryPills">
-        <button class="filter-btn filter-btn-category active" data-category="all">All</button>
-        <button class="filter-btn filter-btn-category" data-category="Web Development">Web Development</button>
-        <button class="filter-btn filter-btn-category" data-category="Data Science">Data Science</button>
-        <button class="filter-btn filter-btn-category" data-category="Mobile Development">Mobile Development</button>
-        <button class="filter-btn filter-btn-category" data-category="Design">Design</button>
-        <button class="filter-btn filter-btn-category" data-category="Machine Learning">Machine Learning</button>
+        <button class="filter-btn filter-btn-category active" data-category="all"><%= __("labels.all") %></button>
+        <button class="filter-btn filter-btn-category" data-category="Web Development"><%= __("categories.webDevelopment") %></button>
+        <button class="filter-btn filter-btn-category" data-category="Data Science"><%= __("categories.dataScience") %></button>
+        <button class="filter-btn filter-btn-category" data-category="Mobile Development"><%= __("categories.mobileDevelopment") %></button>
+        <button class="filter-btn filter-btn-category" data-category="Design"><%= __("categories.design") %></button>
+        <button class="filter-btn filter-btn-category" data-category="Machine Learning"><%= __("categories.machineLearning") %></button>
       </div>
       <div class="filter-row" id="levelPills">
-        <button class="filter-btn filter-btn-level active" data-level="all">All</button>
-        <button class="filter-btn filter-btn-level" data-level="Beginner">Beginner</button>
-        <button class="filter-btn filter-btn-level" data-level="Intermediate">Intermediate</button>
-        <button class="filter-btn filter-btn-level" data-level="Advanced">Advanced</button>
+        <button class="filter-btn filter-btn-level active" data-level="all"><%= __("labels.all") %></button>
+        <button class="filter-btn filter-btn-level" data-level="Beginner"><%= __("levels.beginner") %></button>
+        <button class="filter-btn filter-btn-level" data-level="Intermediate"><%= __("levels.intermediate") %></button>
+        <button class="filter-btn filter-btn-level" data-level="Advanced"><%= __("levels.advanced") %></button>
       </div>
     </section>
 
@@ -57,17 +59,17 @@
 
   <% if (isOwn) { %>
     <div class="card-own-ribbon">
-      <i class="fa-solid fa-graduation-cap"></i> Your Course
+      <i class="fa-solid fa-graduation-cap"></i> <%= __("status.yourCourse") %>
     </div>
   <% } %>
   <% if (course.isEnrolled) { %>
   <div class="card-own-ribbon">
-    <i class="fa-solid fa-check"></i> Enrolled
+    <i class="fa-solid fa-check"></i> <%= __("status.enrolled") %>
   </div>
 <% } %>
 <% if (course.hasCertificate) { %>
   <div class="card-certificate-ribbon">
-    <i class="fa-solid fa-certificate"></i> Certificate Earned
+    <i class="fa-solid fa-certificate"></i> <%= __("status.certificateEarned") %>
   </div>
 <% } %>
 
@@ -87,7 +89,9 @@
              </div>
           <h2 class="card-title"><%= course.title %></h2>
           <p class="card-desc"><%= course.shortDescription %></p>
-          <p class="card-author">By <%= course.instructor?.name || "Unknown Instructor" %></p>
+          <p class="card-author">
+            <%= __("labels.by") %> <%= course.instructor?.name || __("courses.unknownInstructor") %>
+          </p>
           <div class="card-stats">
             <span class="card-rating">
               <i class="fa-solid fa-star"></i>
@@ -101,9 +105,9 @@
           <div class="card-footer">
            <span class="card-price">$<%= course.price %></span>
              <% if (course.isEnrolled) { %>
-            <a href="/student/my-courses" class="btn-view-details">Continue</a>
+            <a href="/student/my-courses" class="btn-view-details"><%= __("buttons.continue") %></a>
           <% } else { %>
-            <a href="/courses/<%= course._id %>" class="btn-view-details">View Details</a>
+            <a href="/courses/<%= course._id %>" class="btn-view-details"><%= __("buttons.viewDetails") %></a>
           <% } %>
           </div>
         </div>
@@ -111,7 +115,7 @@
         <% }); %>
     </section>
 
-    <p class="no-results hidden" id="noResults">No courses found matching your criteria.</p>
+    <p class="no-results hidden" id="noResults"><%= __("courses.noResults") %></p>
 
     <!-- Pagination -->
     <div class="pagination-wrap hidden" id="paginationWrap">
@@ -125,7 +129,12 @@
     </div>
 
   </main>
-
+  <script>
+  window.coursePageText = {
+    showingCount: "<%= __('courses.showingCount') %>",
+    showingCountSingle: "<%= __('courses.showingCountSingle') %>"
+  };
+</script>
   <script src="/js/all-courses.js"></script>
   <script src="/js/footer.js"></script>
 </body>
