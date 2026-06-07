@@ -35,7 +35,12 @@ function renderPage() {
   Array.from(grid.querySelectorAll('.challenge-card')).forEach(c => c.style.display = 'none');
   filteredCards.slice(start, end).forEach(c => c.style.display = '');
 
-  countLabel.textContent = `Showing ${total} challenge${total !== 1 ? 's' : ''}`;
+  const text = window.challengePageText || {};
+  const template = total === 1
+    ? text.showingCountSingle || "Showing {{count}} challenge"
+    : text.showingCount || "Showing {{count}} challenges";
+
+  countLabel.textContent = template.replace("{{count}}", total);
 
   // Pagination controls
   if (totalPages <= 1) {

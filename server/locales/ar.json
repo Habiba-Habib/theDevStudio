@@ -70,7 +70,8 @@
   },
   "buttons": {
   "viewDetails": "عرض التفاصيل",
-  "continue": "متابعة"
+  "continue": "متابعة",
+  "viewChallenge": "عرض التحدي"
 },
 "labels": {
   "by": "بواسطة",
@@ -102,5 +103,24 @@
   "showingCountSingle": "عرض {{count}} دورة",
   "unknownInstructor": "مدرب غير معروف",
   "noResults": "لا توجد دورات تطابق معايير البحث."
+},
+"difficulty": {
+  "easy": "سهل",
+  "medium": "متوسط",
+  "hard": "صعب"
+},
+"challenges":{
+"pageTitle": "التحديات البرمجية",
+"heroBadge": "اختبر مهاراتك",
+"heroTitle": "التحديات البرمجية",
+"heroSubtitle": "طوّر مهاراتك البرمجية من خلال تحديات واقعية. اجمع النقاط، وتقدم في لوحة المتصدرين، وكن من أفضل المبرمجين.",
+"totalChallenges": "إجمالي التحديات",
+"totalPointsAvailable": "إجمالي النقاط المتاحة",
+"activeCompetitors": "متنافسين نشطين",
+"difficulty": "الصعوبة",
+"category": "التصنيف",
+"showingCount": "عرض {{count}} تحديات",
+"showingCountSingle": "عرض {{count}} تحدي",
+"points": "نقطة"
 }
 }

@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= locale || 'en' %>" dir="<%= isRTL ? 'rtl' : 'ltr' %>">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TheDevStudio | Coding Challenges</title>
+  <title>TheDevStudio | <%= __("challenges.pageTitle") %></title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
   <link rel="stylesheet" href="/css/challengespage.css">
- 
+ <script>
+  window.challengePageText = {
+    showingCount: "<%= __('challenges.showingCount') %>",
+    showingCountSingle: "<%= __('challenges.showingCountSingle') %>"
+  };
+</script>
   <script src="/js/challengescode.js" defer></script>
 </head>
 <body>
@@ -15,10 +20,10 @@
   <!-- HERO -->
   <header class="hero">
     <button class="btn-test-skills">
-      <i class="fa-solid fa-trophy"></i> Test Your Skills
+      <i class="fa-solid fa-trophy"></i> <%= __("challenges.heroBadge") %>
     </button>
-    <h1>Coding Challenges</h1>
-    <p>Sharpen your coding skills with real-world challenges. Earn points, climb the leaderboard, and become a top coder.</p>
+    <h1><%= __("challenges.heroTitle") %></h1>
+<p><%= __("challenges.heroSubtitle") %></p>
   </header>
 
   <!-- MAIN CONTENT -->
@@ -29,35 +34,35 @@
             <div class="stat-card">
         <i class="fa-solid fa-code icon-pink"></i>
         <h3><%= stats.totalChallenges %></h3>
-        <p>Total Challenges</p>
+        <p><%= __("challenges.totalChallenges") %></p>
       </div>
       <div class="stat-card">
         <i class="fa-solid fa-bolt icon-yellow"></i>
         <h3><%= stats.totalPoints %></h3>
-        <p>Total Points Available</p>
+        <p><%= __("challenges.totalPointsAvailable") %></p>
       </div>
       <div class="stat-card">
         <i class="fa-solid fa-trophy icon-teal"></i>
         <h3><%= stats.totalUsers %>+</h3>
-        <p>Active Competitors</p>
+        <p><%= __("challenges.activeCompetitors") %></p>
       </div>
     </div>
 
     <!-- FILTERS -->
     <div class="filters">
       <div class="filter-row">
-        <span>Difficulty</span>
+        <span><%= __("challenges.difficulty") %></span>
         <div class="filter-btns" data-type="difficulty">
-          <button class="active" data-value="all">All</button>
-          <button data-value="easy">Easy</button>
-          <button data-value="medium">Medium</button>
-          <button data-value="hard">Hard</button>
+          <button class="active" data-value="all"><%= __("labels.all") %></button>
+          <button data-value="easy"><%= __("difficulty.easy") %></button>
+          <button data-value="medium"><%= __("difficulty.medium") %></button>
+          <button data-value="hard"><%= __("difficulty.hard") %></button>
         </div>
       </div>
       <div class="filter-row">
-        <span>Category</span>
+        <span><%= __("challenges.category") %></span>
         <div class="filter-btns" data-type="category">
-          <button class="active" data-value="all">All</button>
+          <button class="active" data-value="all"><%= __("labels.all") %></button>
 
           <% [...new Set(challenges.map(c => c.category).filter(Boolean))].forEach(category => { %>
             <button data-value="<%= category.toLowerCase() %>"><%= category %></button>
@@ -67,7 +72,9 @@
     </div>
 
     <!-- RESULTS COUNT -->
-    <p id="results-count">Showing <%= challenges.length %> challenges</p>
+    <p id="results-count">
+  <%= __("challenges.showingCount", { count: challenges.length }) %>
+</p>
 
 <div id="challenges-grid" class="challenges-grid">
   <% challenges.forEach(challenge => { %>
@@ -76,8 +83,10 @@
          data-category="<%= (challenge.category || '').toLowerCase() %>">
 
       <div class="card-header">
-        <span class=" badge badge-<%= (challenge.difficulty || '').toLowerCase() %>"><%= challenge.difficulty %></span>
-        <span class="card-points"><i class="fa-solid fa-bolt icon-yellow "></i> <%= challenge.points %> pts</span>
+        <span class="badge badge-<%= (challenge.difficulty || '').toLowerCase() %>">
+          <%= __("difficulty." + (challenge.difficulty || "").toLowerCase()) %>
+        </span>
+        <span class="card-points"><i class="fa-solid fa-bolt icon-yellow "></i> <%= challenge.points %> <%= __("challenges.points") %></span>
       </div>
 
       <h3 class="card-title"><%= challenge.title %></h3>
@@ -85,7 +94,9 @@
 
       <div class="card-footer">
         <span class="card-category"><%= challenge.category %></span>
-        <a href="/challenges/<%= challenge._id %>" class="btn-view">View challenge</a>
+        <a href="/challenges/<%= challenge._id %>" class="btn-view">
+          <%= __("buttons.viewChallenge") %>
+        </a>
       </div>
 
     </div>

@@ -71,7 +71,8 @@
   },
   "buttons": {
   "viewDetails": "View Details",
-  "continue": "Continue"
+  "continue": "Continue",
+  "viewChallenge": "View Challenge"
 },
 "labels": {
   "by": "By",
@@ -103,5 +104,24 @@
   "showingCountSingle": "Showing {{count}} course",
   "unknownInstructor": "Unknown Instructor",
   "noResults": "No courses found matching your criteria."
+},
+"difficulty": {
+  "easy": "Easy",
+  "medium": "Medium",
+  "hard": "Hard"
+},
+"challenges": {
+    "pageTitle": "Coding Challenges",
+    "heroBadge": "Test Your Skills",
+    "heroTitle": "Coding Challenges",
+    "heroSubtitle": "Sharpen your coding skills with real-world challenges. Earn points, climb the leaderboard, and become a top coder.",        "totalChallenges": "Total Challenges",
+    "totalPointsAvailable": "Total Points Available",
+    "activeCompetitors": "Active Competitors",
+    "difficulty": "Difficulty",
+    "category": "Category",
+    "showingCount": "Showing {{count}} challenges",
+    "showingCountSingle": "Showing {{count}} challenge",
+    "points": "pts"
+        
 }
 }
