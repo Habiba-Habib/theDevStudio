@@ -1,5 +1,20 @@
 let currentUser = null;
+const navText = window.devStudioI18n || {};
+const currentLocale = navText.locale || "en";
 
+function t(key, fallback) {
+  return navText[key] || fallback;
+}
+
+function languageSwitcher() {
+  return `
+    <div class="language-switcher" aria-label="Language switcher">
+      <a href="/language/en" class="${currentLocale === "en" ? "active" : ""}">EN</a>
+      <span></span>
+      <a href="/language/ar" class="${currentLocale === "ar" ? "active" : ""}">AR</a>
+    </div>
+  `;
+}
 async function fetchCurrentUser() {
   try {
     const res = await fetch("/me");
@@ -67,14 +82,15 @@ function createGuestNavbar() {
     </button>
 
     <div class="nav-center">
-      <a onclick="goCourses()">Courses</a>
-      <a onclick="goChallenges()">Challenges</a>
-    </div>
+  <a onclick="goCourses()">${t("courses", "Courses")}</a>
+  <a onclick="goChallenges()">${t("challenges", "Challenges")}</a>
+</div>
 
-    <div class="nav-actions">
-      <button class="btn-login" onclick="goLogin()">Login</button>
-      <button class="btn-signup" onclick="goSignup()">Sign Up</button>
-    </div>
+<div class="nav-actions">
+  ${languageSwitcher()}
+  <button class="btn-login" onclick="goLogin()">${t("login", "Login")}</button>
+  <button class="btn-signup" onclick="goSignup()">${t("signup", "Sign Up")}</button>
+</div>
   `;
 
   return nav;
@@ -93,15 +109,16 @@ function createUserNavbar() {
     </button>
 
     <div class="nav-center">
-      <a onclick="goCourses()">Courses</a>
-      <a onclick="goChallenges()">Challenges</a>
-      <a onclick="goDashboard()">Dashboard</a>
-      <a onclick="goProfile()">Profile</a>
-    </div>
+  <a onclick="goCourses()">${t("courses", "Courses")}</a>
+  <a onclick="goChallenges()">${t("challenges", "Challenges")}</a>
+  <a onclick="goDashboard()">${t("dashboard", "Dashboard")}</a>
+  <a onclick="goProfile()">${t("profile", "Profile")}</a>
+</div>
 
-    <div class="nav-actions">
-      <button class="btn-signup" onclick="logout()">Logout</button>
-    </div>
+<div class="nav-actions">
+  ${languageSwitcher()}
+  <button class="btn-signup" onclick="logout()">${t("logout", "Logout")}</button>
+</div>
   `;
 
   return nav;

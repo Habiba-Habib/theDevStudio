@@ -3,6 +3,8 @@ require("dotenv").config({ path: path.join(__dirname, ".env") });
 const express = require("express");
 const session = require("express-session");
 const connectDB = require("./config/db");
+const localization = require("./middleware/localization");
+const languageRoutes = require("./routes/languageRoutes");
 
 const app = express();
 
@@ -30,7 +32,7 @@ app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, "../public")));   
 //app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
-
+app.use(localization);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -53,6 +55,7 @@ app.use("/challenges", challengeRoutes);
 app.use("/courses", coursesRoutes);
 app.use('/api', uploadRoute); //added
 app.use("/api/chatbot", chatbotRoutes);
+app.use("/language", languageRoutes);
 app.use("/",           publicRoutes);
 
 app.get("/me", (req, res) => res.json(req.session.user || null));

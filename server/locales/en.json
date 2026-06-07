@@ -1,0 +1,72 @@
+{
+  "nav": {
+    "home": "Home",
+    "courses": "Courses",
+    "challenges": "Challenges",
+    "login": "Login",
+    "signup": "Sign Up",
+    "dashboard": "Dashboard",
+    "logout": "Logout",
+    "profile": "Profile"
+  },
+  "home": {
+    "title": "The Dev Studio",
+    "subtitle": "Learn coding, solve challenges, and build your future.",
+    "browseCourses": "Browse Courses",
+    "startChallenges": "Start Challenges",
+  "heroTagline": "Welcome to the Future of Learning",
+  "heroTitle1": "Master New Skills,",
+  "heroTitle2": "Shape Your Future",
+  "heroSubtitle": "Join thousands of learners worldwide. Access expert-led courses, tackle coding challenges, and earn certifications that matter",
+  "startCoding": "Start Coding",
+
+  "activeLearners": "Active Learners",
+  "expertCourses": "Expert Courses",
+  "certifiedStudents": "Certified Students",
+  "successRate": "Success Rate",
+
+  "featuredCourses": "Featured Courses",
+  "featuredCoursesTagline": "Start learning with our most popular courses",
+  "byInstructor": "By",
+  "defaultInstructor": "Instructor",
+  "viewDetails": "View Details",
+  "viewAllCourses": "View All Courses",
+
+  "challengeTagline": "Challenge Yourself",
+  "challengeTitle": "Practice with Real Coding Challenges",
+  "challengeSubtitle": "Test your skills with hundreds of coding challenges. Earn points, climb the leaderboard, and prove your expertise.",
+  "exploreChallenges": "Explore Challenges",
+  "points": "pts",
+  "noChallenges": "No challenges available yet.",
+
+  "whyTitle": "Why Choose TheDevStudio?",
+  "whySubtitle": "Everything you need to succeed in your learning journey",
+
+  "feature1Title": "Expert-Led Courses",
+  "feature1Desc": "Learn from industry professionals with years of real-world experience",
+
+  "feature2Title": "Hands-On Challenges",
+  "feature2Desc": "Practice with real coding problems and build your problem-solving skills",
+
+  "feature3Title": "Earn Certificates",
+  "feature3Desc": "Get recognized for your achievements with industry-valued certifications.",
+
+  "feature4Title": "Self-Paced Learning",
+  "feature4Desc": "Learn at your own pace, anytime, anywhere, on any device.",
+
+  "feature5Title": "Career Growth",
+  "feature5Desc": "Acquire in-demand skills that accelerate your career advancement.",
+
+  "feature6Title": "Community Support",
+  "feature6Desc": "Join a vibrant community of learners and mentors worldwide.",
+
+  "readyTitle": "Ready to Start Learning?",
+  "readySubtitle": "Join thousands of students achieving their goals every day.",
+  "getStarted": "Get Started for Free"
+
+  },
+  "errors": {
+    "pageNotFound": "The page you are looking for does not exist.",
+    "serverError": "Something went wrong. Please try again later."
+  }
+}

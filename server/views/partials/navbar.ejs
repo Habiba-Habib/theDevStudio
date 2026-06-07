@@ -6,6 +6,18 @@
 <link rel="stylesheet" href="/css/navbar-css.css" />
 <link rel="stylesheet" href="/css/chatbot.css" />
 
+<script>
+  window.devStudioI18n = {
+    locale: "<%= locale || 'en' %>",
+    courses: "<%= __('nav.courses') %>",
+    challenges: "<%= __('nav.challenges') %>",
+    login: "<%= __('nav.login') %>",
+    signup: "<%= __('nav.signup') %>",
+    dashboard: "<%= __('nav.dashboard') %>",
+    logout: "<%= __('nav.logout') %>",
+    profile: "<%= __('nav.profile') %>"
+  };
+</script>
 <script defer src="/js/main-navbar.js"></script>
 
 <button class="chatbot-toggle" id="chatbotToggle" type="button" aria-label="Open chat assistant">

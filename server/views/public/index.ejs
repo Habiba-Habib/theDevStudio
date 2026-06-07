@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= locale || 'en' %>" dir="<%= isRTL ? 'rtl' : 'ltr' %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,18 +20,18 @@
 
              <span class="hero-tagline">
                <i class="fa-solid fa-rocket"></i>
-                Welcome to the Future of Learning
+                <%= __("home.heroTagline") %>
               </span>
       
 
-               <h1 class="hero-title1">Master New Skills, </h1>
-               <h1 class="hero-title2">Shape Your Future</h1> 
-               <p>Join thousands of learners worldwide. Access expert-led courses, <br>tackle coding challenges, and earn certifications that matter</p>
+               <h1 class="hero-title1"><%= __("home.heroTitle1") %></h1>
+<h1 class="hero-title2"><%= __("home.heroTitle2") %></h1> 
+<p><%= __("home.heroSubtitle") %></p>
 
             <div class="buttons">
                <button class="hero-buttn1">
                 <a href="courses/all-courses">
-                  <span class="browse-text">Browse Courses
+                  <span class="browse-text"><%= __("home.browseCourses") %>
                    <i class="fa-solid fa-right-long"></i>                
                   </span>
                    </a> 
@@ -43,7 +43,7 @@
                     <span class="btn-icon">
                          <i class="fa-solid fa-code"></i>
                     </span>
-                       Start Coding
+                       <%= __("home.startCoding") %>
                    </a>
                 </button> 
               </div>
@@ -55,29 +55,29 @@
             <div class="card-item">
                 <span class="icon pink"><i class="fa-solid fa-users"></i></span>
                 <div class="card-number"><%= stats.learners %></div>
-                <div class="card-label">Active Learners</div>
+                <div class="card-label"><%= __("home.activeLearners") %></div>
             </div>
             <div class="card-item">
                 <span class="icon yellow"><i class="fa-solid fa-book"></i></span>
                 <div class="card-number"><%= stats.courses %></div>
-                <div class="card-label">Expert Courses</div>
+                <div class="card-label"><%= __("home.expertCourses") %></div>
             </div>
             <div class="card-item">
                 <span class="icon green"><i class="fa-solid fa-trophy"></i></span>
                 <div class="card-number"><%= stats.certified %></div>
-                <div class="card-label">Certified Students</div>
+                <div class="card-label"><%= __("home.certifiedStudents") %></div>
             </div>
             <div class="card-item">
                 <span class="icon light-pink"><i class="fa-solid fa-bullseye"></i></span>
                 <div class="card-number"><%= stats.successRate %></div>
-                <div class="card-label">Success Rate</div>
+                <div class="card-label"><%= __("home.successRate") %></div>
             </div>
         </section>
         
           
         <section class="featured-courses">
-            <h1 class="section-title">Featured Courses</h1>
-            <p class="courses-tagline">Start learning with our most popular courses</p>
+            <h1 class="section-title"><%= __("home.featuredCourses") %></h1>
+            <p class="courses-tagline"><%= __("home.featuredCoursesTagline") %></p>
 
             <div class="courses-grid">
               <% courses.forEach(course => { %>
@@ -92,7 +92,9 @@
                 <p class="category"><%= course.category %> • <%= course.duration %></p>
             <h3 class="card-title"><%= course.title %></h3>
             <p class="description"><%= course.shortDescription %></p>
-            <p class="instructor">By <%= course.instructor?.name || "Instructor" %></p>
+            <p class="instructor">
+              <%= __("home.byInstructor") %> <%= course.instructor?.name || __("home.defaultInstructor") %>
+            </p>
             <div class="rating">
                <span class="card-rating">
               <i class="fa-solid fa-star"></i>
@@ -106,7 +108,9 @@
 
             <div class="card-footer">
                 <span class="price">$<%= course.price %></span>
-          <button class="btn-details"><a href="/courses/<%= course._id %>">View Details</a></button>
+          <button class="btn-details">
+            <a href="/courses/<%= course._id %>"><%= __("home.viewDetails") %></a>
+          </button>
             </div>
             </div>
             </article>
@@ -114,17 +118,17 @@
             </div>
         </section>
        <div class="view-all-container">
-          <a href="/courses/all-courses" class="view-all">View All Courses →</a>
+          <a href="/courses/all-courses" class="view-all"><%= __("home.viewAllCourses") %> →</a>
         </div>
 
           
 
         <section class="challenges">
          <div class="challenges-content">
-            <span class="challenge"> 🏆 Challenge Yourself</span>
-            <h1 style="color:white; font-family: 'Inter' , sans-serif;">Practice with Real Coding Challenges</h1>
-            <p style="color: #99A1AF; font-family: 'Inter' , sans-serif;">Test your skills with hundreds of coding challenges. Earn points, climb the leaderboard, and prove your expertise.</p>
-            <button class="challenge-btn"><a href="/challenges">Explore Challenges 
+            <span class="challenge"><i class="fa-solid fa-trophy"></i> <%= __("home.challengeTagline") %></span>
+            <h1 style="color:white; font-family: 'Inter' , sans-serif;"><%= __("home.challengeTitle") %></h1>
+            <p style="color: #99A1AF; font-family: 'Inter' , sans-serif;"><%= __("home.challengeSubtitle") %></p>
+            <button class="challenge-btn"><a href="/challenges"><%= __("home.exploreChallenges") %> 
                 <span style="color:orange"><i class="fa-solid fa-bolt"></i></span>
             </a></button>
          </div>
@@ -141,20 +145,20 @@
                    <h3 class="challenge-title"><%= challenge.title %></h3>
                    <div class="challenge-footer">
                      <span class="difficulty <%= challenge.difficulty %>"><%= challenge.difficulty %></span>
-                     <span class="points"><i class="fa-solid fa-bolt" style="color:#F0FE72;font-size:0.7rem;"></i> <%= challenge.points %> pts</span>
+                     <span class="points"><i class="fa-solid fa-bolt" style="color:#F0FE72;font-size:0.7rem;"></i> <%= challenge.points %> <%= __("home.points") %></span>
                    </div>
                  </div>
                </a>
              <% }) %>
            <% } else { %>
-             <p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:2rem 0;">No challenges available yet.</p>
+             <p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:2rem 0;"><%= __("home.noChallenges") %></p>
            <% } %>
          </div>
          </section>
 
         <section class="why-DevStudio">
-  <h1 class="section-title">Why Choose TheDevStudio?</h1>
-  <p class="courses-tagline">Everything you need to succeed in your learning journey</p>
+        <h1 class="section-title"><%= __("home.whyTitle") %></h1>
+      <p class="courses-tagline"><%= __("home.whySubtitle") %></p>
 
   <div class="learning-grid">
 
@@ -162,57 +166,57 @@
       <span class="learning-icon">
         <span class="icon pink"><i class="fa-solid fa-book"></i></span>
       </span>
-      <h3 class="learning-title">Expert-Led Courses</h3>
-      <p class="learning-desc">Learn from industry professionals with years of real-world experience</p>
+      <h3 class="learning-title"><%= __("home.feature1Title") %></h3>
+<p class="learning-desc"><%= __("home.feature1Desc") %></p>
     </div>
 
     <div class="learning-card">
       <span class="learning-icon">
         <span class="icon lightsalmon"><i class="fa-solid fa-code"></i></span>
       </span>
-      <h3 class="learning-title">Hands-On Challenges</h3>
-      <p class="learning-desc">Practice with real coding problems and build your problem-solving skills</p>
+      <h3 class="learning-title"><%= __("home.feature2Title") %></h3>
+<p class="learning-desc"><%= __("home.feature2Desc") %></p>
     </div>
 
     <div class="learning-card">
       <span class="learning-icon">
         <span class="icon green"><i class="fa-solid fa-trophy"></i></span>
       </span>
-      <h3 class="learning-title">Earn Certificates</h3>
-      <p class="learning-desc">Get recognized for your achievements with industry-valued certifications.</p>
+      <h3 class="learning-title"><%= __("home.feature3Title") %></h3>
+<p class="learning-desc"><%= __("home.feature3Desc") %></p>
     </div>
 
     <div class="learning-card">
       <span class="learning-icon">
         <span class="icon yellow "><i class="fa-solid fa-bolt"></i></span>
       </span>
-      <h3 class="learning-title">Self-Paced Learning</h3>
-      <p class="learning-desc">Learn at your own pace, anytime, anywhere, on any device.</p>
+      <h3 class="learning-title"><%= __("home.feature4Title") %></h3>
+<p class="learning-desc"><%= __("home.feature4Desc") %></p>
     </div>
 
     <div class="learning-card">
       <span class="learning-icon">
         <span class="icon purple"><i class="fa-solid fa-globe"></i></span>
       </span>
-      <h3 class="learning-title">Career Growth</h3>
-      <p class="learning-desc">Acquire in-demand skills that accelerate your career advancement.</p>
+      <h3 class="learning-title"><%= __("home.feature5Title") %></h3>
+<p class="learning-desc"><%= __("home.feature5Desc") %></p>
     </div>
 
    <div class="learning-card">
       <span class="learning-icon">
         <span class="icon light-pink"><i class="fa-solid fa-people-group"></i></span>
       </span>
-      <h3 class="learning-title">Community Support</h3>
-      <p class="learning-desc">join a vibrant community of learners and mentors worldwide </p>
+      <h3 class="learning-title"><%= __("home.feature6Title") %></h3>
+<p class="learning-desc"><%= __("home.feature6Desc") %></p>
     </div>
 
 
   </div>
   <div class="start-learning">
-    <h1 >Ready to Start Learning?</h1>
-    <p >Join thousands of students achieving their goals every day.</p>
+    <h1><%= __("home.readyTitle") %></h1>
+    <p><%= __("home.readySubtitle") %></p>
     <button class="learning-btn">
-      <a href="/auth/signup"> Get Started for Free 
+      <a href="/auth/signup"> <%= __("home.getStarted") %> 
       <span class="arrow-icon">
          <i class="fa-solid fa-right-long"></i> 
       </span>
@@ -253,7 +257,7 @@
 
         const browseText = document.querySelector('.browse-text');
         if (browseText) {
-            typeWriter(browseText, 'Browse Courses');
+            typeWriter(browseText, '<%= __("home.browseCourses") %>');
         }
     });
 </script>
