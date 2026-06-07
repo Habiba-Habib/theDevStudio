@@ -72,16 +72,30 @@
   "buttons": {
   "viewDetails": "View Details",
   "continue": "Continue",
-  "viewChallenge": "View Challenge"
+  "viewChallenge": "View Challenge",
+  "back": "Back",
+"edit": "Edit",
+"enroll": "Enroll",
+"close": "Close",
+"confirmPayment": "Confirm Payment"
 },
 "labels": {
   "by": "By",
-  "all": "All"
+  "all": "All",
+  "students": "students",
+"enrolled": "enrolled",
+"lessons": "lessons",
+"sections": "Sections",
+"subtotal": "Subtotal",
+"tax": "Tax",
+"total": "Total"
 },
 "status": {
   "yourCourse": "Your Course",
   "enrolled": "Enrolled",
-  "certificateEarned": "Certificate Earned"
+  "certificateEarned": "Certificate Earned",
+  "owner": "Owner",
+"certificateIncluded": "Certificate Included"
 },
 "categories": {
   "webDevelopment": "Web Development",
@@ -123,5 +137,88 @@
     "showingCountSingle": "Showing {{count}} challenge",
     "points": "pts"
         
+},
+"courseDetails": {
+  "pageTitle": "Course Description",
+  "backToCourses": "Back to Courses",
+  "instructor": "Instructor",
+  "unknownInstructor": "Unknown Instructor",
+  "coursePreview": "Course Preview",
+  "whatYouWillLearn": "What you'll learn",
+  "curriculum": "Course Curriculum",
+  "certificateTitle": "Certificate of Completion",
+  "certificateDesc": "Earn an official certificate when you complete this course. Share it on LinkedIn, add it to your resume, or display it in your professional portfolio.",
+  "studentReviews": "Student Reviews",
+  "student": "Student",
+  "noReviews": "No reviews yet. Be the first to review this course.",
+  "ownerDesc": "Edit content, manage students, and track performance.",
+  "editCourse": "Edit Course",
+  "viewCoursePlayer": "View Course Player",
+  "oneTimePayment": "One-time payment • Full lifetime access",
+  "lifetimeAccess": "You have lifetime access to this course",
+  "yourProgress": "Your progress",
+  "continueLearning": "Continue Learning",
+  "totalDuration": "Total duration",
+  "skillLevel": "Skill level",
+  "courseModules": "Course modules"
+},
+"payment": {
+  "pageTitle": "Complete Your Enrollment",
+  "courseSummary": "Course Summary",
+  "defaultInstructor": "Instructor",
+  "oneTimeLifetime": "One-time payment • Lifetime access",
+  "moneyBack": "30-day money-back guarantee",
+
+  "paymentInfo": "Payment Information",
+  "secureEncrypted": "All transactions are secure and encrypted",
+
+  "cardholderName": "Cardholder Name",
+  "cardholderPlaceholder": "John Doe",
+  "cardNumber": "Card Number",
+  "cardNumberPlaceholder": "1234 5678 9012 3456",
+  "expiryDate": "Expiry Date",
+  "expiryPlaceholder": "MM/YY",
+  "cvv": "CVV",
+  "cvvPlaceholder": "123",
+  "promoCode": "Promo Code (Optional)",
+  "promoPlaceholder": "Enter promo code",
+
+  "cardHolder": "Card Holder",
+  "yourName": "YOUR NAME",
+  "expires": "Expires",
+
+  "termsAgree": "I agree to the",
+  "termsOfService": "Terms of Service",
+  "and": "and",
+  "privacyPolicy": "Privacy Policy",
+
+  "secureNote": "Your payment information is secure and encrypted",
+  "backToCourses": "Back to courses",
+
+  "termsTitle": "Terms of Service",
+  "termsIntro": "By using TheDevStudio you agree to:",
+  "termsItem1": "Provide accurate account information",
+  "termsItem2": "Use courses and challenges honestly",
+  "termsItem3": "Follow instructor verification rules if applying to teach",
+  "termsItem4": "Not upload harmful, illegal, or infringing content",
+  "readFullTerms": "Read full Terms of Service",
+
+  "privacyTitle": "Privacy Policy",
+  "privacyIntro": "We collect data needed to run the platform, including:",
+  "privacyItem1": "Name, email, and account details",
+  "privacyItem2": "Course progress and challenge submissions",
+  "privacyItem3": "Instructor verification documents if you apply",
+  "privacyNoSell": "We do not sell your personal data.",
+  "readFullPrivacy": "Read full Privacy Policy",
+  "successTitle": "Payment Successful",
+  "successSubtitle": "Your enrollment has been completed successfully.",
+  "successDescription": "You now have lifetime access to this course. You can start learning immediately from your dashboard.",
+  "course": "Course",
+  "instructor": "Instructor",
+  "amountPaid": "Amount Paid",
+  "status": "Status",
+  "enrollmentConfirmed": "Enrollment Confirmed",
+  "browseMoreCourses": "Browse more courses",
+  "goToMyCourses": "Go to my courses"
 }
 }

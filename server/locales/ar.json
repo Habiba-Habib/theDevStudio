@@ -71,16 +71,30 @@
   "buttons": {
   "viewDetails": "عرض التفاصيل",
   "continue": "متابعة",
-  "viewChallenge": "عرض التحدي"
+  "viewChallenge": "عرض التحدي",
+  "back": "رجوع",
+  "edit": "تعديل",
+  "enroll": "التسجيل",
+  "close": "إغلاق",
+"confirmPayment": "تأكيد الدفع"
 },
 "labels": {
   "by": "بواسطة",
-  "all": "الكل"
+  "all": "الكل",
+  "students": "طلاب",
+"enrolled": "مسجل",
+"lessons": "دروس",
+"sections": "أقسام",
+"subtotal": "المجموع الفرعي",
+"tax": "الضريبة",
+"total": "الإجمالي"
 },
 "status": {
   "yourCourse": "دورتك",
   "enrolled": "مسجل",
-  "certificateEarned": "تم الحصول على الشهادة"
+  "certificateEarned": "تم الحصول على الشهادة",
+  "owner": "المالك",
+"certificateIncluded": "الشهادة متضمنة"
 },
 "categories": {
   "webDevelopment": "تطوير الويب",
@@ -122,5 +136,88 @@
 "showingCount": "عرض {{count}} تحديات",
 "showingCountSingle": "عرض {{count}} تحدي",
 "points": "نقطة"
+},
+"courseDetails": {
+  "pageTitle": "وصف الدورة",
+  "backToCourses": "العودة إلى الدورات",
+  "instructor": "المدرب",
+  "unknownInstructor": "مدرب غير معروف",
+  "coursePreview": "معاينة الدورة",
+  "whatYouWillLearn": "ماذا ستتعلم",
+  "curriculum": "منهج الدورة",
+  "certificateTitle": "شهادة إتمام",
+  "certificateDesc": "احصل على شهادة رسمية عند إكمال هذه الدورة. يمكنك مشاركتها على LinkedIn أو إضافتها إلى سيرتك الذاتية أو عرضها في ملفك المهني.",
+  "studentReviews": "تقييمات الطلاب",
+  "student": "طالب",
+  "noReviews": "لا توجد تقييمات بعد. كن أول من يقيّم هذه الدورة.",
+  "ownerDesc": "عدّل المحتوى، وأدر الطلاب، وتابع الأداء.",
+  "editCourse": "تعديل الدورة",
+  "viewCoursePlayer": "عرض مشغل الدورة",
+  "oneTimePayment": "دفعة واحدة • وصول كامل مدى الحياة",
+  "lifetimeAccess": "لديك وصول مدى الحياة إلى هذه الدورة",
+  "yourProgress": "تقدمك",
+  "continueLearning": "متابعة التعلم",
+  "totalDuration": "المدة الإجمالية",
+  "skillLevel": "مستوى المهارة",
+  "courseModules": "وحدات الدورة"
+},
+"payment": {
+  "pageTitle": "إكمال التسجيل",
+  "courseSummary": "ملخص الدورة",
+  "defaultInstructor": "المدرب",
+  "oneTimeLifetime": "دفعة واحدة • وصول مدى الحياة",
+  "moneyBack": "ضمان استرداد الأموال خلال 30 يوماً",
+
+  "paymentInfo": "معلومات الدفع",
+  "secureEncrypted": "جميع المعاملات آمنة ومشفرة",
+
+  "cardholderName": "اسم حامل البطاقة",
+  "cardholderPlaceholder": "John Doe",
+  "cardNumber": "رقم البطاقة",
+  "cardNumberPlaceholder": "1234 5678 9012 3456",
+  "expiryDate": "تاريخ الانتهاء",
+  "expiryPlaceholder": "MM/YY",
+  "cvv": "CVV",
+  "cvvPlaceholder": "123",
+  "promoCode": "رمز الخصم (اختياري)",
+  "promoPlaceholder": "أدخل رمز الخصم",
+
+  "cardHolder": "حامل البطاقة",
+  "yourName": "اسمك",
+  "expires": "تنتهي",
+
+  "termsAgree": "أوافق على",
+  "termsOfService": "شروط الخدمة",
+  "and": "و",
+  "privacyPolicy": "سياسة الخصوصية",
+
+  "secureNote": "معلومات الدفع الخاصة بك آمنة ومشفرة",
+  "backToCourses": "العودة إلى الدورات",
+
+  "termsTitle": "شروط الخدمة",
+  "termsIntro": "باستخدامك TheDevStudio فإنك توافق على:",
+  "termsItem1": "تقديم معلومات حساب دقيقة",
+  "termsItem2": "استخدام الدورات والتحديات بأمانة",
+  "termsItem3": "اتباع قواعد التحقق من المدربين عند التقديم للتدريس",
+  "termsItem4": "عدم رفع محتوى ضار أو غير قانوني أو مخالف للحقوق",
+  "readFullTerms": "قراءة شروط الخدمة كاملة",
+
+  "privacyTitle": "سياسة الخصوصية",
+  "privacyIntro": "نحن نجمع البيانات اللازمة لتشغيل المنصة، وتشمل:",
+  "privacyItem1": "الاسم والبريد الإلكتروني وتفاصيل الحساب",
+  "privacyItem2": "تقدم الدورات وتسليمات التحديات",
+  "privacyItem3": "مستندات التحقق من المدرب إذا قمت بالتقديم",
+  "privacyNoSell": "نحن لا نبيع بياناتك الشخصية.",
+  "readFullPrivacy": "قراءة سياسة الخصوصية كاملة",
+  "successTitle": "تم الدفع بنجاح",
+  "successSubtitle": "تم إكمال تسجيلك بنجاح.",
+  "successDescription": "أصبح لديك الآن وصول مدى الحياة إلى هذه الدورة. يمكنك البدء بالتعلم مباشرة من لوحة التحكم.",
+  "course": "الدورة",
+  "instructor": "المدرب",
+  "amountPaid": "المبلغ المدفوع",
+  "status": "الحالة",
+  "enrollmentConfirmed": "تم تأكيد التسجيل",
+  "browseMoreCourses": "تصفح المزيد من الدورات",
+  "goToMyCourses": "اذهب إلى دوراتي"
 }
 }

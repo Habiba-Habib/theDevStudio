@@ -2,6 +2,7 @@ const User      = require("../models/User");
 const Challenge = require("../models/challenges");
 const Course = require("../models/Course");
 const Payment = require("../models/payment");
+const bcrypt = require("bcryptjs");
 
 exports.getDashboard = async (req, res) => {
   try {
@@ -180,27 +181,83 @@ exports.getEditProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    const { fullname, username, email, location, bio } = req.body;
-    const avatar = (req.body.avatar || '').replace(/^.*\//, ''); // keep filename only
+    const {
+      name,
+      username,
+      email,
+      location,
+      bio,
+      currentPassword,
+      newPassword,
+      confirmPassword
+    } = req.body;
 
-    await User.findByIdAndUpdate(req.session.user._id, {
-      fullname, username, email, location, bio, avatar
-    });
+    const avatar = (req.body.avatar || "").replace(/^.*\//, "");
 
-    const updated = await User.findById(req.session.user._id);
-    req.session.user = {
-      _id:   updated._id,
-      name:  updated.name,
-      email: updated.email,
-      role:  updated.role,
-      avatar: updated.avatar,
+    const user = await User.findById(req.session.user._id);
+
+    if (!user) {
+      return res.redirect("/auth/login");
+    }
+
+    const updateData = {
+      name: name?.trim() || user.name,
+      username: username?.trim() || "",
+      email: email?.trim() || user.email,
+      location: location?.trim() || "",
+      bio: bio?.trim() || "",
+      avatar
     };
 
-    res.redirect('/admin/profile');
+    if (currentPassword || newPassword || confirmPassword) {
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        return res.render("shared/edit-profile", {
+          user,
+          errors: ["Please fill all password fields."]
+        });
+      }
+
+      if (newPassword !== confirmPassword) {
+        return res.render("shared/edit-profile", {
+          user,
+          errors: ["New passwords do not match."]
+        });
+      }
+
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+      if (!isMatch) {
+        return res.render("shared/edit-profile", {
+          user,
+          errors: ["Current password is incorrect."]
+        });
+      }
+
+      updateData.password = await bcrypt.hash(newPassword, 10);
+    }
+
+    const updated = await User.findByIdAndUpdate(
+      req.session.user._id,
+      updateData,
+      { returnDocument: "after", runValidators: true }
+    );
+
+    req.session.user = {
+      _id: updated._id,
+      name: updated.name,
+      email: updated.email,
+      role: updated.role,
+      avatar: updated.avatar
+    };
+
+    res.redirect("/admin/profile");
   } catch (err) {
     console.error(err);
     const user = await User.findById(req.session.user._id);
-    res.render('shared/edit-profile', { user, errors: ['Something went wrong. Please try again.'] });
+    res.render("shared/edit-profile", {
+      user,
+      errors: ["Something went wrong. Please try again."]
+    });
   }
 };
 

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= locale || 'en' %>" dir="<%= isRTL ? 'rtl' : 'ltr' %>">
 <head>
   <meta charset="UTF-8"/>
   <link rel="icon" type="image/png" href="/images/favicon.png?v=2" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EduPlatform | Complete Your Enrollment</title>
+  <title>TheDevStudio | <%= __("payment.pageTitle") %></title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
@@ -17,13 +17,13 @@
 <%- include('../partials/navbar') %>
   <main class="enroll-wrapper">
 
-    <h1 class="enroll-title">Complete Your Enrollment</h1>
+    <h1 class="enroll-title"><%= __("payment.pageTitle") %></h1>
 
     <div class="enroll-grid">
 
       <!-- LEFT: Course Summary -->
       <aside class="enroll-card">
-        <h2>Course Summary</h2>
+        <h2><%= __("payment.courseSummary") %></h2>
 
         <img
           src="<%= course.image || 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80' %>"
@@ -34,7 +34,7 @@
         <h3 class="course-name"><%= course.title %></h3>
 
         <p class="course-author">
-          By <%= course.instructorName || course.author || 'Instructor' %>
+          <%= __("labels.by") %> <%= course.instructorName || course.author || __("payment.defaultInstructor") %>
         </p>
 
         <p class="course-desc">
@@ -54,13 +54,13 @@
           $<%= Number(course.price || 0).toFixed(2) %>
         </p>
 
-        <p class="course-access">One-time payment • Lifetime access</p>
+        <p class="course-access"><%= __("payment.oneTimeLifetime") %></p>
 
         <hr class="divider"/>
 
         <div class="guarantee">
           <i class="fa-regular fa-circle-check"></i>
-          30-day money-back guarantee
+          <%= __("payment.moneyBack") %>
         </div>
       </aside>
 
@@ -72,8 +72,8 @@
             <i class="fa-solid fa-credit-card"></i>
           </div>
           <div>
-            <h2>Payment Information</h2>
-            <p class="payment-sub">All transactions are secure and encrypted</p>
+            <h2><%= __("payment.paymentInfo") %></h2>
+            <p class="payment-sub"><%= __("payment.secureEncrypted") %></p>
           </div>
         </div>
         <div class="payment-content">
@@ -83,39 +83,42 @@
         <input type="hidden" id="cardType" name="cardType" value="unknown">
 
           <div class="field-group">
-            <label for="cardName">Cardholder Name</label>
-            <input type="text" placeholder="John Doe" id="cardName" name="cardName"/>
+            <label for="cardName"><%= __("payment.cardholderName") %></label>
+            <input type="text" placeholder="<%= __('payment.cardholderPlaceholder') %>" id="cardName" name="cardName"/>
             <span class="field-error" id="err-cardName"></span>
           </div>
 
           <div class="field-group">
-            <label for="cardNumber">Card Number</label>
-            <div class="input-row">
-              <input 
-                type="text" 
-                placeholder="1234 5678 9012 3456" 
-                id="cardNumber" 
-                name="cardNumber" 
-                maxlength="19"
-              />
-              <div class="card-brands">
-                <span class="brand visa" id="brandVisa">VISA</span>
-                <span class="brand mc" id="brandMastercard">MC</span>
-              </div>
-            </div>
-            <span class="field-error" id="err-cardNumber"></span>
-          </div>
+  <label for="cardNumber"><%= __("payment.cardNumber") %></label>
+
+  <div class="input-row">
+    <input 
+      type="text" 
+      placeholder="<%= __('payment.cardNumberPlaceholder') %>" 
+      id="cardNumber" 
+      name="cardNumber" 
+      maxlength="19"
+    />
+
+    <div class="card-brands">
+      <span class="brand visa" id="brandVisa">VISA</span>
+      <span class="brand mc" id="brandMastercard">MC</span>
+    </div>
+  </div>
+
+  <span class="field-error" id="err-cardNumber"></span>
+</div>
 
           <div class="two-col">
             <div class="field-group">
-              <label for="expiry">Expiry Date</label>
-              <input type="text" placeholder="MM/YY" id="expiry" name="expiry" maxlength="5"/>
+              <label for="expiry"><%= __("payment.expiryDate") %></label>
+              <input type="text" placeholder="<%= __('payment.expiryPlaceholder') %>" id="expiry" name="expiry" maxlength="5"/>
               <span class="field-error" id="err-expiry"></span>
             </div>
 
             <div class="field-group">
-              <label for="cvv">CVV</label>
-              <input type="text" placeholder="123" id="cvv" name="cvv" maxlength="3"/>
+              <label for="cvv"><%= __("payment.cvv") %></label>
+              <input type="text" placeholder="<%= __('payment.cvvPlaceholder') %>" id="cvv" name="cvv" maxlength="3"/>
               <span class="field-error" id="err-cvv"></span>
             </div>
           </div>
@@ -131,11 +134,11 @@
                 <div class="preview-card-number" id="previewCardNumber">#### #### #### ####</div>
                 <div class="card-bottom">
                   <div>
-                    <span class="card-small-label">Card Holder</span>
-                    <strong id="previewCardName">YOUR NAME</strong>
+                    <span class="card-small-label"><%= __("payment.cardHolder") %></span>
+                    <strong id="previewCardName"><%= __("payment.yourName") %></strong>
                   </div>
                   <div>
-                    <span class="card-small-label">Expires</span>
+                    <span class="card-small-label"><%= __("payment.expires") %></span>
                     <strong id="previewExpiry">MM/YY</strong>
                   </div>
                 </div>
@@ -151,8 +154,8 @@
           </div>
 
           <div class="field-group">
-            <label for="promo">Promo Code (Optional)</label>
-            <input type="text" placeholder="Enter promo code" id="promo" name="promo"/>
+            <label for="promo"><%= __("payment.promoCode") %></label>
+            <input type="text" placeholder="<%= __('payment.promoPlaceholder') %>" id="promo" name="promo"/>
             <span class="field-error" id="err-promo"></span>
           </div>
 
@@ -162,17 +165,17 @@
             <% const tax = subtotal * 0.14; %>
             <% const total = subtotal + tax; %>
             <div class="order-row">
-              <span>Subtotal</span>
+              <span><%= __("labels.subtotal") %></span>
               <span id="subtotal" data-subtotal="<%= subtotal.toFixed(2) %>">$<%= subtotal.toFixed(2) %></span>
             </div>
 
             <div class="order-row">
-              <span>Tax</span>
+              <span><%= __("labels.tax") %></span>
               <span id="tax" data-tax-rate="0.14">$<%= tax.toFixed(2) %></span>
             </div>
 
             <div class="order-row total-row">
-              <span>Total</span>
+              <span><%= __("labels.total") %></span>
               <span id="total" class="total-amount">
                 $<%= total.toFixed(2) %>
               </span>
@@ -183,10 +186,10 @@
           <div class="field-group">
             <div class="terms-row">
               <input type="checkbox" id="terms" name="terms"/>
-              <label for="terms" class="terms-check-label">I agree to the</label>
-              <button type="button" class="terms-link-btn" id="open-terms">Terms of Service</button>
-              <span class="terms-label-text"> and </span>
-              <button type="button" class="terms-link-btn" id="open-privacy">Privacy Policy</button>
+              <label for="terms" class="terms-check-label"><%= __("payment.termsAgree") %></label>
+              <button type="button" class="terms-link-btn" id="open-terms"><%= __("payment.termsOfService") %></button>
+              <span class="terms-label-text"> <%= __("payment.and") %> </span>
+              <button type="button" class="terms-link-btn" id="open-privacy"><%= __("payment.privacyPolicy") %></button>
             </div>
             <span class="field-error" id="err-terms"></span>
           </div>
@@ -194,7 +197,7 @@
           <!-- Confirm Button -->
           <button class="btn-confirm" id="confirmBtn" type="submit">
             <i class="fa-solid fa-lock"></i>
-            Confirm Payment
+            <%= __("buttons.confirmPayment") %>
           </button>
 
         </form>
@@ -203,10 +206,10 @@
 
         <p class="secure-note">
           <i class="fa-solid fa-lock"></i>
-          Your payment information is secure and encrypted
+          <%= __("payment.secureNote") %>
         </p>
 
-        <a href="/courses/all-courses" class="back-link">← Back to courses</a>
+        <a href="/courses/all-courses" class="back-link">← <%= __("payment.backToCourses") %></a>
 
       </section>
     </div>
@@ -218,18 +221,22 @@
       <button type="button" class="terms-modal-close" id="terms-modal-close" aria-label="Close">
         <i class="fa-solid fa-xmark"></i>
       </button>
-      <h3>Terms of Service</h3>
+            <h3><%= __("payment.termsTitle") %></h3>
       <div class="terms-modal-body">
-        <p>By using TheDevStudio you agree to:</p>
+        <p><%= __("payment.termsIntro") %></p>
         <ul>
-          <li>Provide accurate account information</li>
-          <li>Use courses and challenges honestly</li>
-          <li>Follow instructor verification rules if applying to teach</li>
-          <li>Not upload harmful, illegal, or infringing content</li>
+          <li><%= __("payment.termsItem1") %></li>
+          <li><%= __("payment.termsItem2") %></li>
+          <li><%= __("payment.termsItem3") %></li>
+          <li><%= __("payment.termsItem4") %></li>
         </ul>
-        <a href="/auth/terms-of-services" target="_blank" rel="noopener noreferrer" class="legal-full-link">Read full Terms of Service</a>
+        <a href="/auth/terms-of-services" target="_blank" rel="noopener noreferrer" class="legal-full-link">
+          <%= __("payment.readFullTerms") %>
+        </a>
       </div>
-      <button type="button" class="btn-confirm terms-modal-close-btn" id="terms-modal-close-btn">Close</button>
+      <button type="button" class="btn-confirm terms-modal-close-btn" id="terms-modal-close-btn">
+        <%= __("buttons.close") %>
+      </button>
     </div>
   </div>
 
@@ -239,18 +246,22 @@
       <button type="button" class="terms-modal-close" id="privacy-modal-close" aria-label="Close">
         <i class="fa-solid fa-xmark"></i>
       </button>
-      <h3>Privacy Policy</h3>
+      <h3><%= __("payment.privacyTitle") %></h3>
       <div class="terms-modal-body">
-        <p>We collect data needed to run the platform, including:</p>
+        <p><%= __("payment.privacyIntro") %></p>
         <ul>
-          <li>Name, email, and account details</li>
-          <li>Course progress and challenge submissions</li>
-          <li>Instructor verification documents if you apply</li>
+          <li><%= __("payment.privacyItem1") %></li>
+          <li><%= __("payment.privacyItem2") %></li>
+          <li><%= __("payment.privacyItem3") %></li>
         </ul>
-        <p>We do not sell your personal data.</p>
-        <a href="/auth/privacy-policy" target="_blank" rel="noopener noreferrer" class="legal-full-link">Read full Privacy Policy</a>
+        <p><%= __("payment.privacyNoSell") %></p>
+        <a href="/auth/privacy-policy" target="_blank" rel="noopener noreferrer" class="legal-full-link">
+          <%= __("payment.readFullPrivacy") %>
+        </a>
       </div>
-      <button type="button" class="btn-confirm terms-modal-close-btn" id="privacy-modal-close-btn">Close</button>
+      <button type="button" class="btn-confirm terms-modal-close-btn" id="privacy-modal-close-btn">
+        <%= __("buttons.close") %>
+      </button>
     </div>
   </div>
 
