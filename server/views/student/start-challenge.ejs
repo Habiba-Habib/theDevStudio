@@ -49,9 +49,10 @@
       <div class="card">
         <h2 class="section-title">Examples</h2>
 
-        <% challenge.examples.forEach((ex, i) => { %>
+        <% if (challenge.examples.length > 0) { %>
+  <% const ex = challenge.examples[0]; %>
   <div class="example-block">
-    <div class="example-label">Example <%= i + 1 %></div>
+    <div class="example-label">Example</div>
     <div class="example-line">
       <span class="kw">Input: </span>
       <span class="val"><%= ex.input %></span>
@@ -66,7 +67,7 @@
       </div>
     <% } %>
   </div>
-<% }) %>
+<% } %>
       </div>
 
       

@@ -533,7 +533,7 @@ exports.runCode = async (req, res) => {
     const challenge = await Challenge.findById(req.params.id);
     if (!challenge) return res.status(404).json({ error: 'Challenge not found' });
 
-    const visibleTests = challenge.testCases.filter(t => !t.isHidden);
+    const visibleTests = challenge.testCases.filter(t => !t.isHidden).slice(0, 1);
     const results = await Promise.all(visibleTests.map(t => runTestCase(code, language, t)));
 
     res.json({ success: true, results });
@@ -550,8 +550,9 @@ exports.submitChallenge = async (req, res) => {
     const challenge = await Challenge.findById(req.params.id);
     if (!challenge) return res.status(404).json({ error: 'Challenge not found' });
 
-    // run against ALL test cases
-    const results = await Promise.all(challenge.testCases.map(async t => ({
+    // run against visible test cases only
+    const visibleTests = challenge.testCases.filter(t => !t.isHidden).slice(0, 1);
+    const results = await Promise.all(visibleTests.map(async t => ({
       ...(await runTestCase(code, language, t)),
       isHidden: t.isHidden,
     })));

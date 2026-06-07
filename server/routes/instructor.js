@@ -56,6 +56,6 @@ router.get('/courses/:id/edit',     getEditCourse);
 router.post('/courses/:id/edit', uploadCourseMaterials, updateCourse);
 router.post('/courses/:id/delete',  deleteCourse);
 router.get('/courses/:id/students', getEnrolledStudents);
-router.get('/courses/:id/preview',  courseController.getCourseContent);
+router.get('/courses/:courseId/preview', courseController.getCourseContent);
 
 module.exports = router;

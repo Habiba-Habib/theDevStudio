@@ -34,6 +34,8 @@
   const canCompleteLessons = user?.role === 'student' && !isInstructorOwner;
   const lessonBaseUrl = user?.role === 'admin'
   ? `/admin/courses/${course._id}/content`
+  : user?.role === 'instructor'
+  ? `/instructor/courses/${course._id}/preview`
   : `/student/course/${course._id}/learn`;
 %>
 
