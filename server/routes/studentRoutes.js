@@ -3,6 +3,7 @@ const router     = express.Router();
 const bcrypt     = require("bcryptjs");
 const multer     = require("multer");
 const User       = require("../models/User");
+const isStudent         = require("../middleware/isStudent");
 const studentController = require("../controllers/studentController");
 const courseController  = require("../controllers/courseController");
 
@@ -22,25 +23,7 @@ const submissionUpload = multer({
   }
 });
 
-/* ── AUTH MIDDLEWARE ── */
-function requireStudentSession(req, res, next) {
-  if (!req.session || !req.session.userId) {
-    if (req.method === "GET") req.session.returnTo = req.originalUrl;
-    return res.redirect("/auth/login");
-  }
-
-  if (req.session.role !== "student" && req.session.role !== "instructor") {
-    return res.status(403).render("public/error-page", {
-      statusCode: 403,
-      errorTitle: "Access Denied",
-      message: "Students and instructors only."
-    });
-  }
-
-  next();
-}
-
-router.use(requireStudentSession);
+router.use(isStudent);
 
 /* ══════════════════════════════════════════
    STUDENT PAGES
