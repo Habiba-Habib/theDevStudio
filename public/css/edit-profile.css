@@ -185,6 +185,10 @@ label {
     height: 18px;
     color: var(--text-muted);
     flex-shrink: 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 input {
@@ -194,7 +198,8 @@ input {
     color: var(--text-muted);
     font-family: var(--font);
     font-size: 14px;
-    width: 100%;
+    flex: 1;
+    min-width: 0;
 }
 
 input::placeholder { color: var(--text-muted); }

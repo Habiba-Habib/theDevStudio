@@ -164,6 +164,8 @@ textarea {
   border-radius: 10px;
   color: white;
   color: var(--text-white);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 textarea {
@@ -248,7 +250,16 @@ textarea {
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:12px;
   margin-top:15px;
+}
+
+.course-card span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .view-btn{

@@ -51,6 +51,10 @@ async function submitOnboarding() {
 
     if (!res.ok) {
       document.getElementById('loading-overlay').classList.add('hidden');
+      if (res.status === 401 && data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+        return;
+      }
       showError(data.message || 'Something went wrong. Please try again.');
       return;
     }

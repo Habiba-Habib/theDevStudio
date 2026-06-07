@@ -52,12 +52,14 @@ if (!email || !password) {
       formMessage.textContent = "Logging in...";
       formMessage.style.color = "#FF40A0";
 
+      const rememberMe = document.querySelector('input[name="rememberMe"]').checked;
+
       const res = await fetch("/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ email, password})
+        body: JSON.stringify({ email, password, rememberMe })
       });
 
       const data = await res.json();
