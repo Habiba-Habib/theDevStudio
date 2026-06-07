@@ -27,6 +27,8 @@ const {
   downloadSubmission
 } = require("../controllers/instructor-controller");
 
+const courseController = require("../controllers/courseController");
+
 router.use(isInstructor);
 
 router.get("/submission-download", downloadSubmission);
@@ -54,5 +56,6 @@ router.get('/courses/:id/edit',     getEditCourse);
 router.post('/courses/:id/edit', uploadCourseMaterials, updateCourse);
 router.post('/courses/:id/delete',  deleteCourse);
 router.get('/courses/:id/students', getEnrolledStudents);
+router.get('/courses/:id/preview',  courseController.getCourseContent);
 
 module.exports = router;
