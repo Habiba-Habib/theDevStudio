@@ -94,7 +94,6 @@ if (course.instructor && course.instructor.toString() === req.session.userId.toS
 }
 
 
-    const paymentMethod = req.body.paymentMethod;
     const cardNumber = req.body.cardNumber;
     const cardType = req.body.cardType || "unknown";
 
@@ -115,7 +114,6 @@ if (cleanCardNumber.length === 16) {
       student: req.session.userId,
       course: course._id,
       amount: amountPaid,
-      paymentMethod: paymentMethod,
       cardType: cardType,
       status: paymentStatus,
     });
