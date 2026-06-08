@@ -139,6 +139,29 @@ body {
   color: var(--text-white);
 }
 
+.form-group {
+  position: relative;
+}
+
+.form-group .error-msg {
+  display: none;
+  margin-top: 6px;
+  width: 100%;
+
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--pink, #ff40a0);
+}
+
+.form-group .error-msg.show {
+  display: block;
+}
+
+.form-input.error {
+  border-color: var(--pink, #ff40a0);
+  box-shadow: 0 0 0 3px rgba(255, 64, 160, 0.12);
+}
+
 .subtitle {
   font-size: 14px;
   color: var(--text-muted);

@@ -69,6 +69,9 @@
     function isValidEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
+    function isValidName(name) {
+  return /^[A-Za-z\s]{2,}$/.test(name.trim());
+}
 
     // create account — validate then redirect based on role
     document.getElementById('btn-create').addEventListener('click', () => {
@@ -81,7 +84,7 @@
       let valid = true;
 
       // name check
-      if (!name.value.trim()) {
+      if (!isValidName(name.value)) {
         showError('name', 'name-error');
         valid = false;
       } else {

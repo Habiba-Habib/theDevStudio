@@ -13,13 +13,20 @@ exports.signup = async (req, res) => {
     if (!name || !email || !password || !role) {
       return res.status(400).json({ message: "Missing fields" });
     }
+    const nameRegex = /^[A-Za-z\s]{2,}$/;
+
+    if (!nameRegex.test(name.trim())) {
+      return res.status(400).json({
+        message: "Name must contain letters only and be at least 2 characters."
+      });
+    }
 
     if (!["student", "instructor"].includes(role)) {
       return res.status(400).json({ message: "Invalid signup role" });
     }
 
     // 1. Check if user already exists in your real MongoDB database
-    const exists = await User.findOne({ email });
+    const exists = await User.findOne({ email: email.trim().toLowerCase() });
     if (exists) {
       return res.status(409).json({ message: "User already exists" });
     }
@@ -29,12 +36,11 @@ exports.signup = async (req, res) => {
 
     // 3. Save the new user to MongoDB!
     const newUser = await User.create({
-      name,
-      email,
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
       password: hashedPassword,
       role
     });
-
     req.session.user = {
       _id: newUser._id,
       name: newUser.name,
