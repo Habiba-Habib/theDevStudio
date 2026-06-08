@@ -101,7 +101,9 @@
   "dataScience": "علم البيانات",
   "mobileDevelopment": "تطوير تطبيقات الهاتف",
   "design": "التصميم",
-  "machineLearning": "تعلم الآلة"
+  "machineLearning": "تعلم الآلة",
+  "cybersecurity": "الأمن السيبراني",
+"cloudComputing": "الحوسبة السحابية"
 },
 "levels": {
   "beginner": "مبتدئ",

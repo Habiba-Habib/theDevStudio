@@ -102,7 +102,9 @@
   "dataScience": "Data Science",
   "mobileDevelopment": "Mobile Development",
   "design": "Design",
-  "machineLearning": "Machine Learning"
+  "machineLearning": "Machine Learning",
+  "cybersecurity": "Cybersecurity",
+"cloudComputing": "Cloud Computing"
 },
 "levels": {
   "beginner": "Beginner",
