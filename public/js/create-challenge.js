@@ -298,11 +298,13 @@ generateBtn.addEventListener('click', async () => {
 
     // Convert structured test cases to your textarea format
     if (Array.isArray(c.testCases)) {
-      testCasesArea.value = c.testCases
-        .map(tc => `Input: ${tc.input}\nExpected: ${tc.expectedOutput}`)
-        .join('\n\n');
-      testCasesArea.classList.remove('placeholder-active');
-    }
+  testCasesArea.value = c.testCases
+    .slice(0, 1)
+    .map(tc => `Input: ${tc.input}\nExpected: ${tc.expectedOutput}`)
+    .join('\n\n');
+
+  testCasesArea.classList.remove('placeholder-active');
+}
 
     updatePreview();
     showToast('Challenge generated! Review and edit before saving.');

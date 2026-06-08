@@ -38,7 +38,7 @@ Return ONLY valid JSON in this exact shape. No markdown. No explanation:
 }
 
 Rules:
-- Include at least 3 test cases
+- Include exactly 1 test case
 - starterCode must be a JavaScript function skeleton
 - difficulty must be lowercase: easy, medium, or hard
 - category must be one of: Arrays, Strings, Trees, Graphs, Dynamic Programming, Sorting
