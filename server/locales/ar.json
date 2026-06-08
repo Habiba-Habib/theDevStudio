@@ -99,11 +99,11 @@
 "categories": {
   "webDevelopment": "تطوير الويب",
   "dataScience": "علم البيانات",
-  "mobileDevelopment": "تطوير تطبيقات الهاتف",
-  "design": "التصميم",
   "machineLearning": "تعلم الآلة",
+  "mobileDevelopment": "تطوير تطبيقات الهاتف",
   "cybersecurity": "الأمن السيبراني",
-"cloudComputing": "الحوسبة السحابية"
+  "cloudComputing": "الحوسبة السحابية",
+  "design": "التصميم"
 },
 "levels": {
   "beginner": "مبتدئ",

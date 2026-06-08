@@ -100,11 +100,11 @@
 "categories": {
   "webDevelopment": "Web Development",
   "dataScience": "Data Science",
-  "mobileDevelopment": "Mobile Development",
-  "design": "Design",
   "machineLearning": "Machine Learning",
+  "mobileDevelopment": "Mobile Development",
   "cybersecurity": "Cybersecurity",
-"cloudComputing": "Cloud Computing"
+  "cloudComputing": "Cloud Computing",
+  "design": "Design"
 },
 "levels": {
   "beginner": "Beginner",
