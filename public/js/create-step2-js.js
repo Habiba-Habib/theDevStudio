@@ -104,7 +104,37 @@ function setupFileUpload(lessonBox) {
     docBox.classList.remove('file-selected');
     docClearBtn.style.display = 'none';
   });
-  
+
+  // Assignment file upload
+  const assignmentBox = lessonBox.querySelector('.assignment-file-box');
+  const assignmentInput = lessonBox.querySelector('.assignment-file-input');
+  const assignmentDisplay = assignmentBox.querySelector('.file-display');
+  const assignmentFileName = assignmentBox.querySelector('.file-name');
+  const assignmentClearBtn = assignmentBox.querySelector('.btn-clear-file');
+
+  assignmentDisplay.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('btn-clear-file') && !e.target.closest('.btn-clear-file')) {
+      assignmentInput.click();
+    }
+  });
+
+  assignmentInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+      const file = e.target.files[0];
+      assignmentFileName.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${file.name}`;
+      assignmentBox.classList.add('file-selected');
+      assignmentClearBtn.style.display = 'flex';
+    }
+  });
+
+  assignmentClearBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    assignmentInput.value = '';
+    assignmentFileName.innerHTML = 'Add Assignment (Optional)';
+    assignmentBox.classList.remove('file-selected');
+    assignmentClearBtn.style.display = 'none';
+  });
+
   // Video source toggle
   const radios = lessonBox.querySelectorAll('[name*="videoSource"]');
   const urlInput = lessonBox.querySelector('.video-url-input');
@@ -166,7 +196,17 @@ function addLesson(section) {
           <button type="button" class="btn-clear-file" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
         </div>
       </div>
-      
+
+      <div class="file-upload-box assignment-file-box">
+        <input type="file" class="assignment-file-input" name="sections[${sectionIndex}][lessons][${lessonIndex}][assignmentFile]" accept=".pdf,.doc,.docx,.zip">
+        <div class="file-display">
+          <i class="fa-solid fa-clipboard-list"></i>
+          <span class="file-name">Add Assignment (Optional)</span>
+          <button type="button" class="btn-clear-file" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, ZIP</p>
+      </div>
+
       <button type="button" class="btn-remove-lesson"><i class="fa-solid fa-xmark"></i></button>
     </div>
   `;
@@ -239,7 +279,17 @@ document.getElementById('add-section').addEventListener('click', () => {
               <button type="button" class="btn-clear-file" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
             </div>
           </div>
-          
+
+          <div class="file-upload-box assignment-file-box">
+            <input type="file" class="assignment-file-input" name="sections[${sectionIndex}][lessons][0][assignmentFile]" accept=".pdf,.doc,.docx,.zip">
+            <div class="file-display">
+              <i class="fa-solid fa-clipboard-list"></i>
+              <span class="file-name">Add Assignment (Optional)</span>
+              <button type="button" class="btn-clear-file" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, ZIP</p>
+          </div>
+
           <button type="button" class="btn-remove-lesson"><i class="fa-solid fa-xmark"></i></button>
         </div>
       </div>
