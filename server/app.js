@@ -71,15 +71,6 @@ app.use("/language", languageRoutes);
 app.use("/",           publicRoutes);
 
 app.get("/me", (req, res) => res.json(req.session.user || null));
-app.get("/dashboard", (req, res) => {
- const role = req.session.role;
-  const dashboards = {
-    student:    "/student/dashboard",
-    instructor: "/instructor/dashboard",
-    admin:      "/admin/dashboard"
-  };
-  res.redirect(dashboards[role] || "/login");
-});
 
 app.use((req, res) => {
   res.status(404).render("public/error-page", {

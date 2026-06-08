@@ -12,6 +12,17 @@ router.get("/error-page",(req, res) => res.render("public/error-page", {
   errorTitle: "Page Not Found",
   message:    "The page you are looking for does not exist."
 }));
+router.get("/dashboard", (req, res) => {
+  const role = req.session.role;
+
+  const dashboards = {
+    student: "/student/dashboard",
+    instructor: "/instructor/dashboard",
+    admin: "/admin/dashboard"
+  };
+
+  res.redirect(dashboards[role] || "/auth/login");
+});
 
 /* ── BECOME INSTRUCTOR FLOW ── */
 router.get( "/become-instructor",        requireLoginPage, publicController.getBecomeInstructor);
