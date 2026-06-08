@@ -118,7 +118,7 @@
         <div class="student-meta">
           <span>
             <i class="fa-regular fa-clock"></i>
-            Last active: <%= student.lastActive %>
+            Last active: <%= student.lastActive ? new Date(student.lastActive).toLocaleDateString() : 'Never' %>
           </span>
           <span>
             <i class="fa-regular fa-calendar"></i>

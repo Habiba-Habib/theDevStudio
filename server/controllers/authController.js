@@ -93,6 +93,9 @@ exports.login = async (req, res) => {
     req.session.userId = user._id;
     req.session.role = user.role;
 
+    // Update lastActive on login
+    await User.findByIdAndUpdate(user._id, { lastActive: new Date() });
+
     // 4. Remember Me — extend session to 30 days, otherwise expires on browser close
     if (req.body.rememberMe) {
       req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days

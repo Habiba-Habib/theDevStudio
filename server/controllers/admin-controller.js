@@ -275,7 +275,9 @@ exports.getUsers = async (req, res) => {
       joinDate: u.createdAt
         ? u.createdAt.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
         : "N/A",
-      progress: u.progress || 0,
+      progress: u.enrolledCourses?.length
+        ? Math.round(u.enrolledCourses.reduce((sum, e) => sum + (e.progress || 0), 0) / u.enrolledCourses.length)
+        : 0,
       courses:  u.enrolledCourses?.length  || 0,
       students: u.students || 0
     }));

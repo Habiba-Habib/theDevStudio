@@ -158,18 +158,45 @@
                   <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, PPT, PPTX, TXT</p>
                 </div>
                 
+                <!-- Assignment File Upload -->
+                <div class="file-upload-box assignment-file-box">
+                  <input type="file" class="assignment-file-input"
+                         name="sections[<%= sectionIdx %>][lessons][<%= lessonIdx %>][assignmentFile]"
+                         accept=".pdf,.doc,.docx,.zip">
+                  <div class="file-display">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    <span class="file-name">
+                      <% if (lesson.assignmentFile) { %>
+                        <i class="fa-solid fa-check-circle"></i> <%= lesson.assignmentFile.split('/').pop() %>
+                      <% } else { %>
+                        Add Assignment (Optional)
+                      <% } %>
+                    </span>
+                    <button type="button" class="btn-clear-file"
+                            style="<%= lesson.assignmentFile ? '' : 'display:none;' %>">
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
+                  </div>
+                  <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, ZIP</p>
+                </div>
+
                 <!-- Hidden fields to preserve existing file paths -->
                 <% if (lesson.videoFile) { %>
-                  <input type="hidden" 
-                         name="sections[<%= sectionIdx %>][lessons][<%= lessonIdx %>][existingVideoFile]" 
+                  <input type="hidden"
+                         name="sections[<%= sectionIdx %>][lessons][<%= lessonIdx %>][existingVideoFile]"
                          value="<%= lesson.videoFile %>">
                 <% } %>
                 <% if (lesson.resourceFile) { %>
-                  <input type="hidden" 
-                         name="sections[<%= sectionIdx %>][lessons][<%= lessonIdx %>][existingResourceFile]" 
+                  <input type="hidden"
+                         name="sections[<%= sectionIdx %>][lessons][<%= lessonIdx %>][existingResourceFile]"
                          value="<%= lesson.resourceFile %>">
                 <% } %>
-                
+                <% if (lesson.assignmentFile) { %>
+                  <input type="hidden"
+                         name="sections[<%= sectionIdx %>][lessons][<%= lessonIdx %>][existingAssignmentFile]"
+                         value="<%= lesson.assignmentFile %>">
+                <% } %>
+
                 <button type="button" class="btn-remove-lesson"><i class="fa-solid fa-xmark"></i></button>
               </div>
             </div>
@@ -229,7 +256,17 @@
               </div>
               <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, PPT, PPTX, TXT</p>
             </div>
-            
+
+            <div class="file-upload-box assignment-file-box">
+              <input type="file" class="assignment-file-input" name="sections[0][lessons][0][assignmentFile]" accept=".pdf,.doc,.docx,.zip">
+              <div class="file-display">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span class="file-name">Add Assignment (Optional)</span>
+                <button type="button" class="btn-clear-file" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+              <p class="file-type-hint"><i class="fa-solid fa-circle-info"></i> Accepted: PDF, DOC, DOCX, ZIP</p>
+            </div>
+
             <button type="button" class="btn-remove-lesson"><i class="fa-solid fa-xmark"></i></button>
           </div>
         </div>

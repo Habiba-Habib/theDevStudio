@@ -49,7 +49,8 @@ const courseSchema = new mongoose.Schema({
   "Mobile Development",
   "Cybersecurity",
   "Cloud Computing",
-  "Design"
+  "Design",
+  "Data Structures"
 ],
     required: true
   },

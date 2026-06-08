@@ -394,17 +394,20 @@ exports.getCreateStep1 = async (req, res) => {
 
 exports.postCreateStep1 = async (req, res) => {
   try {
-    const { title, shortDescription, fullDescription, category, level, offersCertificate } = req.body;
-    
+    const instructorId = req.session.userId || req.session.user?._id;
+    if (!instructorId) return res.redirect('/auth/login');
+
+    const { title, shortDescription, fullDescription, category, level } = req.body;
+
     // Check if a draft already exists — update it, don't create a new one
     let course = await Course.findOne({
-  instructor: req.session.user._id,
-  isPublished: false,
-  approvalStatus: "draft"
-});
+      instructor: instructorId,
+      isPublished: false,
+      approvalStatus: "draft"
+    });
 
     const thumbnailUrl = req.file
-      ? req.file.path // Streams remote Cloudinary URL!
+      ? req.file.path
       : (course?.thumbnail || '');
 
     if (course) {
@@ -416,32 +419,32 @@ exports.postCreateStep1 = async (req, res) => {
         category,
         level,
         thumbnail: thumbnailUrl,
-      offersCertificate: true
+        offersCertificate: true
       });
     } else {
       // Create new draft
       course = await Course.create({
-  title,
-  shortDescription,
-  fullDescription,
-  category,
-  level,
-  thumbnail: thumbnailUrl,
-  instructor: req.session.user._id,
-  isPublished: false,
-  approvalStatus: "draft",
-  offersCertificate: true
-});
+        title,
+        shortDescription,
+        fullDescription,
+        category,
+        level,
+        thumbnail: thumbnailUrl,
+        instructor: instructorId,
+        isPublished: false,
+        approvalStatus: "draft",
+        offersCertificate: true
+      });
     }
 
     // Move to step 2
     res.redirect('/instructor/create/step2');
   } catch (err) {
-    console.error(err);
+    console.error("postCreateStep1 error:", err);
     res.status(500).render("public/error-page", {
       statusCode: 500,
       errorTitle: "Internal Server Error",
-      message: "Something went wrong while creating the course."
+      message: err.message || "Something went wrong while creating the course."
     });
   }
 };
@@ -494,6 +497,7 @@ exports.postCreateStep2 = async (req, res) => {
 
  const uploadedVideos = {};
 const uploadedDocuments = {};
+const uploadedAssignments = {};
 
 (req.files || []).forEach(file => {
   const videoMatch = file.fieldname.match(/^sections\[(\d+)\]\[lessons\]\[(\d+)\]\[videoFile\]$/);
@@ -501,11 +505,15 @@ const uploadedDocuments = {};
 
   const documentMatch = file.fieldname.match(/^sections\[(\d+)\]\[lessons\]\[(\d+)\]\[resourceFile\]$/);
   if (documentMatch) uploadedDocuments[`${documentMatch[1]}_${documentMatch[2]}`] = file.path;
+
+  const assignmentMatch = file.fieldname.match(/^sections\[(\d+)\]\[lessons\]\[(\d+)\]\[assignmentFile\]$/);
+  if (assignmentMatch) uploadedAssignments[`${assignmentMatch[1]}_${assignmentMatch[2]}`] = file.path;
 });
 
 // Get existing file paths from hidden inputs
 const existingVideos = {};
 const existingDocuments = {};
+const existingAssignments = {};
 const rawSections = req.body.sections || {};
 
 Object.keys(rawSections).forEach(i => {
@@ -514,8 +522,9 @@ Object.keys(rawSections).forEach(i => {
   Object.keys(rawLessons).forEach(j => {
     const lesson = rawLessons[j];
     const fileKey = `${i}_${j}`;
-    if (lesson.existingVideoFile) existingVideos[fileKey] = lesson.existingVideoFile;
-    if (lesson.existingResourceFile) existingDocuments[fileKey] = lesson.existingResourceFile;
+    if (lesson.existingVideoFile)      existingVideos[fileKey]      = lesson.existingVideoFile;
+    if (lesson.existingResourceFile)   existingDocuments[fileKey]   = lesson.existingResourceFile;
+    if (lesson.existingAssignmentFile) existingAssignments[fileKey] = lesson.existingAssignmentFile;
   });
 });
 
@@ -537,6 +546,7 @@ Object.keys(rawSections).forEach(i => {
     videoUrl: (lesson.videoUrl || '').trim(),
     videoFile: uploadedVideos[fileKey] || existingVideos[fileKey] || '',
     resourceFile: uploadedDocuments[fileKey] || existingDocuments[fileKey] || '',
+    assignmentFile: uploadedAssignments[fileKey] || existingAssignments[fileKey] || '',
     content: '',
     duration: ''
   };
@@ -947,14 +957,30 @@ exports.getEnrolledStudents = async (req, res) => {
   });
 }
 
-    const students = await User.find({
-      enrolledCourses: course._id,
+    const users = await User.find({
+      "enrolledCourses.course": course._id,
       role: 'student'
-    }).select('name email avatar memberSince progress lastActive enrolledAt');
+    }).select('name email avatar createdAt lastActive enrolledCourses');
+
+    const students = users.map(user => {
+      const enrollment = user.enrolledCourses.find(
+        e => e.course.toString() === course._id.toString()
+      );
+      return {
+        _id:        user._id,
+        name:       user.name,
+        email:      user.email,
+        avatar:     user.avatar,
+        memberSince: user.createdAt,
+        lastActive:  user.lastActive,
+        enrolledAt:  enrollment?.enrolledAt,
+        progress:    enrollment?.progress || 0
+      };
+    });
 
     // Calculate stats
     const avgProgress = students.length
-      ? Math.round(students.reduce((sum, s) => sum + (s.progress || 0), 0) / students.length)
+      ? Math.round(students.reduce((sum, s) => sum + s.progress, 0) / students.length)
       : 0;
 
     const today = new Date();
@@ -965,12 +991,26 @@ exports.getEnrolledStudents = async (req, res) => {
     ).length;
 
     const nearCompletion = students.filter(s =>
-      (s.progress || 0) >= 80
+      s.progress >= 80
     ).length;
 
-    // Fetch submissions for this course (if you have a Submission model)
-    // For now, pass empty array to prevent error
+    // Collect all assignment submissions from course lessons
     const submissions = [];
+    for (const section of course.sections) {
+      for (const lesson of section.lessons) {
+        for (const sub of (lesson.assignmentSubmissions || [])) {
+          submissions.push({
+            studentId:   sub.student.toString(),
+            lessonTitle: lesson.title,
+            fileName:    sub.fileName,
+            fileUrl:     sub.fileUrl,
+            submittedAt: sub.submittedAt
+          });
+        }
+      }
+    }
+    // Sort newest first
+    submissions.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
 
     res.render('instructor/enrolled-students', {
       course,
