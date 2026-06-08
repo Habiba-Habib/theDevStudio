@@ -5,11 +5,9 @@ const session = require("express-session");
 const {MongoStore} = require("connect-mongo");
 const connectDB = require("./config/db");
 const localization = require("./middleware/localization");
-const languageRoutes = require("./routes/languageRoutes");
 
 const app = express();
 
-//test
 const passport = require("passport");
 const { configurePassport } = require("./config/passport");
 
@@ -45,7 +43,6 @@ app.use(passport.session());
 
 
 app.use(express.static(path.join(__dirname, "../public")));   
-//app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use(localization);
 
 app.set("view engine", "ejs");
@@ -58,8 +55,9 @@ const adminRoutes      = require("./routes/adminRoutes");
 const challengeRoutes  = require("./routes/challenges");
 const coursesRoutes     = require("./routes/coursesRoutes");
 const publicRoutes     = require("./routes/public");  
-const uploadRoute = require('./routes/upload'); //added
+const uploadRoute = require('./routes/upload'); 
 const chatbotRoutes = require("./routes/chatbotRoutes");
+const languageRoutes = require("./routes/languageRoutes");
 
 app.use("/auth",       authRoutes);
 app.use("/student",    studentRoutes);
@@ -67,7 +65,7 @@ app.use("/instructor", instructorRoutes);
 app.use("/admin",      adminRoutes);
 app.use("/challenges", challengeRoutes);
 app.use("/courses", coursesRoutes);
-app.use('/api', uploadRoute); //added
+app.use('/api', uploadRoute); 
 app.use("/api/chatbot", chatbotRoutes);
 app.use("/language", languageRoutes);
 app.use("/",           publicRoutes);
