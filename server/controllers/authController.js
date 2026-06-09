@@ -212,11 +212,12 @@ exports.forgotPassword = async (req, res) => {
     const appUrl = process.env.APP_URL || `${req.protocol}://${req.get("host")}`;
     const resetUrl = `${appUrl.replace(/\/$/, "")}/auth/reset-password/${token}`;
 
-    const transporter = nodemailer.createTransport({
+    const emailPort = Number(process.env.EMAIL_PORT) || 465;
+
+const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
-  port: Number(process.env.EMAIL_PORT),
-  secure: false,
-  requireTLS: true,
+  port: emailPort,
+  secure: emailPort === 465,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
@@ -224,9 +225,9 @@ exports.forgotPassword = async (req, res) => {
   tls: {
     rejectUnauthorized: false
   },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000
+  connectionTimeout: 30000,
+  greetingTimeout: 30000,
+  socketTimeout: 30000
 });
 
     await transporter.sendMail({
