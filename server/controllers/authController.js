@@ -181,8 +181,14 @@ exports.adminLogin = async (req, res) => {
 exports.forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
-
-    const user = await User.findOne({ email });
+      if (!email || !email.trim()) {
+      return res.render("auth/forgot-password", {
+        successMessage: null,
+        errorMessage: "Please enter your email address."
+      });
+    }
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await User.findOne({ email: normalizedEmail });
 
     const successMessage = "If that email exists, a reset link has been sent.";
 

@@ -4,7 +4,7 @@ function countLessonFiles(lesson = {}) {
   const countResources = value => Array.isArray(value)
     ? value.filter(item => item && (item.url || item.name || typeof item === "string")).length
     : 0;
-
+   //counts resources
   return (
     countString(lesson.videoFile) +
     countArray(lesson.videoFiles) +
