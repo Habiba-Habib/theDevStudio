@@ -75,8 +75,17 @@ router.get("/profile", async (req, res) => {
     .populate("completedCourses.course")
     .populate("certificates.course");
 
+  const rankedStudents = await User.find({ role: "student" })
+    .sort({ points: -1 })
+    .select("_id");
+
+  const rank = rankedStudents.findIndex(
+    student => student._id.toString() === user._id.toString()
+  ) + 1;
+
   res.render("shared/profile", {
     user,
+    rank: rank || null,
     completedCourses: user.completedCourses || [],
     certificates:     user.certificates     || []
   });

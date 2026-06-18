@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: 'Inter', 'Poppins';
+  font-family: var(--font);
   background-color: var(--bg);
   color: var(--text-white);
   overflow-y:auto;}

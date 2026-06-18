@@ -5,6 +5,7 @@
   <link rel="icon" type="image/png" href="/images/favicon.png?v=2" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/profiles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
    
@@ -32,7 +33,7 @@
         </div>
 
         <div class="stat-card">
-          <h3 style="color:#61b2b1">#<%= typeof rank !== "undefined" ? rank : "N/A" %></h3>
+          <h3 style="color:#61b2b1"><%= rank ? `#${rank}` : "N/A" %></h3>
           <p>Global Rank</p>
         </div>
 
